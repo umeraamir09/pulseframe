@@ -1,5 +1,8 @@
 {
   "permissions": {
-    "allow": ["mcp__Figma"]
+    "allow": [
+      "mcp__Figma",
+      "mcp__Figma__*"
+    ]
   }
 }
