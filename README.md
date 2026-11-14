@@ -9,7 +9,7 @@ This is a hackathon prototype and a **decision-support** tool. It is not a medic
 ## Docs
 
 - Product spec: [Pulseframe — Space Apps 2026 Product Spec](https://cursor.com/canvas/store-c803f290-9f41-41b1-9e9b-993d1c558d72/0bf5085b-2464-43a3-b740-9e63ab7c34df)
-- Feature breakdown and dev split: see the team Page titled **Pulseframe: Feature Breakdown & Dev Split** (link to be added on that Page once published)
+- Feature breakdown and dev split: [Pulseframe: Feature Breakdown & Dev Split](https://cursor.com/canvas/store-c803f290-9f41-41b1-9e9b-993d1c558d72/048a95a2-2fd5-4f5c-b578-a96c7264ea83)
 - Research brief (unchanged): [NASA Space Apps 2026: Health Monitoring Software — Team Brief](https://cursor.com/canvas/store-c803f290-9f41-41b1-9e9b-993d1c558d72/a4107434-e067-4280-9064-03f5ccd9ae2c)
 
 ## Features
