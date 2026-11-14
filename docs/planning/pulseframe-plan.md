@@ -375,7 +375,7 @@ https://github.com/umeraamir09/pulseframe/issues/1
 Every route renders inside one shell. The shell has a left nav with an always-visible red Emergency control, a header that shows the simulated crew, mission day, and Earth sync status, and a decision-support disclaimer that never scrolls out of reach. Shared UI primitives live in `src/ui/`, and the app deploys to a public URL where deep links work.
 
 ## Context
-This serves every feature and the judging rule that the tool is decision support only. Follow Figma frame 01 Home / app shell (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=1-11) and the Nav Item and Nav Item / Active parts in Components (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=1-2). Low-fi is fine.
+This serves every feature and the judging rule that the tool is decision support only. Follow Figma frame 01 Home / app shell (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=1-11) and the Nav Item and Nav Item / Active parts in Components (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=1-2). Low-fi is fine. Spec: https://cursor.com/canvas/store-c803f290-9f41-41b1-9e9b-993d1c558d72/0bf5085b-2464-43a3-b740-9e63ab7c34df. Breakdown: https://cursor.com/canvas/store-c803f290-9f41-41b1-9e9b-993d1c558d72/048a95a2-2fd5-4f5c-b578-a96c7264ea83. Full plan: `docs/planning/pulseframe-plan.md` (on branch `claude/clever-feynman-skwgd6` until merged).
 
 ## Scope in
 - Nav order: Emergency (red, pinned at top), Dashboard, Checklist, Fitness, Radiation, Psychology, Assistant, Ground sync, Sources.
@@ -384,6 +384,7 @@ This serves every feature and the judging rule that the tool is decision support
 - `Chip` (neutral, watch, act) and `HazardChip` primitives.
 - NotFound route.
 - `vercel.json` SPA rewrite.
+- Remove unused Vite marketing assets in `src/assets/` (`hero.png`, `react.svg`, `vite.svg`) so no likeness of anyone under 18 ships.
 
 ## Scope out
 - Page content for any module.
@@ -402,7 +403,8 @@ This serves every feature and the judging rule that the tool is decision support
 6. Create `src/modules/shell/NotFound.tsx` and add `<Route path="*" element={<NotFound />} />` in `src/App.tsx`.
 7. Add `vercel.json` at the repo root: `{ "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }] }`.
 8. Set `<title>Pulseframe</title>` in `index.html`.
-9. Import data only from `src/data/db` and types only from `src/contracts`.
+9. Delete the unused files in `src/assets/` after confirming with `grep -rn "assets/" src` that nothing imports them.
+10. Import data only from `src/data/db` and types only from `src/contracts`.
 
 ## Acceptance criteria
 - [ ] `npm run build` and `npm run lint` pass.
@@ -413,6 +415,7 @@ This serves every feature and the judging rule that the tool is decision support
 - [ ] After issue 2 merges: running `pf.queuePacket(...)` from the dev console changes the sync chip count without a reload.
 - [ ] On the Vercel preview, a hard refresh on `/emergency` loads the page, not a 404.
 - [ ] At 390 px width the nav stacks above the content and nothing scrolls sideways.
+- [ ] `ls src/assets` shows no unused Vite marketing images, and the build output has no photo of a person.
 
 ## Test notes
 Run `npm run dev` and click every nav item. Scroll a long page and confirm the disclaimer stays in view. Shrink the window to phone width in DevTools. For the Sunday demo, the Emergency control must be visible on the dashboard without scrolling.
@@ -442,7 +445,7 @@ https://github.com/umeraamir09/pulseframe/issues/2
 The shared contracts and the full IndexedDB store surface are merged to `main`, so both devs can build features without touching `idb`. Every type change, the store API, change notifications with `useLive`, mission day helpers, the inventory slot, and a minimal `queueEmergencyCase` are in place. Feature issues only fill in behavior behind these signatures.
 
 ## Context
-This is the one contract PR both devs depend on. It serves all nine features. There is no Figma frame. The full type and API listing is in the planning doc, `docs/planning/pulseframe-plan.md`, sections "Data model" and "Store API".
+This is the one contract PR both devs depend on. It serves all nine features. There is no Figma frame. The full type and API listing is in the planning doc, `docs/planning/pulseframe-plan.md` (on branch `claude/clever-feynman-skwgd6` until merged), sections "Data model" and "Store API".
 
 ## Scope in
 - Type changes in `src/contracts/types.ts` and additions in `src/contracts/keys.ts`.
@@ -765,13 +768,30 @@ https://github.com/umeraamir09/pulseframe/issues/6
 On first load, the app writes a deterministic 7-day simulated mission (MD 136 to MD 142, with MD 142 equal to today) into IndexedDB: vitals, sleep, psych checks, radiation readings, workouts, checklist items, and the active inventory. Alerts are rebuilt from that history. A "Reset demo data" action restores the same state at any time, so the Sunday demo always starts from known numbers.
 
 ## Context
-This serves features 3 through 9. Every page needs data, and the demo needs repeatable alerts. Use simulated crew data only. The full seed table and the 4 expected alerts are in `docs/planning/pulseframe-plan.md`, section "Seed scenario". The values are simulated and are not reference ranges or ISS data.
+This serves features 3 through 9. Every page needs data, and the demo needs repeatable alerts. Use simulated crew data only. The full seed table and the 4 expected alerts are in `docs/planning/pulseframe-plan.md` (on branch `claude/clever-feynman-skwgd6` until merged), section "Seed scenario". The values are simulated and are not reference ranges or ISS data.
+
+Seed table (MD 136 to MD 142):
+
+| Key | 136 | 137 | 138 | 139 | 140 | 141 | 142 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| heartRate (07:00) | 60 | 66 | 62 | 64 | 67 | 61 | 78 |
+| systolicBP | 112 | 114 | 111 | 113 | 114 | 112 | 114 |
+| diastolicBP | 72 | 74 | 71 | 73 | 74 | 72 | 73 |
+| temperatureC | 36.6 | 36.7 | 36.5 | 36.6 | 36.7 | 36.6 | 36.7 |
+| bloodGlucose | 92 | 95 | 90 | 94 | 93 | 91 | 94 |
+| oxygenSat | 98 | 98 | 97 | 98 | 98 | 98 | 98 |
+| sleepHours (06:30) | 7.2 | 7.0 | 7.4 | 5.1 | 4.4 | 6.4 | 6.8 |
+| sleepQuality | 4 | 4 | 4 | 2 | 2 | 3 | 4 |
+| moodScore (20:00) | 4 | 4 | 4 | 3 | 3 | 4 | 4 |
+| stressScore | 2 | 2 | 2 | 3 | 3 | 2 | 2 |
+| teamStrain | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| radiationRate (12:00) | 17.8 | 18.1 | 17.9 | 18.0 | 18.0 | 17.9 | 18.0 |
 
 ## Scope in
 - `buildSeed(now)` as a pure function.
 - `seedIfNeeded()` keyed on `SEED_VERSION`.
 - `resetDemoData()`.
-- The seed table values exactly as in the plan.
+- The seed table values exactly as above.
 - A daily checklist template for each seed day.
 - Inventory load from `ACTIVE_INVENTORY`.
 - A call to `rebuildAlerts()` once issue 8 exists.
@@ -782,7 +802,7 @@ This serves features 3 through 9. Every page needs data, and the demo needs repe
 - Any medication name in the checklist. The meds item stays a placeholder until the researcher list arrives.
 
 ## Implementation notes
-1. In `src/data/seed.ts`, set `SEED_VERSION = 2` and add `export const SEED_SERIES: Partial<Record<MeasurementKey, number[]>>` with the 12 rows from the plan, indexed MD 136 to MD 142.
+1. In `src/data/seed.ts`, set `SEED_VERSION = 2` and add `export const SEED_SERIES: Partial<Record<MeasurementKey, number[]>>` with the 12 rows above, indexed MD 136 to MD 142.
 2. Add a `SEED_TIMES` map for the time of day of each key. Vitals are at 07:00. `sleepHours` and `sleepQuality` are at 06:30. `moodScore`, `stressScore`, and `teamStrain` are at 20:00. `radiationRate` is at 12:00.
 3. `export function buildSeed(now: Date): SeedBundle`, where `SeedBundle = { measurements: Omit<Measurement,"id">[]; psych: Omit<PsychCheck,"id">[]; radiation: Omit<RadiationReading,"id">[]; workouts: Workout[]; checklist: ChecklistItem[]; inventory: InventoryItem[] }`.
    - Timestamps come from `missionDayStart(md)` plus the hour. Drop any row later than `now`.
@@ -848,7 +868,7 @@ https://github.com/umeraamir09/pulseframe/issues/7
 The dashboard at `/` shows the whole week, MD 136 to MD 142. It has open personal baseline alerts in the Figma alert pattern (z = (x - μ) / σ with Watch and Act chips, μ, σ, x, z, and a plain-language explanation), trend charts with a μ ± 2σ band, summary tiles grouped by NASA HRP hazard, acknowledge actions, and a Reset demo data button.
 
 ## Context
-This serves feature 4 (a whole-week dashboard with personal baseline alerts). Follow Figma 05 Weekly dashboard (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=5-110) and 10 Abnormal-reading alert pattern (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=7-367). This is the first screen in the demo video.
+This serves feature 4 (a whole-week dashboard with personal baseline alerts). Follow Figma 05 Weekly dashboard (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=5-110) and 10 Abnormal-reading alert pattern (https://www.figma.com/design/Rv5ffoCJxWrZDF0BnAuYZi?node-id=7-367). This is the first screen in the demo video. Plan: `docs/planning/pulseframe-plan.md` (on branch `claude/clever-feynman-skwgd6` until merged).
 
 ## Scope in
 - `src/ui/AlertCard.tsx` (shared, reused by Emergency).
@@ -927,7 +947,7 @@ https://github.com/umeraamir09/pulseframe/issues/8
 Every new measurement is scored automatically against the crew member's own rolling 7-day baseline: z = (x - μ) / σ, Watch at |z| ≥ 2, Act at |z| ≥ 3, with hard bounds only when burn-in is not met or σ is near zero. Alerts store μ, σ, x, z, and window size, and carry a plain-language explanation. Emergency test values are scored but kept out of the baseline.
 
 ## Context
-This serves feature 9 (automatic identification of abnormal variables) and feeds features 1, 4, 6, and 7. The method was decided in the product spec. It is not a NASA-validated diagnostic algorithm, and the UI must not say that it is. The rules are in `docs/planning/pulseframe-plan.md`, section "Anomaly rules".
+This serves feature 9 (automatic identification of abnormal variables) and feeds features 1, 4, 6, and 7. The method was decided in the product spec. It is not a NASA-validated diagnostic algorithm, and the UI must not say that it is. The rules are in `docs/planning/pulseframe-plan.md` (on branch `claude/clever-feynman-skwgd6` until merged), section "Anomaly rules".
 
 ## Scope in
 - The pure engine in `src/data/anomaly.ts`.
@@ -1339,7 +1359,7 @@ https://github.com/umeraamir09/pulseframe/issues/14
 The Sources page lists every official NASA and partner resource with one line on how Pulseframe uses it, maps each module to a NASA HRP hazard, credits all licenses, and repeats the full disclaimer. A disclaimer audit passes on every route. The app is deployed to a public Vercel URL, and `docs/submission.md` holds drafted text for every Space Apps form field and the demo script.
 
 ## Context
-This serves the judging criteria Relevance and Presentation and the Global Award rule (at least one NASA data or resource as a core part). It also covers the submission guide (https://www.spaceappschallenge.org/resources/project-submission-guide/) and the judging guide (https://www.spaceappschallenge.org/resources/judging-awards-guide/). There is no Figma frame. Use the shell style.
+This serves the judging criteria Relevance and Presentation and the Global Award rule (at least one NASA data or resource as a core part). It also covers the submission guide (https://www.spaceappschallenge.org/resources/project-submission-guide/) and the judging guide (https://www.spaceappschallenge.org/resources/judging-awards-guide/). There is no Figma frame. Use the shell style. The demo script and NASA data uses are in `docs/planning/pulseframe-plan.md` (on branch `claude/clever-feynman-skwgd6` until merged).
 
 ## Scope in
 - A rewrite of `SourcesPage` with "How we use it" lines.
