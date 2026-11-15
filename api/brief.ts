@@ -2,7 +2,8 @@
  * POST /api/brief: the dashboard AI brief (issue 30, step 7).
  *
  * Body: a BriefSummary (src/modules/dashboard/briefSummary.ts), numbers only.
- * 200 → {bullets: [{text, citations[]}]} with 3–5 bullets, every one cited
+ * 200 → {notes: [{key, status, headline, action?, why?, arrow?, citations[]}]}
+ * One note per notable measurement key. notes [] means nothing stood out.
  * (plus `usage` outside production).
  * Any failure → non-2xx `{error, fallback: true}`, the same contract as
  * /api/assistant. The client hides the brief; the dashboard is unaffected.
@@ -56,7 +57,7 @@ export async function handleBrief(request: Request, deps: BriefDeps = {}): Promi
       },
       options,
     );
-    const brief: ReturnType<typeof finalizeBrief> & { usage?: unknown } = finalizeBrief(result.content, retrieved.ids);
+    const brief: ReturnType<typeof finalizeBrief> & { usage?: unknown } = finalizeBrief(result.content, retrieved.ids, summary);
     if (isDevelopment(env)) {
       brief.usage = {
         ...result.usage,

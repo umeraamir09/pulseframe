@@ -20,7 +20,9 @@ import { Icon, type IconName } from "../../ui/Icon";
 import { TrendChart } from "../../ui/MetricTrend";
 import { fmt, useTrend } from "../../ui/useTrend";
 import { usePageMeta } from "../../ui/pageMeta";
-import { AiBrief } from "./AiBrief";
+import { AiNoteList, AiNotesProvider, AiNotesRefresh } from "./AiNotes";
+import { notesFor } from "./briefCopy";
+import { useAiNotes } from "./useAiNotes";
 
 const RANK: Record<Alert["severity"], number> = { act: 2, watch: 1 };
 
@@ -112,6 +114,7 @@ function TrendCard({
   alert,
   days,
   note,
+  noteKeys,
 }: {
   metric: MeasurementKey;
   title: string;
@@ -119,7 +122,11 @@ function TrendCard({
   alert?: Alert;
   days: number;
   note?: string;
+  /** Measurement keys whose AI notes belong on this card. Defaults to `metric`. */
+  noteKeys?: MeasurementKey[];
 }) {
+  const ai = useAiNotes();
+  const aiNotes = notesFor(ai.byKey, noteKeys ?? [metric]);
   const trend = useTrend(SIM_CREW.id, metric, days);
   const latest = trend.latest;
   const base = trend.latestBaseline;
@@ -162,6 +169,7 @@ function TrendCard({
           Latest flagged reading {fmt(lastAlertPoint.value)} {trend.unit}, {lastAlertPoint.severity}
         </span>
       ) : null}
+      <AiNoteList notes={aiNotes} />
     </section>
   );
 }
@@ -173,6 +181,7 @@ function MetricCard({
   unit,
   caption,
   alert,
+  keys,
 }: {
   icon: IconName;
   label: string;
@@ -180,7 +189,9 @@ function MetricCard({
   unit: string;
   caption: string;
   alert?: Alert;
+  keys: MeasurementKey[];
 }) {
+  const aiNotes = notesFor(useAiNotes().byKey, keys);
   return (
     <section className="card metric-card">
       <div className="card-head">
@@ -195,6 +206,7 @@ function MetricCard({
         <span className="unit">{unit}</span>
       </div>
       <span className="caption">{caption}</span>
+      <AiNoteList notes={aiNotes} />
     </section>
   );
 }
@@ -339,80 +351,87 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="dash-grid">
-      <div className="dash-left">
-        <OpenAlerts open={open} />
-        <AiBrief />
-        <TodayCard s={summary} />
+    <AiNotesProvider>
+      <div className="dash-grid">
+        <div className="dash-left">
+          <OpenAlerts open={open} />
+          <TodayCard s={summary} />
+        </div>
+
+        <div className="dash-right">
+          <div className="dash-toolbar">
+            <Segmented
+              label="Range"
+              value={range}
+              onChange={setRange}
+              options={[
+                { value: "week", label: "Week" },
+                { value: "today", label: "Today" },
+              ]}
+            />
+            <span className="muted">Band = your own μ ± 2σ. Not population norms.</span>
+            <AiNotesRefresh />
+            <button type="button" className="btn secondary" onClick={() => void reset()} disabled={resetting}>
+              <Icon name="reset" size={18} />
+              {resetting ? "Resetting…" : "Reset demo data"}
+            </button>
+          </div>
+
+          <div className="trend-pair">
+            <TrendCard metric="heartRate" title="Heart rate, morning" icon="heart" alert={latestAlert("heartRate")} days={days} />
+            <TrendCard
+              metric="sleepHours"
+              title="Sleep"
+              icon="moon"
+              alert={[...open].filter((a) => a.key === "sleepHours").sort((a, b) => b.openedAt.localeCompare(a.openedAt))[0]}
+              days={days}
+              note={sleepAlerts ? `${sleepAlerts} alert${sleepAlerts === 1 ? "" : "s"} this week` : undefined}
+              noteKeys={["sleepHours", "sleepQuality"]}
+            />
+          </div>
+
+          <div className="metric-row">
+            <MetricCard
+              icon="gauge"
+              label="Blood pressure"
+              value={L.systolicBP ? `${fmt(L.systolicBP.value)}/${fmt(L.diastolicBP?.value)}` : "–"}
+              unit="mmHg"
+              caption={`${when(L.systolicBP)}, seated`}
+              alert={latestAlert("systolicBP") ?? latestAlert("diastolicBP")}
+              keys={["systolicBP", "diastolicBP"]}
+            />
+            <MetricCard
+              icon="thermo"
+              label={KEY_LABELS.temperatureC.replace("Body t", "T")}
+              value={fmt(L.temperatureC?.value)}
+              unit="°C"
+              caption={when(L.temperatureC)}
+              alert={latestAlert("temperatureC")}
+              keys={["temperatureC"]}
+            />
+            <MetricCard
+              icon="lungs"
+              label="SpO2"
+              value={fmt(L.oxygenSat?.value)}
+              unit="%"
+              caption={when(L.oxygenSat)}
+              alert={latestAlert("oxygenSat")}
+              keys={["oxygenSat"]}
+            />
+            <MetricCard
+              icon="drop"
+              label="Glucose"
+              value={fmt(L.bloodGlucose?.value)}
+              unit="mg/dL"
+              caption={L.bloodGlucose ? `Fasting, ${when(L.bloodGlucose).replace("Today", "today")}` : when()}
+              alert={latestAlert("bloodGlucose")}
+              keys={["bloodGlucose"]}
+            />
+          </div>
+
+          <Hazards s={summary} openPsych={open.some((a) => ["moodScore", "stressScore", "teamStrain", "sleepQuality"].includes(a.key))} />
+        </div>
       </div>
-
-      <div className="dash-right">
-        <div className="dash-toolbar">
-          <Segmented
-            label="Range"
-            value={range}
-            onChange={setRange}
-            options={[
-              { value: "week", label: "Week" },
-              { value: "today", label: "Today" },
-            ]}
-          />
-          <span className="muted">Band = your own μ ± 2σ. Not population norms.</span>
-          <button type="button" className="btn secondary" onClick={() => void reset()} disabled={resetting}>
-            <Icon name="reset" size={18} />
-            {resetting ? "Resetting…" : "Reset demo data"}
-          </button>
-        </div>
-
-        <div className="trend-pair">
-          <TrendCard metric="heartRate" title="Heart rate, morning" icon="heart" alert={latestAlert("heartRate")} days={days} />
-          <TrendCard
-            metric="sleepHours"
-            title="Sleep"
-            icon="moon"
-            alert={[...open].filter((a) => a.key === "sleepHours").sort((a, b) => b.openedAt.localeCompare(a.openedAt))[0]}
-            days={days}
-            note={sleepAlerts ? `${sleepAlerts} alert${sleepAlerts === 1 ? "" : "s"} this week` : undefined}
-          />
-        </div>
-
-        <div className="metric-row">
-          <MetricCard
-            icon="gauge"
-            label="Blood pressure"
-            value={L.systolicBP ? `${fmt(L.systolicBP.value)}/${fmt(L.diastolicBP?.value)}` : "–"}
-            unit="mmHg"
-            caption={`${when(L.systolicBP)}, seated`}
-            alert={latestAlert("systolicBP") ?? latestAlert("diastolicBP")}
-          />
-          <MetricCard
-            icon="thermo"
-            label={KEY_LABELS.temperatureC.replace("Body t", "T")}
-            value={fmt(L.temperatureC?.value)}
-            unit="°C"
-            caption={when(L.temperatureC)}
-            alert={latestAlert("temperatureC")}
-          />
-          <MetricCard
-            icon="lungs"
-            label="SpO2"
-            value={fmt(L.oxygenSat?.value)}
-            unit="%"
-            caption={when(L.oxygenSat)}
-            alert={latestAlert("oxygenSat")}
-          />
-          <MetricCard
-            icon="drop"
-            label="Glucose"
-            value={fmt(L.bloodGlucose?.value)}
-            unit="mg/dL"
-            caption={L.bloodGlucose ? `Fasting, ${when(L.bloodGlucose).replace("Today", "today")}` : when()}
-            alert={latestAlert("bloodGlucose")}
-          />
-        </div>
-
-        <Hazards s={summary} openPsych={open.some((a) => ["moodScore", "stressScore", "teamStrain", "sleepQuality"].includes(a.key))} />
-      </div>
-    </div>
+    </AiNotesProvider>
   );
 }
