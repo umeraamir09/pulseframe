@@ -105,13 +105,13 @@ export function useEmergencyCase() {
     return store.saveCase({ ...c, ...patch });
   }
 
-  async function startCase(narrative: string, details: CaseIntake): Promise<void> {
+  async function startCase(narrative: string, details: CaseIntake, regionIds: SkeletonRegionId[] = []): Promise<void> {
     const now = new Date().toISOString();
     const created = await store.saveCase({
       id: id("case"),
       crewId: SIM_CREW.id,
       narrative: narrative.trim(),
-      regionIds: [],
+      regionIds,
       startedAt: now,
       status: "open",
       stage: "pinpoint",

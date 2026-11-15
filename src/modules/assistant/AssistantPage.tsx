@@ -7,6 +7,7 @@ import { KEY_LABELS } from "../../contracts";
 import { SIM_CREW, missionDayLabel, missionDayOf, store, useLive } from "../../data/db";
 import { Icon, type IconName } from "../../ui/Icon";
 import { usePageMeta } from "../../ui/pageMeta";
+import { ActionCard } from "./ActionCard";
 import { Formulary } from "./Formulary";
 import { GivenDialog } from "./GivenDialog";
 import { KitSuggestions } from "./KitSuggestions";
@@ -20,6 +21,7 @@ import {
   RESEARCH_ANSWER_TITLE,
 } from "./copy";
 import { getProvider, isOfflineCommand, type LastTurn } from "./providers";
+import type { ReplyAction } from "./types";
 import type { AnswerBlock } from "./answerBlocks";
 import { AstronautAvatar } from "./AstronautAvatar";
 import type { AstronautPose } from "./AstronautScene";
@@ -39,6 +41,15 @@ interface Turn {
   research?: "answer" | "general" | "notFound";
   citations?: ResolvedCitations;
   blocks?: AnswerBlock[];
+  /** Emergency or app-help card. Shown instead of a text wall. */
+  action?: {
+    kind: "emergency" | "app";
+    title?: string;
+    steps?: string[];
+    actions?: ReplyAction[];
+    redFlag?: string;
+    badge?: string;
+  };
 }
 
 /** Example questions shown before the first message in live mode. */
@@ -139,8 +150,19 @@ export function AssistantPage() {
       });
       if (!alive.current) return;
       const offline = provider.name === "offline" || reply.text.includes(LIVE_FALLBACK_NOTE);
+      const action: Turn["action"] =
+        reply.kind === "emergency" || reply.kind === "app"
+          ? {
+              kind: reply.kind,
+              title: reply.title,
+              steps: reply.steps,
+              actions: reply.actions,
+              redFlag: reply.redFlag,
+              badge: reply.badge,
+            }
+          : undefined;
       const research: Turn["research"] =
-        offline || isOfflineCommand(command)
+        action || reply.kind === "formulary" || offline || isOfflineCommand(command)
           ? undefined
           : reply.notFound || reply.kind === "notFound"
             ? "notFound"
@@ -181,6 +203,7 @@ export function AssistantPage() {
           research,
           citations,
           blocks: reply.blocks,
+          action,
         },
       ]);
       setLastCommand(command);
@@ -366,6 +389,8 @@ function presenceMessage(pending: boolean, live: boolean, last: Turn | undefined
       ? "Hi, I'm the Pulseframe assistant. Ask me about crew health, vitals or the onboard kit, or say hello."
       : "Hi, I'm the Pulseframe assistant. Try Explain alerts, or type find with part of an item name.";
   }
+  if (last.action?.kind === "emergency") return "Open Emergency now. If they stop breathing or lose consciousness, start CPR and call the flight surgeon.";
+  if (last.action?.kind === "app") return "Here is how that part of the station works.";
   if (last.research === "notFound") return "That isn't in Pulseframe research. For anything serious, contact the flight surgeon.";
   if (last.research === "general") return "That's general knowledge. Ask me about crew health for a cited answer.";
   return "Here's what I found. Ask a follow-up any time.";
@@ -423,17 +448,19 @@ function TurnView({
   const [why, setWhy] = useState(false);
   const lines = turn.text.split("\n");
   const rejected = turn.rejectedItemIds.length > 0;
-  const title =
-    turn.research === "notFound"
+  const title = turn.action?.title
+    ? turn.action.title
+    : turn.research === "notFound"
       ? NOT_IN_RESEARCH_TITLE
       : turn.research === "answer"
         ? RESEARCH_ANSWER_TITLE
         : turn.research === "general"
           ? GENERAL_ANSWER_TITLE
           : commandTitle(turn, lines, rejected);
-  const body = turn.research || turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(1);
-  const tag =
-    turn.research === "general"
+  const body = turn.action || turn.research || turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(1);
+  const tag = turn.action?.badge
+    ? turn.action.badge
+    : turn.research === "general"
       ? "General"
       : turn.research === "answer"
         ? sourceCount(turn.citations)
@@ -459,6 +486,21 @@ function TurnView({
             <h2 className="h3">{title}</h2>
             <span className="tag">{tag}</span>
           </div>
+
+          {turn.action ? (
+            <ActionCard
+              showBadge={false}
+              reply={{
+                text: turn.text,
+                kind: turn.action.kind,
+                steps: turn.action.steps,
+                actions: turn.action.actions,
+                redFlag: turn.action.redFlag,
+                badge: turn.action.badge,
+              }}
+            />
+          ) : null}
+          {turn.action && turn.text.includes(LIVE_FALLBACK_NOTE) ? <p className="tag">{LIVE_FALLBACK_NOTE}</p> : null}
 
           {turn.research === "notFound" ? <NotInResearch text={turn.text} /> : null}
           {turn.research === "answer" || turn.research === "general" ? (

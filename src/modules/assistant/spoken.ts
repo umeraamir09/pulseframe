@@ -1,8 +1,12 @@
+import { isEmergencyReport } from "./emergency.ts";
+
 /**
  * Turns a spoken sentence into one of the assistant's commands
  * (help, find <text>, item <id>, alerts, suggest). Pure, so it is unit-tested.
+ * A symptom report is left as spoken so emergency routing can see it.
  */
 export function spokenToCommand(raw: string): string {
+  if (isEmergencyReport(raw)) return raw.trim();
   const text = raw
     .toLowerCase()
     .replace(/[.,!?;:"]/g, " ")

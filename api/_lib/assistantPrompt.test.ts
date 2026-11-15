@@ -4,6 +4,7 @@ import {
   ANSWER_RESPONSE_FORMAT,
   AssistantRequestSchema,
   CONTEXT_BUDGET_TOKENS,
+  DOSE_LINE,
   MAX_INPUT_TOKENS,
   MAX_INVENTORY_LINES,
   ModelOutputError,
@@ -84,6 +85,9 @@ describe("buildPrompt token budget", () => {
     expect(a.messages[0]).toEqual({ role: "system", content: SYSTEM_PROMPT });
     expect(b.messages[0]!.content).toBe(a.messages[0]!.content);
     expect(SYSTEM_PROMPT).toContain(NOT_FOUND_TEXT);
+    expect(SYSTEM_PROMPT).toContain("reasonable health");
+    expect(SYSTEM_PROMPT).toContain(DOSE_LINE);
+    expect(SYSTEM_PROMPT).not.toMatch(/\u2014/);
     expect(a.messages).toHaveLength(2);
   });
 

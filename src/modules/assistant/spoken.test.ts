@@ -15,6 +15,11 @@ describe("spokenToCommand", () => {
     expect(spokenToCommand("What can you do?")).toBe("help");
   });
 
+  it("leaves a symptom report alone so emergency routing can see it", () => {
+    expect(spokenToCommand("I have a hard pain in my chest")).toBe("I have a hard pain in my chest");
+    expect(spokenToCommand("What should I take for chest pain?")).toBe("What should I take for chest pain?");
+  });
+
   it("returns empty for silence", () => {
     expect(spokenToCommand("  ...  ")).toBe("");
   });

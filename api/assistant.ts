@@ -4,7 +4,8 @@
  * Vercel Function, Web-standard form (`export default { fetch }`).
  *
  * 200 → {kind, text, citations[], blocks[], draft?, notFound} (plus `usage` outside production).
- * kind is "research" (cited), "general" (uncited, non-medical) or "notFound".
+ * kind is "research" (cited), "general" (uncited), "notFound", or a local card
+ * ("emergency", "app", "formulary") answered before the model is called.
  * Any failure → a non-2xx JSON body `{error, fallback: true}` with no `text`.
  * liveProvider treats every non-2xx (and any body without text) as "use the
  * offline provider and show LIVE_FALLBACK_NOTE", so the crew never sees a blank screen.
@@ -19,10 +20,12 @@ import {
   finalizeAnswer,
   parseModelAnswer,
   pickCard,
+  SERVER_INVENTORY,
   type AssistantAnswer,
 } from "./_lib/assistantPrompt.ts";
 import { GroqError, groqChat, type GroqCallOptions, type GroqUsage } from "./_lib/groq.ts";
 import { retrieve } from "./_lib/retrieve.ts";
+import { answerLocally, type AssistantReply } from "../src/modules/assistant/routing.ts";
 
 export type AssistantErrorCode = "method_not_allowed" | "bad_request" | "bad_model_output" | GroqError["code"] | "internal";
 
@@ -69,6 +72,31 @@ function fail(code: AssistantErrorCode): Response {
   return json({ error: code, fallback: true }, STATUS[code], code === "method_not_allowed" ? { Allow: "POST" } : {});
 }
 
+function onboardRows(ids: readonly string[] | undefined): { id: string; name: string }[] {
+  const source = ids && ids.length > 0 ? ids : [...SERVER_INVENTORY.keys()];
+  return source.flatMap((id) => {
+    const row = SERVER_INVENTORY.get(id);
+    return row ? [{ id: row.id, name: row.name }] : [];
+  });
+}
+
+/** Emergency, app help, and formulary replies. No model, and no dose. */
+function fromLocal(reply: AssistantReply) {
+  return {
+    kind: reply.kind,
+    text: reply.text,
+    citations: [] as string[],
+    blocks: [] as [],
+    notFound: false,
+    ...(reply.title ? { title: reply.title } : {}),
+    ...(reply.steps ? { steps: reply.steps } : {}),
+    ...(reply.actions ? { actions: reply.actions } : {}),
+    ...(reply.redFlag ? { redFlag: reply.redFlag } : {}),
+    ...(reply.badge ? { badge: reply.badge } : {}),
+    ...(reply.draft ? { draft: reply.draft } : {}),
+  };
+}
+
 export async function handleAssistant(request: Request, deps: AssistantDeps = {}): Promise<Response> {
   if (request.method !== "POST") return fail("method_not_allowed");
   const env = deps.env ?? process.env;
@@ -84,6 +112,12 @@ export async function handleAssistant(request: Request, deps: AssistantDeps = {}
   const input = parsed.data;
 
   try {
+    const local = answerLocally(input.command, onboardRows(input.inventoryIds), {
+      caseOpen: Boolean(input.caseCtx),
+    });
+    // General notes stay with the model so a research hit can still be cited.
+    if (local && local.kind !== "general") return json(fromLocal(local));
+
     const card = pickCard(input);
     const retrieved = retrieve({
       question: input.command,

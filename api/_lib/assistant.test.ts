@@ -166,6 +166,32 @@ describe("POST /api/assistant", () => {
     }
   });
 
+  it("routes chest pain to Emergency without calling Groq", async () => {
+    const fetchMock = vi.fn<typeof fetch>();
+    const res = await handleAssistant(post({ command: "I have a hard pain in my chest" }), { env: PROD, fetch: fetchMock });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { kind: string; text: string; redFlag: string; actions: { label: string; to: string }[] };
+    expect(body.kind).toBe("emergency");
+    expect(body.redFlag).toContain("start CPR");
+    expect(body.actions[0]?.label).toBe("Open Emergency");
+    expect(body.actions[0]?.to).toContain("/emergency?");
+    expect(body.actions[0]?.to).toContain("region=chest");
+    expect(body.text).not.toContain(NOT_FOUND_TEXT);
+    expect(body.text).not.toMatch(/\u2014/);
+  });
+
+  it("keeps a medicine question on the onboard kit and does not call Groq for a dose", async () => {
+    const fetchMock = vi.fn<typeof fetch>();
+    const res = await handleAssistant(post({ command: "what dose of aspirin should I give" }), { env: PROD, fetch: fetchMock });
+    expect(fetchMock).not.toHaveBeenCalled();
+    const body = (await res.json()) as { kind: string; text: string };
+    expect(body.kind).toBe("formulary");
+    expect(body.text).toContain("Aspirin");
+    expect(body.text).toContain("does not suggest a dose");
+    expect(body.text).not.toMatch(/\d+\s*mg/i);
+  });
+
   it("rejects bad request bodies and other methods", async () => {
     expect((await handleAssistant(post("{bad"), { env: PROD })).status).toBe(400);
     expect((await handleAssistant(post({ command: "" }), { env: PROD })).status).toBe(400);

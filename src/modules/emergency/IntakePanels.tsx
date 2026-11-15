@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { KEY_LABELS, SKELETON_REGIONS, type Alert, type Baseline, type Measurement, type MeasurementKey, type SkeletonRegionId } from "../../contracts";
 import { MISSION_DAY_TODAY, SIM_CREW, missionDayOf, store, useLive } from "../../data/db";
 import { Chip } from "../../ui/Chip";
@@ -7,6 +8,7 @@ import { Icon, type IconName } from "../../ui/Icon";
 import { fmt } from "../../ui/useTrend";
 import { SkeletonView } from "../skeleton/SkeletonView";
 import { REGION_SHORT, toggleRegion } from "../skeleton/regions";
+import { readEmergencyQuery } from "./prefill";
 import { stageIndex, type CaseIntake, type EmergencyApi } from "./useEmergencyCase";
 
 const QUICK: { label: string; icon: IconName }[] = [
@@ -33,7 +35,13 @@ function words(text: string): number {
 
 export function IntakePanel({ api }: { api: EmergencyApi }) {
   const { c, intake } = api;
-  const [narrative, setNarrative] = useState(c?.narrative ?? "");
+  const [params] = useSearchParams();
+  const prefill = readEmergencyQuery(params.toString());
+  const [narrative, setNarrative] = useState(c?.narrative?.trim() ? c.narrative : prefill.situation);
+  // The assistant link can arrive while this page is already open, so pick up a new situation.
+  useEffect(() => {
+    if (!c?.narrative && prefill.situation) setNarrative(prefill.situation);
+  }, [c, prefill.situation]);
   const [details, setDetails] = useState<CaseIntake>(intake ?? { started: "Under 1 h", strength: 3 });
   const [busy, setBusy] = useState(false);
   const locked = c ? stageIndex(c.stage) >= stageIndex("differential") : false;
@@ -48,7 +56,7 @@ export function IntakePanel({ api }: { api: EmergencyApi }) {
     if (!narrative.trim()) return;
     setBusy(true);
     try {
-      await api.startCase(narrative, details);
+      await api.startCase(narrative, details, prefill.regionId ? [prefill.regionId] : []);
     } finally {
       setBusy(false);
     }
