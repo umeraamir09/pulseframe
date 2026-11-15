@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import type { Alert, InventoryItem } from "../../contracts";
 import { KEY_LABELS } from "../../contracts";
 import { SIM_CREW, missionDayLabel, missionDayOf, store, useLive } from "../../data/db";
-import { Disclaimer } from "../../ui/Disclaimer";
+import { Icon, type IconName } from "../../ui/Icon";
+import { usePageMeta } from "../../ui/pageMeta";
 import { Formulary } from "./Formulary";
 import { GivenDialog } from "./GivenDialog";
 import { KitSuggestions } from "./KitSuggestions";
-import { LIVE_FALLBACK_NOTE, MODE_LIVE, MODE_OFFLINE, PROVENANCE_LABEL, REJECTED_LINE } from "./copy";
+import { LIVE_FALLBACK_NOTE, MODE_LIVE, MODE_OFFLINE, REJECTED_LINE } from "./copy";
 import { getProvider } from "./providers";
 import { validateRecommendation } from "./validate";
 
@@ -17,21 +19,44 @@ interface Turn {
   rejectedItemIds: string[];
   kept: InventoryItem[];
   alerts?: Alert[];
+  /** Items matched by `find` or shown by `item`, for card rendering. */
+  items?: InventoryItem[];
 }
 
-const QUICK = [
-  { id: "suggest", label: "Suggest", run: "suggest" },
-  { id: "find", label: "Find item", fill: "find " },
-  { id: "item", label: "Item details", fill: "item " },
-  { id: "alerts", label: "Explain alerts", run: "alerts" },
-  { id: "help", label: "Help", run: "help" },
-] as const;
+const QUICK: ({ id: string; label: string; icon: IconName } & ({ run: string } | { fill: string }))[] = [
+  { id: "suggest", label: "Suggest", icon: "sparkles", run: "suggest" },
+  { id: "find", label: "Find item", icon: "search", fill: "find " },
+  { id: "item", label: "Item details", icon: "info", fill: "item " },
+  { id: "alerts", label: "Explain alerts", icon: "bell", run: "alerts" },
+  { id: "help", label: "Help", icon: "help", run: "help" },
+];
 
 function commandVerb(command: string): string {
   return command.trim().toLowerCase();
 }
 
+/** Same match rule as the offline provider's `find`. */
+function findItems(inventory: InventoryItem[], query: string): InventoryItem[] {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return [];
+  return inventory.filter((item) => item.name.toLowerCase().includes(needle) || item.comments.toLowerCase().includes(needle));
+}
+
+function commandLabel(command: string, inventory: InventoryItem[]): string {
+  const v = commandVerb(command);
+  if (v === "alerts" || v === "explain alerts") return "Explain alerts";
+  if (v === "suggest") return "Suggest";
+  if (v === "help") return "Help";
+  if (v.startsWith("find ")) return `Find item: ${command.trim().slice(5)}`;
+  if (v.startsWith("item ")) {
+    const id = command.trim().slice(5).trim();
+    return `Item details: ${inventory.find((i) => i.id.toLowerCase() === id.toLowerCase())?.name ?? id}`;
+  }
+  return command;
+}
+
 export function AssistantPage() {
+  usePageMeta("AI assistant", "Onboard kit only · answers as cards");
   const inventory = useLive(() => store.listInventory(), []);
   const openCase = useLive(() => store.getOpenCase(SIM_CREW.id), []);
   const alerts = useLive(() => store.listAlerts(SIM_CREW.id), []);
@@ -40,6 +65,7 @@ export function AssistantPage() {
   const [history, setHistory] = useState<Turn[]>([]);
   const [lastCommand, setLastCommand] = useState("");
   const [giving, setGiving] = useState<{ item: InventoryItem; caseId?: string } | null>(null);
+  const [selected, setSelected] = useState<string>();
   const [loggedName, setLoggedName] = useState<string>();
   const alive = useRef(true);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -84,6 +110,12 @@ export function AssistantPage() {
         .filter((item): item is InventoryItem => item !== undefined);
       const verb = commandVerb(command);
       const openAlerts = (alerts.data ?? []).filter((alert) => !alert.ackedAt);
+      const items = verb.startsWith("find ")
+        ? findItems(rows, command.trim().slice(5))
+        : verb.startsWith("item ")
+          ? rows.filter((i) => i.id.toLowerCase() === command.trim().slice(5).trim().toLowerCase())
+          : undefined;
+      if (items?.length === 1) setSelected(items[0]!.id);
       setHistory((turns) => [
         ...turns,
         {
@@ -92,6 +124,7 @@ export function AssistantPage() {
           text: reply.text,
           rejectedItemIds: validation?.rejectedItemIds ?? [],
           kept,
+          items,
           alerts: verb === "alerts" || verb === "explain alerts" ? openAlerts : undefined,
         },
       ]);
@@ -123,123 +156,97 @@ export function AssistantPage() {
   }
 
   const lastVerb = commandVerb(lastCommand);
+  const give = (item: InventoryItem) => setGiving({ item, caseId: openCase.data?.id });
 
   return (
-    <section className="assistant">
-      <Disclaimer variant="emergency" />
-      <div className="assistant-grid">
-        <div className="assistant-main">
-          <header className="assistant-head">
-            <h1>AI assistant</h1>
-            <p>Onboard kit only · answers as cards</p>
-          </header>
-
-          <div className="command-row">
-            <form
-              className="command-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void run(draft);
-              }}
-            >
-              <input
-                ref={inputRef}
-                value={draft}
-                placeholder="Ask about the onboard kit or your alerts"
-                aria-label="Assistant command"
-                onChange={(event) => setDraft(event.target.value)}
-                disabled={pending || inventory.data === undefined}
-              />
-              <button type="submit" className="send-btn" aria-label="Send command" disabled={pending || !draft.trim()}>
-                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="currentColor" d="M4 12h12.2l-4.6-4.6L13 6l7 6-7 6-1.4-1.4 4.6-4.6H4z" />
-                </svg>
+    <div className="stack" style={{ gap: 24 }}>
+      <section className="card assistant-top" aria-label="Ask the assistant">
+        <div className="command-row">
+          <form
+            className="command-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void run(draft);
+            }}
+          >
+            <Icon name="sparkles" size={22} />
+            <input
+              ref={inputRef}
+              value={draft}
+              placeholder="Ask about the onboard kit or your alerts"
+              aria-label="Assistant command"
+              onChange={(event) => setDraft(event.target.value)}
+              disabled={pending || inventory.data === undefined}
+            />
+            <button type="submit" className="send-btn" aria-label="Send command" disabled={pending || !draft.trim()}>
+              <Icon name="arrowR" size={20} />
+            </button>
+          </form>
+          <div className="mode-seg" aria-label="Assistant mode">
+            <span className={live ? undefined : "on"}>
+              <span className="dot" /> {MODE_OFFLINE}
+            </span>
+            <span className={live ? "on" : undefined}>
+              <span className="dot" /> {live ? MODE_LIVE : "Live"}
+            </span>
+          </div>
+        </div>
+        <div className="quick-row" role="group" aria-label="Commands">
+          {QUICK.map((action) => {
+            const on =
+              action.id === "find"
+                ? lastVerb.startsWith("find")
+                : action.id === "item"
+                  ? lastVerb.startsWith("item")
+                  : action.id === "alerts"
+                    ? lastVerb === "alerts" || lastVerb === "explain alerts"
+                    : lastVerb === action.id || lastVerb.startsWith(`${action.id} `);
+            return (
+              <button key={action.id} type="button" className={on ? "chip on" : "chip"} onClick={() => quick(action)}>
+                <Icon name={action.icon} size={18} />
+                {action.label}
               </button>
-            </form>
-            <p className={live ? "mode-chip live" : "mode-chip"}>{live ? MODE_LIVE : MODE_OFFLINE}</p>
-          </div>
+            );
+          })}
+        </div>
+      </section>
 
-          <div className="quick-row" role="group" aria-label="Commands">
-            {QUICK.map((action) => {
-              const on =
-                action.id === "find"
-                  ? lastVerb.startsWith("find")
-                  : action.id === "item"
-                    ? lastVerb.startsWith("item")
-                    : action.id === "alerts"
-                      ? lastVerb === "alerts" || lastVerb === "explain alerts"
-                      : lastVerb === action.id || lastVerb.startsWith(`${action.id} `);
-              return (
-                <button key={action.id} type="button" className={on ? "quick-chip on" : "quick-chip"} onClick={() => quick(action)}>
-                  {action.label}
-                </button>
-              );
-            })}
-          </div>
-
+      <div className="assistant-grid">
+        <div className="history" aria-live="polite">
           {loggedName ? (
-            <p className="logged-note" role="status">
-              Logged {loggedName}. The text saved is only what you typed.
+            <p className="note normal" role="status">
+              <Icon name="check" size={16} /> Logged {loggedName}. The text saved is only what you typed.
             </p>
           ) : null}
-
-          <ol className="history">
-            {history.map((turn) => (
-              <li key={turn.id}>
-                <p className="command-pill">{turn.command}</p>
-                <article className="reply-card">
-                  {turn.alerts ? <AlertBars alerts={turn.alerts} /> : null}
-                  {turn.alerts ? (
-                    <details className="why-details">
-                      <summary>Why?</summary>
-                      <ReplyBody text={turn.text} />
-                    </details>
-                  ) : (
-                    <ReplyBody text={turn.text} />
-                  )}
-                  {turn.kept.length > 0 ? (
-                    <ul className="kept-list">
-                      {turn.kept.map((item) => (
-                        <li key={item.id}>
-                          <span>
-                            {item.name} · {item.strength} · {item.route}
-                          </span>
-                          <button
-                            type="button"
-                            className="give-btn"
-                            onClick={() => setGiving({ item, caseId: openCase.data?.id })}
-                          >
-                            Mark as given
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                  {turn.rejectedItemIds.length > 0 ? (
-                    <p className="rejected-line">
-                      {REJECTED_LINE}
-                      <span className="rejected-ids">{turn.rejectedItemIds.join(", ")}</span>
-                    </p>
-                  ) : null}
-                </article>
-              </li>
-            ))}
-          </ol>
-
-          {openCase.data ? (
-            <KitSuggestions
-              caseId={openCase.data.id}
-              onGive={(item) => setGiving({ item, caseId: openCase.data?.id })}
-            />
+          {!history.length ? (
+            <div className="reply-card">
+              <div className="reply-head">
+                <span className="icon-badge sm accent sq">
+                  <Icon name="sparkles" size={16} />
+                </span>
+                <h2 className="h3">Ask about the onboard kit</h2>
+                <span className="tag">Protocol card</span>
+              </div>
+              <p className="muted">
+                Try Explain alerts, or type find with part of an item name. Answers come from the onboard formulary and your own alerts
+                only.
+              </p>
+            </div>
           ) : null}
+          {history.map((turn) => (
+            <TurnView
+              key={turn.id}
+              turn={turn}
+              inventory={inventory.data ?? []}
+              onRun={(c) => void run(c)}
+              onGive={give}
+            />
+          ))}
+          {openCase.data ? <KitSuggestions caseId={openCase.data.id} onGive={give} /> : null}
         </div>
 
-        <Formulary
-          items={inventory.data}
-          onConfirm={(item) => setGiving({ item, caseId: openCase.data?.id })}
-        />
+        <Formulary items={inventory.data} selected={selected} onConfirm={give} />
       </div>
-      <p className="assistant-foot muted">{PROVENANCE_LABEL}</p>
 
       {giving ? (
         <GivenDialog
@@ -253,52 +260,217 @@ export function AssistantPage() {
           }}
         />
       ) : null}
-    </section>
+    </div>
   );
 }
 
-function ReplyBody({ text }: { text: string }) {
+function TurnView({
+  turn,
+  inventory,
+  onRun,
+  onGive,
+}: {
+  turn: Turn;
+  inventory: InventoryItem[];
+  onRun: (command: string) => void;
+  onGive: (item: InventoryItem) => void;
+}) {
+  const [why, setWhy] = useState(false);
+  const lines = turn.text.split("\n");
+  const rejected = turn.rejectedItemIds.length > 0;
+  const title = turn.alerts
+    ? `${turn.alerts.length} open alert${turn.alerts.length === 1 ? "" : "s"}`
+    : rejected
+      ? "Not available"
+      : turn.items && commandVerb(turn.command).startsWith("find")
+        ? turn.items.length
+          ? `${turn.items.length} match${turn.items.length === 1 ? "" : "es"} in onboard kit`
+          : "No match in onboard kit"
+        : lines[0]!.replace(/[.:]$/, "");
+  const body = turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(1);
+
   return (
-    <div className="reply-text">
-      {text.split("\n").map((line, index) =>
-        line === "" ? (
-          <div key={index} className="reply-gap" />
-        ) : (
-          <p key={index} className={line === LIVE_FALLBACK_NOTE ? "fallback-note" : undefined}>
-            {line}
-          </p>
-        ),
-      )}
+    <>
+      <p className="command-pill">
+        <Icon name="chat" size={16} />
+        {commandLabel(turn.command, inventory)}
+      </p>
+      <article className="reply-card">
+        <div className="reply-head">
+          <span className="icon-badge sm accent sq">
+            <Icon name="sparkles" size={16} />
+          </span>
+          <h2 className="h3">{title}</h2>
+          <span className="tag">{rejected ? "Guardrail" : "Protocol card"}</span>
+        </div>
+
+        {turn.alerts ? (
+          <>
+            <AlertBars alerts={turn.alerts} />
+            {why ? (
+              <div className="reply-text muted">
+                {lines.map((l, i) => (
+                  <p key={i}>{l}</p>
+                ))}
+              </div>
+            ) : null}
+            <div className="row wrap">
+              <span className="muted small grow">Bar = distance from your own baseline</span>
+              <button type="button" className="btn ghost" aria-expanded={why} onClick={() => setWhy((w) => !w)}>
+                Why?
+              </button>
+              <Link to="/alerts" className="btn primary">
+                <Icon name="arrowR" size={18} /> Open alerts
+              </Link>
+            </div>
+          </>
+        ) : null}
+
+        {turn.items && turn.items.length ? (
+          <div className="stack" style={{ gap: 8 }}>
+            {turn.items.map((item) =>
+              commandVerb(turn.command).startsWith("item") ? (
+                <ItemDetail key={item.id} item={item} onGive={onGive} />
+              ) : (
+                <div key={item.id} className="item-row">
+                  <span className="icon-badge white">
+                    <Icon name="pill" size={18} />
+                  </span>
+                  <div className="grow">
+                    <div className="t">{item.name}</div>
+                    <div className="d">
+                      {item.strength} · {item.route}
+                    </div>
+                  </div>
+                  <button type="button" className="btn secondary" onClick={() => onRun(`item ${item.id}`)}>
+                    Item details
+                  </button>
+                </div>
+              ),
+            )}
+          </div>
+        ) : null}
+
+        {body.filter(Boolean).length ? (
+          <div className="reply-text">
+            {body.map((line, index) =>
+              line === "" ? (
+                <span key={index} style={{ height: 6 }} />
+              ) : (
+                <p key={index} className={line === LIVE_FALLBACK_NOTE ? "tag" : undefined}>
+                  {line}
+                </p>
+              ),
+            )}
+          </div>
+        ) : null}
+
+        {turn.kept.length > 0 ? (
+          <div className="stack" style={{ gap: 8 }}>
+            {turn.kept.map((item) => (
+              <div key={item.id} className="item-row">
+                <span className="icon-badge white">
+                  <Icon name="pill" size={18} />
+                </span>
+                <div className="grow">
+                  <div className="t">{item.name}</div>
+                  <div className="d">
+                    {item.strength} · {item.route}
+                  </div>
+                </div>
+                <button type="button" className="btn watch-outline" onClick={() => onGive(item)}>
+                  <Icon name="shield" size={14} /> Confirm before given
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        {rejected ? (
+          <div className="row wrap">
+            <span className="tag act" style={{ height: 36, padding: "0 14px", fontSize: 14 }}>
+              <Icon name="ban" size={16} /> {REJECTED_LINE}
+            </span>
+            <span className="muted small">Only onboard kit items are shown. Dropped: {turn.rejectedItemIds.join(", ")}</span>
+          </div>
+        ) : null}
+      </article>
+    </>
+  );
+}
+
+function ItemDetail({ item, onGive }: { item: InventoryItem; onGive: (item: InventoryItem) => void }) {
+  return (
+    <div className="kit-card">
+      <div className="row">
+        <span className="icon-badge sm white">
+          <Icon name="pill" size={16} />
+        </span>
+        <span className="name">{item.name}</span>
+      </div>
+      <dl className="kit-dl">
+        <div>
+          <dt>Pack</dt>
+          <dd>{item.pack}</dd>
+        </div>
+        <div>
+          <dt>Strength</dt>
+          <dd>{item.strength}</dd>
+        </div>
+        <div>
+          <dt>Route</dt>
+          <dd>{item.route}</dd>
+        </div>
+        <div>
+          <dt>Qty in pack</dt>
+          <dd>{item.quantityOnBoard ?? "Not stated"}</dd>
+        </div>
+        <div>
+          <dt>Location</dt>
+          <dd>{item.location || "Not stated"}</dd>
+        </div>
+        <div>
+          <dt>Side effects</dt>
+          <dd>{item.sideEffects || "Not stated"}</dd>
+        </div>
+        <div>
+          <dt>Comments</dt>
+          <dd>{item.comments || "Not stated in the checklist"}</dd>
+        </div>
+      </dl>
+      <div className="row wrap">
+        <a className="small" href={item.sourceUrl} target="_blank" rel="noreferrer">
+          NASA checklist PDF{item.sourcePage ? `, page ${item.sourcePage}` : ""}
+        </a>
+        <span className="grow" />
+        <button type="button" className="btn watch-outline" onClick={() => onGive(item)}>
+          <Icon name="shield" size={14} /> Confirm before given
+        </button>
+      </div>
     </div>
   );
 }
 
 function AlertBars({ alerts }: { alerts: Alert[] }) {
+  if (!alerts.length) return <p className="muted">No open alerts.</p>;
   return (
-    <div className="alert-bars">
-      <h2>
-        {alerts.length} open alert{alerts.length === 1 ? "" : "s"}
-      </h2>
-      {alerts.length === 0 ? <p>No open alerts.</p> : null}
-      <ul>
-        {alerts.map((alert) => {
-          const width = Math.min(100, (Math.abs(alert.zScore ?? 0) / 8) * 100);
-          return (
-            <li key={alert.id}>
-              <span>
-                {KEY_LABELS[alert.key]} · {missionDayLabel(missionDayOf(alert.openedAt))}
-              </span>
-              <span className={`zbar ${alert.severity}`} aria-hidden="true">
-                <span style={{ width: `${width}%` }} />
-              </span>
-              <span className="zscore">{alert.zScore !== undefined ? `z ${alert.zScore.toFixed(2)}` : alert.severity}</span>
-            </li>
-          );
-        })}
-      </ul>
-      {alerts.some((alert) => alert.zScore !== undefined) ? (
-        <p className="muted small">Bar = distance from your own baseline</p>
-      ) : null}
-    </div>
+    <ul className="zbars">
+      {alerts.map((alert) => {
+        const z = alert.zScore;
+        const width = Math.min(100, (Math.abs(z ?? 0) / 12) * 100);
+        const hard = alert.ruleId === "hard-bound" || z === undefined;
+        return (
+          <li key={alert.id}>
+            <span>
+              {KEY_LABELS[alert.key]} <span className="muted">{missionDayLabel(missionDayOf(alert.openedAt))}</span>
+            </span>
+            <span className={`zbar ${alert.severity}`} aria-hidden="true">
+              <span style={{ width: `${hard ? 12 : Math.max(6, width)}%` }} />
+            </span>
+            <span className={`zscore ${alert.severity}`}>{hard ? "Demo threshold" : `z ${z!.toFixed(2)}`}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

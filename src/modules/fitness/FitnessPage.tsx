@@ -1,7 +1,4 @@
-import type { Workout } from "../../contracts";
 import {
-  DEMO_WORKOUT_PLAN,
-  EXERCISE_SOURCES,
   FIRST_SEED_DAY,
   MISSION_DAY_TODAY,
   SIM_CREW,
@@ -11,128 +8,116 @@ import {
   store,
   useLive,
 } from "../../data/db";
+import { Progress } from "../../ui/controls";
 import { HazardChip } from "../../ui/HazardChip";
-import { adherence, weekBars } from "./fitnessStats";
+import { Icon } from "../../ui/Icon";
+import { usePageMeta } from "../../ui/pageMeta";
+import { adherence } from "./fitnessStats";
 import { LogWorkoutForm } from "./LogWorkoutForm";
 import { WeekChart } from "./WeekChart";
 
-function hhmm(hour: number): string {
-  return `${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.round((hour % 1) * 60)).padStart(2, "0")}`;
-}
-
-function timeOf(iso: string): string {
-  return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
-
-function SessionRow({ w, extra }: { w: Workout; extra?: boolean }) {
+function Ring({ done, total }: { done: number; total: number }) {
+  const r = 52;
+  const c = 2 * Math.PI * r;
+  const pct = total ? done / total : 0;
   return (
-    <li className={`session${w.completed ? " done" : ""}`}>
-      <span className={`kind-dot ${w.kind}`} aria-hidden="true" />
-      <div className="session-text">
-        <strong>
-          {w.kind === "resistive" ? "Resistive" : "Aerobic"}
-          {extra ? " (extra)" : ""}
-        </strong>
-        <span className="muted small">
-          {timeOf(w.at)}
-          {w.device ? ` · ${w.device}` : ""}
-          {w.notes ? ` · ${w.notes}` : ""}
-        </span>
-      </div>
-      <span className="session-status">
-        {w.completed ? (
-          <>
-            Done · {w.minutes}
-            {w.plannedMinutes !== undefined ? ` of ${w.plannedMinutes}` : ""} min
-          </>
-        ) : (
-          <>Not done{w.plannedMinutes !== undefined ? ` · ${w.plannedMinutes} min planned` : ""}</>
-        )}
-      </span>
-    </li>
+    <svg className="ring" viewBox="0 0 128 128" aria-hidden="true">
+      <circle cx="64" cy="64" r={r} fill="none" stroke="var(--surface2)" strokeWidth="12" />
+      <circle
+        cx="64"
+        cy="64"
+        r={r}
+        fill="none"
+        stroke="var(--normal)"
+        strokeWidth="12"
+        strokeLinecap="round"
+        strokeDasharray={`${c * pct} ${c}`}
+        transform="rotate(-90 64 64)"
+      />
+    </svg>
   );
 }
 
 export function FitnessPage() {
+  usePageMeta(
+    "Fitness countermeasures",
+    `Planned vs completed, ${missionDayLabel(FIRST_SEED_DAY)} to ${missionDayLabel(MISSION_DAY_TODAY)}`,
+  );
   const { data, loading, error } = useLive(
     () => store.listWorkouts(SIM_CREW.id, missionDayStart(FIRST_SEED_DAY).toISOString()),
     [],
   );
   const rows = data ?? [];
-  const today = rows.filter((w) => missionDayOf(w.at) === MISSION_DAY_TODAY);
   const week = rows.filter((w) => missionDayOf(w.at) <= MISSION_DAY_TODAY);
+  const today = rows.filter((w) => missionDayOf(w.at) === MISSION_DAY_TODAY);
   const adh = adherence(week);
-  const bars = weekBars(week);
-  const notYetLogged = DEMO_WORKOUT_PLAN.filter(
-    (p) => !today.some((w) => w.kind === p.kind && w.plannedMinutes !== undefined),
-  );
+  const byKind = (["resistive", "aerobic"] as const).map((k) => {
+    const planned = week.filter((w) => w.kind === k && w.plannedMinutes !== undefined);
+    return { kind: k, done: planned.filter((w) => w.completed).length, total: planned.length };
+  });
 
   return (
-    <section className="panel fitness">
-      <header className="page-head">
-        <div>
-          <h1>Fitness countermeasures</h1>
-          <p className="muted">
-            {SIM_CREW.displayName} (simulated) · {missionDayLabel(FIRST_SEED_DAY)} to {missionDayLabel(MISSION_DAY_TODAY)}
-          </p>
-        </div>
-        <HazardChip id="gravity" />
-      </header>
+    <div className="fit-grid">
+      <div className="fit-main">
+        {error ? <p className="error">Could not load workouts: {error.message}</p> : null}
+        {loading && !data ? <p className="muted">Loading…</p> : null}
+        <div className="fit-top">
+          <section className="card ring-card" aria-label="Adherence">
+            <Ring done={adh.completedSessions} total={adh.plannedSessions} />
+            <div className="stack" style={{ gap: 6 }}>
+              <span className="muted" style={{ fontWeight: 500 }}>
+                Adherence
+              </span>
+              <div className="big-value">
+                <span className="numeral-xl" style={{ fontSize: 64 }}>
+                  {adh.completedSessions}
+                </span>
+                <span className="unit" style={{ fontSize: 20 }}>
+                  of {adh.plannedSessions}
+                </span>
+              </div>
+              <span className="tag normal" style={{ alignSelf: "flex-start" }}>
+                Sessions done this week
+              </span>
+              <span className="faint small">
+                {adh.completedMinutes} of {adh.plannedMinutes} planned min
+                {adh.extraSessions ? ` · ${adh.extraSessions} extra` : ""}. Plan is demonstration only.
+              </span>
+            </div>
+          </section>
 
-      {error ? <p className="error">Could not load workouts: {error.message}</p> : null}
-      {loading && !data ? <p className="muted">Loading…</p> : null}
-
-      <div className="fit-top">
-        <div className="tile adherence">
-          <span className="muted small">Adherence this week</span>
-          <span className="hero">{adh.pct}%</span>
-          <span>
-            {adh.completedSessions} of {adh.plannedSessions} planned sessions
-          </span>
-          <span className="muted small">
-            {adh.completedMinutes} of {adh.plannedMinutes} planned minutes
-            {adh.extraSessions ? ` · ${adh.extraSessions} extra session${adh.extraSessions > 1 ? "s" : ""}` : ""}
-          </span>
-          <span className="muted small caption">Plan values are demonstration only.</span>
-        </div>
-
-        <div className="tile today">
-          <h2>Today · {missionDayLabel(MISSION_DAY_TODAY)}</h2>
-          <ul className="sessions">
-            {today.map((w) => (
-              <SessionRow key={w.id} w={w} extra={w.plannedMinutes === undefined} />
-            ))}
-            {notYetLogged.map((p) => (
-              <li key={p.kind} className="session pending">
-                <span className={`kind-dot ${p.kind}`} aria-hidden="true" />
-                <div className="session-text">
-                  <strong>{p.kind === "resistive" ? "Resistive" : "Aerobic"}</strong>
-                  <span className="muted small">Scheduled {hhmm(p.hour)}</span>
+          <section className="card bytype" aria-label="By type">
+            <span className="muted" style={{ fontWeight: 500 }}>
+              By type
+            </span>
+            {byKind.map((k) => (
+              <div key={k.kind}>
+                <div className="top">
+                  <span className="row">
+                    <Icon name={k.kind === "resistive" ? "dumbbell" : "heart"} size={18} />
+                    {k.kind === "resistive" ? "Resistive" : "Aerobic"}
+                  </span>
+                  <span>
+                    {k.done} of {k.total}
+                  </span>
                 </div>
-                <span className="session-status">Planned · {p.plannedMinutes} min</span>
-              </li>
+                <Progress
+                  pct={k.total ? (k.done / k.total) * 100 : 0}
+                  tone={k.kind === "aerobic" ? "normal" : undefined}
+                  label={`${k.kind} sessions`}
+                />
+              </div>
             ))}
-          </ul>
+            <div>
+              <HazardChip id="gravity" />
+            </div>
+          </section>
         </div>
+
+        <WeekChart rows={week} />
       </div>
 
-      <WeekChart data={bars} />
-
       <LogWorkoutForm today={today} />
-
-      <aside className="why">
-        <h2>Why this matters</h2>
-        <p>Exercise is the main countermeasure the team modeled against changes from altered gravity.</p>
-        <ul>
-          {EXERCISE_SOURCES.map((s) => (
-            <li key={s.url}>
-              <a href={s.url} target="_blank" rel="noreferrer">
-                {s.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </aside>
-    </section>
+    </div>
   );
 }

@@ -1,9 +1,8 @@
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, ComposedChart, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
 import type { RadiationReading } from "../../contracts";
 import { missionDayLabel, missionDayOf } from "../../data/db";
+import { CHART } from "../../ui/useTrend";
 import { useElementWidth } from "../../ui/useElementWidth";
-
-const C = { line: "#3987e5", surface: "#10151c", grid: "#232b36", axis: "#9aa6b2" };
 
 interface Point {
   t: number;
@@ -20,16 +19,15 @@ function Tip({ active, payload }: { active?: boolean; payload?: { payload: Point
     <div className="chart-tip">
       <strong>{p.mgy.toFixed(3)} mGy</strong>
       <div className="muted">
-        {missionDayLabel(missionDayOf(iso))} ·{" "}
-        {new Date(p.t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        {missionDayLabel(missionDayOf(iso))} · {new Date(p.t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
       </div>
       {p.rate !== undefined ? <div>rate {p.rate} µGy/h</div> : null}
-      <div className="muted">{p.manual ? "manual entry" : "simulated CAD"}</div>
+      <div className="muted">{p.manual ? "manual entry" : "simulated dosimeter"}</div>
     </div>
   );
 }
 
-/** Cumulative dose since log start. Deliberately no limit or reference line. */
+/** Cumulative dose since log start, one point per reading. Deliberately no limit or reference line. */
 export function CumulativeChart({ readings, height = 200 }: { readings: RadiationReading[]; height?: number }) {
   const [ref, width] = useElementWidth<HTMLDivElement>();
   const data: Point[] = readings.map((r) => ({
@@ -48,48 +46,41 @@ export function CumulativeChart({ readings, height = 200 }: { readings: Radiatio
       ticks.push(p.t);
     }
   }
+  const lo = data.length ? Math.min(...data.map((d) => d.mgy)) : 0;
+  const hi = data.length ? Math.max(...data.map((d) => d.mgy)) : 1;
 
   return (
-    <figure className="trend">
-      <figcaption>
-        <span>Cumulative dose (simulated)</span>
-        <span className="trend-latest">{data.length ? `${data.at(-1)!.mgy.toFixed(3)} mGy` : "No data"}</span>
-      </figcaption>
-      <div ref={ref} style={{ height }}>
-        {width > 0 && data.length ? (
-          <LineChart width={width} height={height} data={data} margin={{ top: 6, right: 12, bottom: 0, left: 0 }}>
-            <CartesianGrid vertical={false} stroke={C.grid} />
-            <XAxis
-              type="number"
-              dataKey="t"
-              domain={["dataMin", "dataMax"]}
-              ticks={ticks}
-              tickFormatter={(t: number) => String(missionDayOf(new Date(t).toISOString()))}
-              tick={{ fill: C.axis, fontSize: 11 }}
-              axisLine={{ stroke: C.grid }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fill: C.axis, fontSize: 11 }}
-              tickFormatter={(v: number) => v.toFixed(1)}
-              axisLine={false}
-              tickLine={false}
-              width={40}
-            />
-            <Tooltip content={<Tip />} cursor={{ stroke: C.axis, strokeWidth: 1, strokeDasharray: "3 3" }} />
-            <Line
-              type="linear"
-              dataKey="mgy"
-              stroke={C.line}
-              strokeWidth={2}
-              dot={{ r: 4, fill: C.line, stroke: C.surface, strokeWidth: 2 }}
-              activeDot={{ r: 6, stroke: C.surface, strokeWidth: 2 }}
-              isAnimationActive={false}
-            />
-          </LineChart>
-        ) : null}
-      </div>
-      <p className="muted small trend-note">mGy since log start. No limit line is shown.</p>
-    </figure>
+    <div ref={ref} style={{ height }}>
+      {width > 0 && data.length ? (
+        <ComposedChart width={width} height={height} data={data} margin={{ top: 12, right: 12, bottom: 0, left: 12 }}>
+          <XAxis
+            type="number"
+            dataKey="t"
+            domain={["dataMin", "dataMax"]}
+            ticks={ticks}
+            tickFormatter={(t: number) => missionDayLabel(missionDayOf(new Date(t).toISOString()))}
+            tick={{ fill: CHART.axis, fontSize: 10 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis domain={[lo, hi + (hi - lo) * 0.05 || 1]} hide />
+          {[0.25, 0.5, 0.75, 1].map((f) => (
+            <ReferenceLine key={f} y={lo + (hi - lo) * f} stroke={CHART.grid} />
+          ))}
+          <Tooltip content={<Tip />} cursor={{ stroke: CHART.axis, strokeWidth: 1, strokeDasharray: "3 3" }} />
+          <Area
+            type="linear"
+            dataKey="mgy"
+            stroke={CHART.line}
+            strokeWidth={2}
+            fill={CHART.band}
+            fillOpacity={1}
+            dot={{ r: 4, fill: CHART.surface, stroke: CHART.line, strokeWidth: 2 }}
+            activeDot={{ r: 6, fill: CHART.surface, stroke: CHART.line, strokeWidth: 2 }}
+            isAnimationActive={false}
+          />
+        </ComposedChart>
+      ) : null}
+    </div>
   );
 }

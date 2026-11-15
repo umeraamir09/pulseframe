@@ -12,6 +12,19 @@ export const REGION_LABELS: Record<SkeletonRegionId, string> = {
   skin: "Skin (whole body)",
 };
 
+/** Short pill labels for the pinpoint card. */
+export const REGION_SHORT: Record<SkeletonRegionId, string> = {
+  head: "Head",
+  chest: "Chest",
+  abdomen: "Abdomen",
+  spine: "Spine",
+  leftArm: "L arm",
+  rightArm: "R arm",
+  leftLeg: "L leg",
+  rightLeg: "R leg",
+  skin: "Skin",
+};
+
 export function isSkeletonRegionId(value: unknown): value is SkeletonRegionId {
   return typeof value === "string" && (SKELETON_REGIONS as readonly string[]).includes(value);
 }
