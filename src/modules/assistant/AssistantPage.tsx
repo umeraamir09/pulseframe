@@ -41,6 +41,9 @@ interface Turn {
   research?: "answer" | "general" | "notFound";
   citations?: ResolvedCitations;
   blocks?: AnswerBlock[];
+  /** Local reply heading and chip, when the provider set them. */
+  title?: string;
+  badge?: string;
   /** Emergency or app-help card. Shown instead of a text wall. */
   action?: {
     kind: "emergency" | "app";
@@ -204,6 +207,8 @@ export function AssistantPage() {
           citations,
           blocks: reply.blocks,
           action,
+          title: reply.title,
+          badge: reply.badge,
         },
       ]);
       setLastCommand(command);
@@ -450,17 +455,22 @@ function TurnView({
   const rejected = turn.rejectedItemIds.length > 0;
   const title = turn.action?.title
     ? turn.action.title
-    : turn.research === "notFound"
+    : turn.title
+      ? turn.title
+      : turn.research === "notFound"
       ? NOT_IN_RESEARCH_TITLE
       : turn.research === "answer"
         ? RESEARCH_ANSWER_TITLE
         : turn.research === "general"
           ? GENERAL_ANSWER_TITLE
           : commandTitle(turn, lines, rejected);
-  const body = turn.action || turn.research || turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(1);
+  const body =
+    turn.action || turn.research || turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(turn.title ? 0 : 1);
   const tag = turn.action?.badge
     ? turn.action.badge
-    : turn.research === "general"
+    : turn.badge
+      ? turn.badge
+      : turn.research === "general"
       ? "General"
       : turn.research === "answer"
         ? sourceCount(turn.citations)
