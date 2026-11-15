@@ -1,0 +1,61 @@
+{
+  "id": "general-fallback",
+  "title": "General onboard fallback",
+  "regionIds": [],
+  "keywords": [],
+  "differential": [
+    {
+      "label": "No demonstration card matched",
+      "note": "This is not a diagnosis. Contact the flight surgeon."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Heart rate",
+      "instruction": "Rest in a restrained position. Read heart rate on the onboard monitor and enter it.",
+      "inputKey": "heartRate"
+    },
+    {
+      "title": "Systolic blood pressure",
+      "instruction": "Rest in a restrained position. Read systolic blood pressure on the onboard monitor and enter it.",
+      "inputKey": "systolicBP"
+    },
+    {
+      "title": "Diastolic blood pressure",
+      "instruction": "Rest in a restrained position. Read diastolic blood pressure on the onboard monitor and enter it.",
+      "inputKey": "diastolicBP"
+    },
+    {
+      "title": "Oxygen saturation",
+      "instruction": "Rest in a restrained position. Read oxygen saturation on the onboard monitor and enter it.",
+      "inputKey": "oxygenSat"
+    },
+    {
+      "title": "Body temperature",
+      "instruction": "Rest in a restrained position. Read body temperature on the onboard monitor and enter it.",
+      "inputKey": "temperatureC"
+    },
+    {
+      "title": "Pain score",
+      "instruction": "Rest in a restrained position. Enter a pain score from 0 to 10.",
+      "inputKey": "painScore"
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "Stop the activity and rest in a restrained position",
+      "instruction": "Stop what you are doing and stay restrained."
+    },
+    {
+      "title": "Tell a crewmate and keep them nearby",
+      "instruction": "Call a crewmate and ask them to stay within reach."
+    },
+    {
+      "title": "Contact the flight surgeon",
+      "instruction": "Send the case. Do not start a treatment on your own."
+    }
+  ],
+  "candidateItemIds": [],
+  "cautions": "No demonstration card matched this situation. Contact the flight surgeon.",
+  "sourceNote": "Demonstration protocol written by the team for a hackathon prototype. Pending researcher review. Not a NASA protocol."
+}
