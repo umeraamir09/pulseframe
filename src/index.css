@@ -266,6 +266,13 @@ label.inline { display: flex; align-items: center; gap: 0.4rem; }
 .data-table th, .data-table td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid #222a35; }
 .data-table th { color: #9aa6b2; font-weight: 600; }
 
+/* Radiation */
+.sim-banner {
+  margin: 0.75rem 0 1rem; padding: 0.5rem 0.75rem; border-radius: 6px;
+  background: #14202e; border: 1px solid #2f4a66; color: #c9dcf0; font-size: 0.9rem;
+}
+.check-input.flush { margin-left: 0; }
+
 @media (max-width: 600px) {
   .check-main { flex-wrap: wrap; }
   .check-side { width: 100%; padding-left: 1.8rem; }
