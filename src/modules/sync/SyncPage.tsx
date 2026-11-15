@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HRP_HAZARDS, HRP_HAZARDS_URL, type GroundReceipt, type SyncPacket } from "../../contracts";
+import type { GroundReceipt, SyncPacket } from "../../contracts";
 import {
   MISSION_DAY_TODAY,
   SIM_CREW,
@@ -11,8 +11,8 @@ import {
   useSyncSettings,
 } from "../../data/db";
 import { Chip, type ChipTone } from "../../ui/Chip";
+import { HazardChip } from "../../ui/HazardChip";
 
-const HAZARD = HRP_HAZARDS.find((h) => h.id === "distance")!;
 const DROP_RATES = [0, 0.3, 1] as const;
 
 const STATUS_TONE: Record<SyncPacket["status"], ChipTone> = {
@@ -220,10 +220,7 @@ export function SyncPage() {
             {missionDayLabel(MISSION_DAY_TODAY)}
           </p>
         </div>
-        {/* Swap for Dev A's <HazardChip id="distance" /> when src/ui/HazardChip lands (issue 1). */}
-        <a className="hazard-chip" href={HRP_HAZARDS_URL} target="_blank" rel="noreferrer">
-          NASA HRP hazard: {HAZARD.label}
-        </a>
+        <HazardChip id="distance" />
       </header>
       <p className="intro">
         Far from Earth a live link can't be counted on, so data waits in the station outbox and is forwarded when the link

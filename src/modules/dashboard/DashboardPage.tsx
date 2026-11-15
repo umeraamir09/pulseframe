@@ -77,7 +77,7 @@ async function loadSummary(): Promise<HazardSummary> {
 function HazardTile({ id, to, value, detail }: { id: HazardId; to: string; value: string; detail: string }) {
   return (
     <Link className="hazard-tile" to={to}>
-      {/* Swap the label for Dev A's <HazardChip id={id} /> when src/ui/HazardChip lands (issue 1). */}
+      {/* Span, not HazardChip: this tile is already a link, so a nested anchor would be invalid. */}
       <span className="hazard-chip small-chip">{hazardLabel(id)}</span>
       <span className="tile-value">{value}</span>
       <span className="muted small">{detail}</span>
