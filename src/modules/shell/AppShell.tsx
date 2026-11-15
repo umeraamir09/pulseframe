@@ -1,9 +1,7 @@
-import { NavLink, Outlet } from "react-router-dom";
-import { MISSION_DAY_TODAY, SIM_CREW, missionDayLabel } from "../../data/db";
-import { AssistantDock } from "../assistant/AssistantDock";
 import { useCallback, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { MISSION_DAY_TODAY, SIM_CREW, missionDayLabel, store, useLive } from "../../data/db";
+import { AssistantDock } from "../assistant/AssistantDock";
 import { Disclaimer } from "../../ui/Disclaimer";
 import { Icon, type IconName } from "../../ui/Icon";
 import { PageMetaContext, type PageMeta } from "../../ui/pageMeta";
@@ -164,9 +162,8 @@ export function AppShell() {
             </NavLink>
           ))}
         </nav>
+        <AssistantDock />
       </div>
-      <AssistantDock />
-    </div>
     </PageMetaContext.Provider>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ProtocolCard } from "../../protocols";
 import { errorMessage } from "../caseActions";
+import { ProtocolDetails } from "../ProtocolDetails";
 import { StageCard } from "../StageCard";
 
 export function DifferentialStage({ card, onContinue }: { card: ProtocolCard; onContinue: () => Promise<void> }) {
@@ -45,6 +46,7 @@ export function DifferentialStage({ card, onContinue }: { card: ProtocolCard; on
         ))}
       </div>
       <p className="em-act-note">Any Act result: go to steps now.</p>
+      <ProtocolDetails card={card} />
       <p className="em-caution">{card.cautions}</p>
       <p className="muted small">{card.sourceNote}</p>
       {error ? <p className="error">{error}</p> : null}

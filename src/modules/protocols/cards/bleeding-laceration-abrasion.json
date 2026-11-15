@@ -1,0 +1,468 @@
+{
+  "id": "bleeding-laceration-abrasion",
+  "title": "Bleeding, cut or scrape",
+  "regionIds": [
+    "skin",
+    "head",
+    "leftArm",
+    "rightArm",
+    "leftLeg",
+    "rightLeg"
+  ],
+  "keywords": [
+    "bleeding",
+    "blood",
+    "cut",
+    "laceration",
+    "scrape",
+    "abrasion",
+    "gash",
+    "wound",
+    "stab",
+    "sharp edge",
+    "floating blood",
+    "droplets"
+  ],
+  "differential": [
+    {
+      "label": "Scrape on the top layer of skin",
+      "note": "Working idea only. This is not a diagnosis. Skin scrapes are among the most common in-flight problems."
+    },
+    {
+      "label": "Cut that may need closing",
+      "note": "Working idea only. This is not a diagnosis. Needs flight surgeon review."
+    },
+    {
+      "label": "Heavy or spurting bleeding. Emergency",
+      "note": "Working idea only. This is not a diagnosis. Spurting blood can send droplet streams into the cabin."
+    },
+    {
+      "label": "Object stuck in the body. Emergency",
+      "note": "Working idea only. This is not a diagnosis. Do not remove it."
+    },
+    {
+      "label": "Shock or internal bleeding. Emergency",
+      "note": "Working idea only. This is not a diagnosis."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Pulse",
+      "instruction": "Read the pulse. Enter it.",
+      "inputKey": "heartRate"
+    },
+    {
+      "title": "Blood pressure, top number",
+      "instruction": "Take the blood pressure. Enter the top number.",
+      "inputKey": "systolicBP"
+    },
+    {
+      "title": "Blood pressure, bottom number",
+      "instruction": "Enter the bottom number.",
+      "inputKey": "diastolicBP"
+    },
+    {
+      "title": "Pain score",
+      "instruction": "Enter a pain score from 0 to 10.",
+      "inputKey": "painScore"
+    },
+    {
+      "title": "Bleeding stopped?",
+      "instruction": "After pressure, note yes or no. Write down the time."
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "Put on gloves",
+      "instruction": "Put on gloves before you touch the wound.",
+      "sourceIds": [
+        "s23"
+      ]
+    },
+    {
+      "title": "Press on the wound",
+      "instruction": "Press a gauze pad or clean cloth hard on the wound. If nothing else is there, use your hand.",
+      "sourceIds": [
+        "s6",
+        "s10"
+      ]
+    },
+    {
+      "title": "Keep pressing",
+      "instruction": "Keep pressing until the bleeding stops. Do not lift the pad to check.",
+      "sourceIds": [
+        "s11",
+        "s12"
+      ]
+    },
+    {
+      "title": "If blood soaks through, add more",
+      "instruction": "Leave the first pad on. Put another pad on top. Keep pressing. Call the flight surgeon.",
+      "sourceIds": [
+        "s13",
+        "s14"
+      ]
+    },
+    {
+      "title": "Catch floating blood",
+      "instruction": "Hold a pad or towel around the wound. Wipe up any blood droplets in the air.",
+      "sourceIds": [
+        "s4",
+        "s5"
+      ]
+    },
+    {
+      "title": "If something is stuck in the body, leave it",
+      "instruction": "Do not pull it out. Pad around it. Tape it in place. Call the flight surgeon now.",
+      "sourceIds": [
+        "s15",
+        "s25"
+      ]
+    },
+    {
+      "title": "Eye wound: do not press",
+      "instruction": "Do not press on the eye. Use the eye card.",
+      "sourceIds": [
+        "s17"
+      ]
+    },
+    {
+      "title": "Clean a scrape",
+      "instruction": "Wash a shallow scrape with soap and water. Pat it dry.",
+      "sourceIds": [
+        "s16"
+      ]
+    },
+    {
+      "title": "Photograph the wound",
+      "instruction": "Take a photo of the wound. Take a new photo every 24 hours.",
+      "sourceIds": [
+        "s8"
+      ]
+    },
+    {
+      "title": "Send the case to the flight surgeon",
+      "instruction": "Continue to handoff and send the case. Ask about closing the cut.",
+      "sourceIds": [
+        "s7",
+        "s21"
+      ]
+    }
+  ],
+  "candidateItemIds": [
+    "kit-white-bacitracin"
+  ],
+  "cautions": "This card is not a diagnosis. It gives no doses. Do not lift the pad to check. Do not remove a stuck object. Do not press on an eye. Blood forms a dome on the wound in weightlessness, and spurting blood can float into the cabin, so catch it with pads. Use any kit item only as the flight surgeon directs.",
+  "sourceNote": "Researcher card, Pulseframe Batch 2, 2026-11-15. Built from NASA IMM data, the 2001 ISS medical checklist (historical), the NASA Human Research Roadmap laceration page, Campbell et al. 1993 on bleeding in microgravity and MedlinePlus first aid. Not a current NASA procedure. Pending second-person safety review.",
+  "redFlagsLifeThreat": [
+    "Bleeding does not stop with firm pressure.",
+    "Blood spurts or sprays.",
+    "An object is stuck in the body.",
+    "Signs of shock: confusion, clammy or pale skin, dizziness, fast pulse, weakness.",
+    "Signs of internal bleeding."
+  ],
+  "redFlagsCallGround": [
+    "The cut may need stitches or closing.",
+    "Dirt will not come out with gentle cleaning.",
+    "Signs of infection: more pain, redness, swelling, yellow or brown fluid, fever."
+  ],
+  "timeLimits": [
+    {
+      "item": "Press until the bleeding stops. No source gives a fixed number of minutes.",
+      "safety": true,
+      "sourceIds": [
+        "s11"
+      ]
+    },
+    {
+      "item": "Photograph the wound every 24 hours.",
+      "safety": false,
+      "sourceIds": [
+        "s8"
+      ]
+    }
+  ],
+  "whenGroundUnavailable": {
+    "status": "PARTIAL (historical rule found, no current rule)",
+    "detail": "The 2001 ISS laceration procedure says that in an emergency or during loss of signal the crew begins treatment, then calls the surgeon as soon as possible. No current public rule was found. Looked in: OCHMO briefs, 2001 ISS checklist, HRR laceration page.",
+    "firstAidThatNeedsNoGround": [
+      "Firm pressure until bleeding stops.",
+      "Add pads on top if blood soaks through.",
+      "Leave a stuck object in place.",
+      "Write down pulse, blood pressure and the time the bleeding stopped.",
+      "Send the case and photos as soon as the link returns."
+    ],
+    "sourceIds": [
+      "s9",
+      "s6",
+      "s11"
+    ]
+  },
+  "proposedKeys": [],
+  "candidateItemNotes": "kit-white-bacitracin is listed for minor skin wounds in inventory.json. Gauze pads, bandages, medical tape, tissue adhesive, skin stapler and sutures are in NASA kit lists but not in inventory.json. No bleeding tourniquet was found in the 2015 kit list (the listed tourniquet is for IVs). equipmentIds lists equipment.json ids used by the tests and steps.",
+  "equipmentIds": [
+    "eq-bp-monitor",
+    "eq-manual-pulse",
+    "eq-cmrs"
+  ],
+  "gaps": [
+    "Gauze, bandages and tape are not in inventory.json, yet pressure needs them.",
+    "No bleeding tourniquet found in public ISS kit lists; no source on tourniquet use in flight was downloaded (Wilderness Environ Med 2023 review found but not read in full).",
+    "Raising the bleeding limb is Earth advice that depends on gravity; it is left out. No source covers it in flight.",
+    "No source gives a time to hold pressure."
+  ],
+  "environment": "iss-historical",
+  "safety": true,
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "SKIN ABRASION 8.21E-01",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s2",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "SKIN LACERATION 1.81E-02",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s3",
+      "url": "https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions/Skin_Laceration.pdf",
+      "title": "NASA Human Research Roadmap, HumanResearchWiki: Skin Laceration (printed 6/15/2016)",
+      "section": "Introduction, p1",
+      "quote": "To date, no lacerations of sufficient depth to require surgical repair have occurred in space",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "history"
+    },
+    {
+      "id": "s4",
+      "url": "https://ntrs.nasa.gov/citations/20040198685",
+      "title": "Campbell, Billica, Johnston 1993, Surgical bleeding in microgravity, Surgery, Gynecology and Obstetrics 177(2) (NTRS 20040198685, abstract)",
+      "section": "Abstract",
+      "quote": "The high surface tension property of blood promotes the formation of large fluid domes, which have a tendency to adhere to the wound.",
+      "accessed": "2026-11-15",
+      "confidence": "B",
+      "usedFor": "microgravity behavior"
+    },
+    {
+      "id": "s5",
+      "url": "https://ntrs.nasa.gov/citations/20040198685",
+      "title": "Campbell, Billica, Johnston 1993, Surgical bleeding in microgravity, Surgery, Gynecology and Obstetrics 177(2) (NTRS 20040198685, abstract)",
+      "section": "Abstract",
+      "quote": "with the exception of temporary arterial droplet streams",
+      "accessed": "2026-11-15",
+      "confidence": "B",
+      "usedFor": "microgravity behavior, red flag"
+    },
+    {
+      "id": "s6",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "LACERATION - REPAIR (ISS MED/3A - ALL/FIN), page 1 of 8, PDF p.823",
+      "quote": "Control bleeding by applying pressure over wound with Gauze Pads",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "pressure step"
+    },
+    {
+      "id": "s7",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "LACERATION - REPAIR, page 1 of 8, PDF p.823",
+      "quote": "Contact Surgeon for laceration repair options.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "call ground"
+    },
+    {
+      "id": "s8",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "LACERATION - REPAIR, page 1 of 8, PDF p.823",
+      "quote": "Continue to photodocument the wound every 24 hours.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "photo step, time limit"
+    },
+    {
+      "id": "s9",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "LACERATION - REPAIR, header NOTE, page 1 of 8, PDF p.823",
+      "quote": "In an emergency or during Loss of Signal, begin appropriate treatment; then call Surgeon as soon as possible.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "whenGroundUnavailable"
+    },
+    {
+      "id": "s10",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "Put pressure directly on an external wound with a sterile bandage, clean cloth, or even a piece of clothing.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "pressure step"
+    },
+    {
+      "id": "s11",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "Maintain pressure until the bleeding stops.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "pressure step"
+    },
+    {
+      "id": "s12",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "Do not peek to see if the bleeding has stopped.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "pressure step"
+    },
+    {
+      "id": "s13",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "If bleeding continues and seeps through the material being held on the wound, do not remove it.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "soak-through step"
+    },
+    {
+      "id": "s14",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "Simply place another cloth over the first one.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "soak-through step"
+    },
+    {
+      "id": "s15",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "Do not remove an object such as a knife, stick, or arrow that is stuck in the body.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "stuck object step"
+    },
+    {
+      "id": "s16",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "If the wound affects just the top layers of skin (superficial), wash it with soap and warm water and pat dry.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "scrape step"
+    },
+    {
+      "id": "s17",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "Direct pressure is best for external bleeding, except for an eye injury.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "eye caution"
+    },
+    {
+      "id": "s18",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Bleeding can't be controlled, it required the use of a tourniquet, or it was caused by a serious injury.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s19",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "Symptoms",
+      "quote": "Bleeding can also cause shock, which may include any of the following symptoms:",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s20",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Signs of infection develop, including increased pain, redness, swelling, yellow or brown fluid,",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "call ground"
+    },
+    {
+      "id": "s21",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "When to Contact a Medical Professional",
+      "quote": "The wound might need stitches.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "call ground"
+    },
+    {
+      "id": "s22",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "When to Contact a Medical Professional",
+      "quote": "You think there may be internal bleeding or shock.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s23",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "LACERATION - REPAIR, page 2 of 8, PDF p.825",
+      "quote": "Don Non Sterile Gloves.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "glove step"
+    },
+    {
+      "id": "s24",
+      "url": "https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions/Skin_Laceration.pdf",
+      "title": "NASA Human Research Roadmap, HumanResearchWiki: Skin Laceration (printed 6/15/2016)",
+      "section": "Introduction, p1",
+      "quote": "tissue adhesives, suture repair kits, and dressings",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "kit gap"
+    },
+    {
+      "id": "s25",
+      "url": "https://medlineplus.gov/ency/article/000045.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Bleeding",
+      "section": "First Aid",
+      "quote": "Place pads and bandages around the object and tape the object in place.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "stuck object step"
+    }
+  ]
+}

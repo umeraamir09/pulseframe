@@ -1,0 +1,445 @@
+{
+  "id": "choking-airway",
+  "title": "Choking or blocked airway",
+  "regionIds": [
+    "head",
+    "chest"
+  ],
+  "keywords": [
+    "choking",
+    "choke",
+    "cannot breathe",
+    "cannot speak",
+    "food stuck",
+    "something in throat",
+    "floating object",
+    "inhaled",
+    "gagging",
+    "blue lips",
+    "airway"
+  ],
+  "differential": [
+    {
+      "label": "Food or a floating object blocking the airway. Emergency",
+      "note": "Working idea only. This is not a diagnosis. In flight a floating object or food crumb can be breathed in."
+    },
+    {
+      "label": "Partial blockage with forceful coughing",
+      "note": "Working idea only. This is not a diagnosis. Let the person keep coughing and watch closely."
+    },
+    {
+      "label": "Throat spasm after something touched the vocal cords",
+      "note": "Working idea only. This is not a diagnosis. Needs flight surgeon review."
+    },
+    {
+      "label": "Severe allergic reaction with throat swelling",
+      "note": "Working idea only. This is not a diagnosis. Use the allergy card if there was no object."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Can they speak or cough?",
+      "instruction": "Ask: are you choking? Note yes if they can speak or cough hard."
+    },
+    {
+      "title": "Oxygen level after the airway is clear",
+      "instruction": "Clip the pulse oximeter on a finger. Enter the oxygen level.",
+      "inputKey": "oxygenSat"
+    },
+    {
+      "title": "Pulse after the airway is clear",
+      "instruction": "Read the pulse from the oximeter or count it for 1 minute. Enter the pulse.",
+      "inputKey": "heartRate"
+    },
+    {
+      "title": "Breathing rate after the airway is clear",
+      "instruction": "Count breaths for 1 minute. Write down the number."
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "Ask if they are choking",
+      "instruction": "Ask: are you choking? Ask: can you speak? Look for hands at the throat.",
+      "sourceIds": [
+        "s10",
+        "s18"
+      ]
+    },
+    {
+      "title": "If they can cough or speak, let them cough",
+      "instruction": "Do not hit or squeeze them. Stay next to them. Act at once if the cough gets weak or they cannot speak.",
+      "sourceIds": [
+        "s7",
+        "s24"
+      ]
+    },
+    {
+      "title": "If they cannot speak or breathe, call the crew",
+      "instruction": "Shout for help. Start the next step now.",
+      "sourceIds": [
+        "s22"
+      ]
+    },
+    {
+      "title": "Brace yourself behind them",
+      "instruction": "Get behind the person. Hook your feet into a foot restraint or handrail. Wrap your arms around their waist.",
+      "sourceIds": [
+        "s14",
+        "s16"
+      ]
+    },
+    {
+      "title": "Give thrusts",
+      "instruction": "Make a fist. Put the thumb side just above the navel, well below the breastbone. Grab the fist with your other hand. Pull in and up fast. Repeat until the object comes out or they pass out.",
+      "sourceIds": [
+        "s4",
+        "s5",
+        "s19",
+        "s6"
+      ]
+    },
+    {
+      "title": "If they pass out, start CPR",
+      "instruction": "Call every crew member. Restrain the person if you can. Start chest compressions. Look in the mouth before each breath. Remove an object only if you can see it and it is loose.",
+      "sourceIds": [
+        "s8",
+        "s17",
+        "s20",
+        "s9",
+        "s15"
+      ]
+    },
+    {
+      "title": "After the object comes out",
+      "instruction": "Keep the person still. Check oxygen level and pulse. Send the case to the flight surgeon, even if they feel fine.",
+      "sourceIds": [
+        "s23",
+        "s11"
+      ]
+    }
+  ],
+  "candidateItemIds": [],
+  "cautions": "This card is not a diagnosis. It gives no doses. Do not reach blindly into the throat. Thrusts can injure, so every person who got thrusts needs a flight surgeon review. Bracing with foot restraints is a team suggestion; no source tests the Heimlich maneuver in weightlessness. Airway tools (AMBU bag, airways, forceps, cutting the neck) are for trained crew under flight surgeon direction only.",
+  "sourceNote": "Researcher card, Pulseframe Batch 2, 2026-11-15. Built from NASA IMM data, the 2001 ISS medical checklist (historical), the NASA Human Research Roadmap choking page, the DGLRM/ESAM microgravity CPR guideline and MedlinePlus first aid. Not a current NASA procedure. Pending second-person safety review.",
+  "redFlagsLifeThreat": [
+    "Cannot speak, cough or breathe.",
+    "Cough becomes weak or silent.",
+    "Lips or skin turn blue.",
+    "The person passes out."
+  ],
+  "redFlagsCallGround": [
+    "Any choking episode, even if the object came out.",
+    "In the next days: a cough that does not go away, fever, trouble swallowing or speaking, shortness of breath or wheezing."
+  ],
+  "timeLimits": [
+    {
+      "item": "If the person cannot speak or breathe, act at once. Do not wait for the ground.",
+      "safety": true,
+      "sourceIds": [
+        "s22"
+      ]
+    },
+    {
+      "item": "Watch for cough, fever, trouble swallowing, shortness of breath or wheezing for the next days. These can mean the object went into the lung.",
+      "safety": true,
+      "sourceIds": [
+        "s12",
+        "s13"
+      ]
+    },
+    {
+      "item": "NOT FOUND: how many minutes without air before brain injury, from a source we could quote. Looked in MedlinePlus 000049, HRR choking page, Hinkelbein 2020.",
+      "safety": true,
+      "sourceIds": []
+    }
+  ],
+  "whenGroundUnavailable": {
+    "status": "NOT FOUND (the choking page has no loss-of-signal note)",
+    "detail": "The 2001 ISS choking procedure is written as an emergency the crew does at once, with no step that waits for the ground. Other 2001 ISS pages say to begin treatment during loss of signal and call the surgeon as soon as possible. No current public rule was found. Looked in: 2001 ISS checklist, HRR choking page, OCHMO briefs, Hinkelbein 2020.",
+    "firstAidThatNeedsNoGround": [
+      "Thrusts until the object comes out or the person passes out.",
+      "CPR if the person passes out.",
+      "Record oxygen level, pulse and breathing rate with the time once the airway is clear.",
+      "Send the case as soon as the link returns."
+    ],
+    "sourceIds": [
+      "s4",
+      "s5",
+      "s8"
+    ]
+  },
+  "proposedKeys": [
+    {
+      "key": "respiratoryRate",
+      "unit": "breaths/min",
+      "reason": "Already proposed in new-measurement-keys.csv. Not in keys.ts yet, so the breathing rate test has no inputKey."
+    }
+  ],
+  "candidateItemNotes": "No inventory.json item treats choking. The 2015 kit list and the 2001 checklist name an AMBU bag, nasal and oral airways and Magill forceps, but none of these are in inventory.json. equipmentIds lists equipment.json ids used by the tests and steps.",
+  "equipmentIds": [
+    "eq-blood-oximeter",
+    "eq-manual-pulse",
+    "eq-cmrs",
+    "eq-aed"
+  ],
+  "gaps": [
+    "No source tests back blows or abdominal thrusts in weightlessness. Bracing advice is team inference.",
+    "No source covers self-rescue when a crew member chokes alone.",
+    "The 2001 ISS procedure uses a blind finger sweep; current MedlinePlus advice says do not grasp a lodged object. The card follows MedlinePlus. Needs flight surgeon review.",
+    "AMBU bag and airway tools are not in inventory.json."
+  ],
+  "environment": "iss-historical",
+  "safety": true,
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "CHOKING/OBSTRUCTED AIRWAY 5.33E-02",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s2",
+      "url": "https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions/Choking_Obstructed_Airway.pdf",
+      "title": "NASA Human Research Roadmap, HumanResearchWiki: Choking/Obstructed Airway (printed 6/14/2016)",
+      "section": "Introduction, p1",
+      "quote": "inhalation of a foreign body suspended in microgravity",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "cause in flight"
+    },
+    {
+      "id": "s3",
+      "url": "https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions/Choking_Obstructed_Airway.pdf",
+      "title": "NASA Human Research Roadmap, HumanResearchWiki: Choking/Obstructed Airway (printed 6/14/2016)",
+      "section": "Introduction, p1",
+      "quote": "Treatment includes the Heimlich maneuver, inspection and removal of the foreign body, chest compressions, and ventilation.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps"
+    },
+    {
+      "id": "s4",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "CHOKING (ISS MED/3A - ALL/FIN B), page 1 of 7, PDF p.55",
+      "quote": "Perform Heimlich Maneuver.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "thrust step"
+    },
+    {
+      "id": "s5",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "CHOKING (ISS MED/3A - ALL/FIN B), page 1 of 7, PDF p.55",
+      "quote": "Repeat thrusts until either foreign body expelled or victim becomes unconscious.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "thrust step"
+    },
+    {
+      "id": "s6",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid",
+      "quote": "You should perform repeated cycles of 5 back blows followed by 5 abdominal thrusts, until the object comes out or the person becomes unconscious.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "thrust step"
+    },
+    {
+      "id": "s7",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "Do Not",
+      "quote": "Do not interfere if the person is coughing forcefully, is able to speak, or is able to breathe in and out adequately.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "cough step"
+    },
+    {
+      "id": "s8",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid, If the person faints or loses consciousness",
+      "quote": "Abdominal thrusts are for a conscious choking victim. Chest compressions are for an unconscious choking victim",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "unconscious step"
+    },
+    {
+      "id": "s9",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid, If the person faints or loses consciousness",
+      "quote": "If the object is lodged in the person's throat, do not try to grasp it.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "unconscious step"
+    },
+    {
+      "id": "s10",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "Symptoms",
+      "quote": "When an older child or adult is choking, they will often grab their throat with the hand.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "recognize"
+    },
+    {
+      "id": "s11",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid, If the person faints or loses consciousness",
+      "quote": "Anyone who is choking should have a medical exam.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "call ground"
+    },
+    {
+      "id": "s12",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid",
+      "quote": "In the days following a choking episode, contact the provider right away if the person develops:",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "call ground, time limit"
+    },
+    {
+      "id": "s13",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid",
+      "quote": "The object entered the lung instead of being expelled",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "call ground"
+    },
+    {
+      "id": "s14",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7607644/",
+      "title": "Hinkelbein et al. 2020, CPR during spaceflight: a guideline for CPR in microgravity (DGLRM and ESAM-SMG), Scand J Trauma Resusc Emerg Med 28:108",
+      "section": "Discussion, chest compression methods",
+      "quote": "bear hug method (RBH) represents a modified version of the Heimlich-maneuver with the rescuer enclosing the patient’s chest from behind",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "microgravity technique"
+    },
+    {
+      "id": "s15",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7607644/",
+      "title": "Hinkelbein et al. 2020, CPR during spaceflight: a guideline for CPR in microgravity (DGLRM and ESAM-SMG), Scand J Trauma Resusc Emerg Med 28:108",
+      "section": "Abstract, Results",
+      "quote": "Airway management should only be performed if at least two rescuers are present and the patient has been restrained.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "unconscious step"
+    },
+    {
+      "id": "s16",
+      "url": "https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions/Choking_Obstructed_Airway.pdf",
+      "title": "NASA Human Research Roadmap, HumanResearchWiki: Choking/Obstructed Airway (printed 6/14/2016)",
+      "section": "Capabilities Needed for Treatment (hypothetical list), p3",
+      "quote": "Crew medical restraint system",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "restraint"
+    },
+    {
+      "id": "s17",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid, If the person faints or loses consciousness",
+      "quote": "Check for an object in the mouth before giving breaths. Chest compressions may help dislodge the object.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "unconscious step"
+    },
+    {
+      "id": "s18",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "CHOKING (ISS MED/3A - ALL/FIN B), page 1 of 7, PDF p.55",
+      "quote": "Victim may be using Universal Distress Signal of choking: clutching neck between thumb, index finger.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "recognize"
+    },
+    {
+      "id": "s19",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid, To perform abdominal thrusts",
+      "quote": "Place the thumb side of your fist just above the person's navel, well below the breastbone.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "thrust step"
+    },
+    {
+      "id": "s20",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid, If the person faints or loses consciousness",
+      "quote": "If you see something blocking the airway and it is loose, try to remove it.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "unconscious step"
+    },
+    {
+      "id": "s21",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "Symptoms",
+      "quote": "Loss of consciousness (unresponsiveness) if the blockage is not cleared",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s22",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid",
+      "quote": "cannot speak or is having a hard time breathing, you need to act fast to help the person.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s23",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "First Aid, If the person faints or loses consciousness",
+      "quote": "After removing the object that caused the choking, keep the person still and get medical help.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "after step"
+    },
+    {
+      "id": "s24",
+      "url": "https://medlineplus.gov/ency/article/000049.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Choking - adult or child over 1 year",
+      "section": "Symptoms",
+      "quote": "Weak, ineffective coughing",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s25",
+      "url": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+      "title": "ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6 - ALL/FIN/T), 09 APR 15",
+      "section": "Airway kit contents list, p7",
+      "quote": "Basic Airway Management AMBU Bag",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "kit gap"
+    }
+  ]
+}
