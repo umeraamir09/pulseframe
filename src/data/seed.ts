@@ -10,6 +10,7 @@ import type {
 } from "../contracts";
 import { CHECKLIST_TEMPLATE, checklistItemId } from "./checklistTemplate";
 import { ACTIVE_INVENTORY } from "./inventory";
+import { DEMO_WORKOUT_PLAN } from "./workoutPlan";
 import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayStart } from "./mission";
 import { SIM_CREW, id, putRaw, store } from "./store";
 
@@ -125,21 +126,18 @@ export function buildSeed(now: Date): SeedBundle {
       });
     }
 
-    // Workouts. Demonstration plan values, not a NASA prescription.
-    const resAt = at(md, 8);
-    if (resAt <= now) {
-      b.workouts.push({ id: `wo-${md}-resistive`, crewId, at: resAt.toISOString(), kind: "resistive", plannedMinutes: 60, minutes: 60, completed: true });
-    }
-    const aeroAt = at(md, 16);
-    if (aeroAt <= now) {
-      const skipped = AEROBIC_SKIPPED.has(md) || md === MISSION_DAY_TODAY;
+    // Workouts from the demonstration plan (not a NASA prescription).
+    for (const plan of DEMO_WORKOUT_PLAN) {
+      const t = at(md, plan.hour);
+      if (t > now) continue;
+      const skipped = plan.kind === "aerobic" && (AEROBIC_SKIPPED.has(md) || md === MISSION_DAY_TODAY);
       b.workouts.push({
-        id: `wo-${md}-aerobic`,
+        id: `wo-${md}-${plan.kind}`,
         crewId,
-        at: aeroAt.toISOString(),
-        kind: "aerobic",
-        plannedMinutes: 30,
-        minutes: skipped ? 0 : 30,
+        at: t.toISOString(),
+        kind: plan.kind,
+        plannedMinutes: plan.plannedMinutes,
+        minutes: skipped ? 0 : plan.plannedMinutes,
         completed: !skipped,
       });
     }
