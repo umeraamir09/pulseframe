@@ -15,7 +15,7 @@ import { DEMO_WORKOUT_PLAN } from "./workoutPlan";
 import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayOf, missionDayStart } from "./mission";
 import { SIM_CREW, putRaw, store } from "./store";
 
-/** Bump to force every device to reseed on next load. 4 loads the transcribed ISS kit subset. */
+/** Bump to force every device to reseed on next load. */
 export const SEED_VERSION = 4;
 
 /** Simulated values, MD 136 to MD 142. Not reference ranges and not ISS data. */
@@ -167,6 +167,9 @@ export function buildSeed(now: Date): SeedBundle {
         item.doneAt = doneAt.toISOString();
         if (tpl.linkedKey) item.value = seriesValue(tpl.linkedKey, md);
         if (tpl.linkedKey === "systolicBP") item.value2 = seriesValue("diastolicBP", md);
+        if (tpl.slug === "dosimeter") item.value = seriesValue("radiationRate", md);
+        const plan = DEMO_WORKOUT_PLAN.find((p) => p.kind === tpl.slug);
+        if (plan) item.value = plan.plannedMinutes;
       }
       b.checklist.push(item);
     });

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { UNITS, type Alert, type ChecklistItem, type InventoryItem } from "../../contracts";
-import { SIM_CREW, missionDayStart, store } from "../../data/db";
+import type { Alert, ChecklistItem, InventoryItem } from "../../contracts";
+import { SIM_CREW, store } from "../../data/db";
 import { AlertCard } from "../../ui/AlertCard";
 import { Icon } from "../../ui/Icon";
 import { MedsConfirm } from "./MedsConfirm";
@@ -47,42 +47,25 @@ export function ChecklistRow({
   const [confirming, setConfirming] = useState(false);
 
   const done = Boolean(item.doneAt);
+  const unit = unitFor(item);
   const isBP = item.linkedKey === "systolicBP";
-  const openLink = OPEN_LINKS[item.kind];
+  // Scheduled meds need the confirm-before-given step; the as-needed log is a plain check.
+  const isMeds = item.kind === "meds" && slugOf(item) !== "prn-med";
+  const isPsych = item.kind === "psych";
   const inventoryItem = item.itemId ? inventory.find((i) => i.id === item.itemId) : undefined;
   const showInput = Boolean(item.linkedKey) && !readOnly && (!done || editing);
   const unit = item.linkedKey ? UNITS[item.linkedKey] : "";
 
   async function saveValue(e: FormEvent) {
     e.preventDefault();
-    if (!item.linkedKey) return;
-    const a = Number(v1);
-    const b = Number(v2);
-    if (v1.trim() === "" || !Number.isFinite(a) || (isBP && (v2.trim() === "" || !Number.isFinite(b)))) {
-      setError("Enter a number.");
+    if (v1.trim() === "" || (isBP && v2.trim() === "")) {
+      setError(isBP ? "Enter both numbers." : "Enter a number.");
       return;
     }
     setBusy(true);
     setError(undefined);
     try {
-      const takenAt = stampFor(item.missionDay);
-      const writes = [{ key: item.linkedKey, value: a }];
-      if (isBP) writes.push({ key: "diastolicBP", value: b });
-      const results = [];
-      for (const w of writes) {
-        results.push(
-          await store.recordMeasurement({
-            crewId: SIM_CREW.id,
-            key: w.key,
-            value: w.value,
-            unit: UNITS[w.key],
-            source: "checklist",
-            takenAt,
-          }),
-        );
-      }
-      setAlerts(results.flatMap((r) => (r.alert ? [r.alert] : [])));
-      await store.saveChecklistItem({ ...item, value: a, value2: isBP ? b : undefined, doneAt: takenAt });
+      setAlerts(await saveItemValue(item, Number(v1), isBP ? Number(v2) : undefined));
       setEditing(false);
       setV1("");
       setV2("");
@@ -96,11 +79,11 @@ export function ChecklistRow({
   async function toggle() {
     if (readOnly) return;
     if (done) {
-      if (item.kind === "meds" && !window.confirm("Clear this checkmark? The medication log entry is kept.")) return;
+      if (isMeds && !window.confirm("Clear this checkmark? The medication log entry is kept.")) return;
       await store.saveChecklistItem({ ...item, doneAt: undefined });
       return;
     }
-    if (item.kind === "meds") {
+    if (isMeds) {
       setConfirming(true);
       return;
     }
@@ -170,6 +153,7 @@ export function ChecklistRow({
               <input
                 type="number"
                 step="any"
+                min={0}
                 inputMode="decimal"
                 placeholder={isBP ? "Sys" : "Enter"}
                 value={v1}
@@ -216,6 +200,7 @@ export function ChecklistRow({
       </div>
       {error ? <p className="error">{error}</p> : null}
 
+      {error ? <p className="cl-error">{error}</p> : null}
       {alerts.map((a) => (
         <AlertCard key={a.id} alert={a} compact />
       ))}
