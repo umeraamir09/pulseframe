@@ -1104,6 +1104,14 @@ details.why-more > summary::-webkit-details-marker { display: none; }
 .em-caution { background: #f8fafc; color: #334155; }
 .em-act-note { background: #fff1f2; color: #9f1239; }
 .emergency .chip { text-transform: none; letter-spacing: 0; }
+.em-protocol-details { margin-top: 0.75rem; font-size: 0.9rem; }
+.em-protocol-details ul, .em-protocol-details ol { margin: 0; padding-left: 1.2rem; }
+.em-protocol-details li { margin-bottom: 0.25rem; overflow-wrap: anywhere; }
+.em-redflags { border-radius: 12px; padding: 0.1rem 0.7rem 0.55rem; background: #fff7e8; color: #92400e; margin-bottom: 0.55rem; }
+.em-redflags.is-act { background: #fff1f2; color: #9f1239; }
+.em-redflags .em-field-label { color: inherit; margin-top: 0.5rem; }
+.em-ground, .em-sources { margin-top: 0.6rem; }
+.em-ground summary, .em-sources summary { cursor: pointer; color: #1d4ed8; font-size: 0.88rem; }
 
 .em-diff-list, .em-test-list, .em-action-list, .em-result-list { list-style: none; margin: 0; padding: 0; }
 .em-diff {

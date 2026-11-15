@@ -93,8 +93,19 @@ describe("emergency case flow", () => {
     expect(resumed?.narrative).toBe("Chest tightness after resistive exercise session");
   });
 
-  it("matches a headache on the head to the general fallback", async () => {
+  it("matches a headache on the head to the headache card", async () => {
     const opened = await startCase("headache");
+    await setRegions(["head"]);
+    await advance("current-info");
+    await advance("differential");
+    expect((await store.getOpenCase(SIM_CREW.id))?.protocolId).toBe("headache-co2");
+    const steps = await store.listSteps(opened.id);
+    expect(steps.filter((step) => step.kind === "test")).toHaveLength(7);
+    expect(steps.filter((step) => step.kind === "action")).toHaveLength(6);
+  });
+
+  it("matches a narrative with no card keyword to the general fallback", async () => {
+    const opened = await startCase("feeling odd");
     await setRegions(["head"]);
     await advance("current-info");
     await advance("differential");

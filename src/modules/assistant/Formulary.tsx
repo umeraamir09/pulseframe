@@ -90,7 +90,7 @@ export function Formulary({
           <h2 id="formulary-title" className="h3" style={{ fontSize: 20 }}>
             Onboard formulary
           </h2>
-          <p className="muted small">NASA ISS kit, {PROVENANCE_LABEL.charAt(0).toLowerCase() + PROVENANCE_LABEL.slice(1)}</p>
+          <p className="muted small">NASA ISS medical kit checklist (MED CL/SpX-6, 2015)</p>
         </div>
         <label className="unit-input sm" style={{ background: "var(--surface2)", borderColor: "transparent" }}>
           <Icon name="search" size={16} />

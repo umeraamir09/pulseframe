@@ -1,0 +1,472 @@
+{
+  "id": "space-motion-sickness",
+  "title": "Space motion sickness: nausea and vomiting",
+  "regionIds": [
+    "head",
+    "abdomen"
+  ],
+  "keywords": [
+    "nausea",
+    "vomit",
+    "vomiting",
+    "sick",
+    "motion sickness",
+    "dizzy",
+    "stomach",
+    "sweating",
+    "pale",
+    "no appetite",
+    "first days",
+    "disoriented"
+  ],
+  "differential": [
+    {
+      "label": "Space motion sickness",
+      "note": "Working idea only. This is not a diagnosis. Most likely in the first days of flight."
+    },
+    {
+      "label": "Dehydration from vomiting",
+      "note": "Working idea only. This is not a diagnosis. Can follow any cause of vomiting."
+    },
+    {
+      "label": "Stomach or gut infection",
+      "note": "Working idea only. This is not a diagnosis. Fever or diarrhea makes this more likely."
+    },
+    {
+      "label": "High cabin CO2",
+      "note": "Working idea only. This is not a diagnosis. Nausea has been reported at high CO2 levels."
+    },
+    {
+      "label": "Head injury or radiation sickness. Cannot be ruled out onboard. Needs flight surgeon review",
+      "note": "Working idea only. This is not a diagnosis."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Sickness grade",
+      "instruction": "Pick one grade. Mild: few symptoms, at most one vomit. Moderate: lasting symptoms, no more than 2 vomits. Severe: more than 2 vomits or cannot work."
+    },
+    {
+      "title": "Vomiting count",
+      "instruction": "Count every time the person vomits. Write down the count and the time."
+    },
+    {
+      "title": "Heart rate",
+      "instruction": "Stay restrained. Read heart rate on the blood pressure monitor and enter it.",
+      "inputKey": "heartRate"
+    },
+    {
+      "title": "Systolic blood pressure",
+      "instruction": "Stay restrained. Read systolic blood pressure on the monitor and enter it.",
+      "inputKey": "systolicBP"
+    },
+    {
+      "title": "Diastolic blood pressure",
+      "instruction": "Stay restrained. Read diastolic blood pressure on the monitor and enter it.",
+      "inputKey": "diastolicBP"
+    },
+    {
+      "title": "Body temperature",
+      "instruction": "Take a temperature with the oral thermometer and enter it.",
+      "inputKey": "temperatureC"
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "Restrain your body and keep your head still",
+      "instruction": "Strap in or hold a rail. Keep your head still. Avoid nodding movements.",
+      "sourceIds": [
+        "s8",
+        "s9"
+      ]
+    },
+    {
+      "title": "Close your eyes or focus on one task",
+      "instruction": "Close your eyes. Or focus on one simple task.",
+      "sourceIds": [
+        "s7",
+        "s24"
+      ]
+    },
+    {
+      "title": "Get away from smells and heat",
+      "instruction": "Move away from strong smells. Move away from warm spots.",
+      "sourceIds": [
+        "s10"
+      ]
+    },
+    {
+      "title": "Sip fluids",
+      "instruction": "Take small sips of water if you can keep them down.",
+      "sourceIds": [
+        "s16"
+      ]
+    },
+    {
+      "title": "Count vomiting episodes",
+      "instruction": "Record each vomit and the time.",
+      "sourceIds": [
+        "s4",
+        "s5",
+        "s6"
+      ]
+    },
+    {
+      "title": "Do not start an EVA or critical task",
+      "instruction": "Tell the commander. Hold any spacewalk or critical task.",
+      "sourceIds": [
+        "s11"
+      ]
+    },
+    {
+      "title": "Send the case to the flight surgeon",
+      "instruction": "Continue to handoff and send the case. The flight surgeon decides on treatment with you.",
+      "sourceIds": [
+        "s12",
+        "s13"
+      ]
+    }
+  ],
+  "candidateItemIds": [
+    "kit-purple-promethazine",
+    "kit-brown-promethazine-im",
+    "kit-purple-meclizine",
+    "kit-purple-ondansetron"
+  ],
+  "cautions": "This card is not a diagnosis. It gives no doses. Treatment is decided by the crew together with the flight surgeon. Motion sickness medicines can cause drowsiness. Use any kit item only as the flight surgeon directs.",
+  "sourceNote": "Researcher card, Pulseframe Batch 1, 2026-11-15. Built from NASA OCHMO-MTB-004 Rev A (Space Adaptation Sickness), NASA IMM data and MedlinePlus. Not a NASA procedure. Pending second-person safety review.",
+  "redFlagsLifeThreat": [
+    "Blood or dark coffee-ground material in the vomit.",
+    "Vomiting after a head injury.",
+    "Confusion, or the person is hard to wake."
+  ],
+  "redFlagsCallGround": [
+    "More than 2 vomiting episodes.",
+    "Cannot keep fluids down for 12 hours.",
+    "Vomiting for more than 24 hours.",
+    "No urine for 8 hours.",
+    "Symptoms past 72 hours.",
+    "Fever or diarrhea with the vomiting."
+  ],
+  "timeLimits": [
+    {
+      "item": "Mild sickness usually clears in 36 to 48 hours.",
+      "safety": false,
+      "sourceIds": [
+        "s4"
+      ]
+    },
+    {
+      "item": "Moderate sickness usually clears in 72 hours.",
+      "safety": false,
+      "sourceIds": [
+        "s5"
+      ]
+    },
+    {
+      "item": "Severe sickness may last past 72 hours. Call the flight surgeon.",
+      "safety": true,
+      "sourceIds": [
+        "s6"
+      ]
+    },
+    {
+      "item": "No fluids kept down for 12 hours, or vomiting past 24 hours: call the flight surgeon.",
+      "safety": true,
+      "sourceIds": [
+        "s18",
+        "s19"
+      ]
+    }
+  ],
+  "whenGroundUnavailable": {
+    "status": "PARTIAL (historical rule found, no current rule)",
+    "detail": "The 2001 ISS medical checklist says that in an emergency or during loss of signal the crew begins treatment, then calls the surgeon as soon as possible. This is a 2001 rule. No current public NASA or ESA rule was found. No public NASA procedure covers motion sickness treatment without ground contact. MTB-004 says treatment is decided by crew with the flight surgeon, and ISS schedules daily private medical conferences for the first five days. Looked in: OCHMO-MTB-004, OCHMO-TB-006, HRP 2017 evidence report.",
+    "firstAidThatNeedsNoGround": [
+      "Keep the head still and the body restrained.",
+      "Sip fluids.",
+      "Record vomit count, heart rate, blood pressure and temperature with times.",
+      "Hold EVA and critical tasks.",
+      "Send the case as soon as the link returns."
+    ],
+    "sourceIds": [
+      "s12",
+      "s13",
+      "s8",
+      "s16",
+      "s11",
+      "s25"
+    ]
+  },
+  "proposedKeys": [
+    {
+      "key": "smsGrade",
+      "unit": "0-3",
+      "reason": "MTB-004 grading scale has no key"
+    },
+    {
+      "key": "vomitCount",
+      "unit": "count",
+      "reason": "No key for vomiting episodes"
+    }
+  ],
+  "candidateItemNotes": "All four ids are listed under Space Motion Sickness/Anti-Nausea in inventory.json, and MTB-004 names promethazine, meclizine and ondansetron as historical SMS medicines. No doses are given here.",
+  "environment": "iss-current",
+  "safety": true,
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "SPACE MOTION SICKNESS (SA) 7.30E-01",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s2",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Executive Summary, p1",
+      "quote": "SMS symptoms include malaise, sluggishness, disorientation, impaired concentration, stomach awareness, decreased appetite, nausea, and vomiting.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "keywords, differential"
+    },
+    {
+      "id": "s3",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Executive Summary, p1",
+      "quote": "Concerns include health decrements (dehydration and weakness) and decreased crew performance.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "severity"
+    },
+    {
+      "id": "s4",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, SMS Grading Criteria, Mild (1), p6",
+      "quote": "may include single episode of retching or vomiting; all symptoms resolve in 36-48 hours",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "grading, time limits"
+    },
+    {
+      "id": "s5",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, SMS Grading Criteria, Moderate (2), p6",
+      "quote": "includes no more than 2 episodes of vomiting, minimal operational impact; all symptoms resolve in 72 hours",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "grading, time limits"
+    },
+    {
+      "id": "s6",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, SMS Grading Criteria, Severe (3), p6",
+      "quote": "includes more than 2 episodes of vomiting; significant performance decrement may be apparent; symptoms may persist beyond 72 hours",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "grading, red flags"
+    },
+    {
+      "id": "s7",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, Attenuating Factors, p6",
+      "quote": "Closing eyes",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps"
+    },
+    {
+      "id": "s8",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, Attenuating Factors, p6",
+      "quote": "Restricting head motion",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps"
+    },
+    {
+      "id": "s9",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, Compounding Factors, p6",
+      "quote": "pitch movements have been anecdotally reported as the most provocative, followed by roll and yaw",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps"
+    },
+    {
+      "id": "s10",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, Compounding Factors, p6",
+      "quote": "Unpleasant sights, noxious odors, certain foods, excessive warmth, loss of IG orientation",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps"
+    },
+    {
+      "id": "s11",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Countermeasures and Treatment, p7",
+      "quote": "Delay of important performance-related activities (EVA) while crew performance may be compromised",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps"
+    },
+    {
+      "id": "s12",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Background, p4",
+      "quote": "The prevention or treatment of SAS is determined per discretion of crew in coordination with their flight surgeon.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "who decides"
+    },
+    {
+      "id": "s13",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Background, ISS MORD Section 5.2 table, p4",
+      "quote": "Daily for the first five days after docking",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "ground contact schedule"
+    },
+    {
+      "id": "s14",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Background, p4",
+      "quote": "Capabilities needed for diagnosis: Auscultation device, blood analysis (check electrolytes if vomiting)",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "tests"
+    },
+    {
+      "id": "s15",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Countermeasures and Treatment, p7",
+      "quote": "Historically, medications including scopolamine (no longer available), promethazine, meclizine, and ondansetron have been used for management of symptoms.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "candidate items"
+    },
+    {
+      "id": "s16",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Symptoms and Medical Issues Associated with SAS, p3",
+      "quote": "Crew is treated with fluid management and fiber in diet",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "fluids step"
+    },
+    {
+      "id": "s17",
+      "url": "https://medlineplus.gov/ency/article/003117.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Nausea and vomiting - adults",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Notice blood or dark, coffee-colored material in the vomit",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s18",
+      "url": "https://medlineplus.gov/ency/article/003117.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Nausea and vomiting - adults",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Been unable to keep any fluids down for 12 hours or more",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag, time limit"
+    },
+    {
+      "id": "s19",
+      "url": "https://medlineplus.gov/ency/article/003117.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Nausea and vomiting - adults",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Been vomiting for longer than 24 hours",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s20",
+      "url": "https://medlineplus.gov/ency/article/003117.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Nausea and vomiting - adults",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Not urinated for 8 or more hours",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s21",
+      "url": "https://medlineplus.gov/ency/article/003024.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Headache",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Your headache occurs with a head injury.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "differential, red flag"
+    },
+    {
+      "id": "s22",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-004-carbon-dioxide.pdf",
+      "title": "OCHMO-TB-004 Rev D, Carbon Dioxide (CO2), NASA-STD-3001 Technical Brief",
+      "section": "Background, anecdotal CO2 symptom associations, p4",
+      "quote": "Fatigue malaise, decreased sleep, and nausea reported at levels above 4.5 mmHg.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential"
+    },
+    {
+      "id": "s23",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-020-radiation-protection.pdf",
+      "title": "OCHMO-TB-020, Design for Ionizing Radiation Protection, NASA-STD-3001 Technical Brief",
+      "section": "Background, In Mission Risk, p2",
+      "quote": "Acute radiation syndromes, such as nausea, vomiting, and fatigue, may occur due to in mission radiation exposure",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential"
+    },
+    {
+      "id": "s24",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Pathophysiology, Attenuating Factors, p6",
+      "quote": "Concentration on performing a task",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps"
+    },
+    {
+      "id": "s25",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "MOTION SICKNESS (ISS MED/3A - ALL/FIN), header NOTE, PDF p.395",
+      "quote": "In an emergency or during Loss of Signal, begin appropriate treatment; then call Surgeon as soon as possible.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "whenGroundUnavailable"
+    }
+  ],
+  "equipmentIds": [],
+  "gaps": [
+    "Current ISS motion sickness procedure is not public."
+  ]
+}

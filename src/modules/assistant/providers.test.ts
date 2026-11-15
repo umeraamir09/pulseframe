@@ -41,7 +41,20 @@ describe("offlineProvider", () => {
       inventory: DEMO_ISS_KIT_SUBSET,
       caseCtx: { ...chest, protocolId: undefined, narrative: "headache", regionIds: ["head"] },
     });
+    expect(reply.text).toContain("From protocol card Headache in flight (including high CO2)");
+    expect(reply.draft).toMatchObject({
+      itemIds: ["kit-white-acetaminophen", "kit-white-aspirin", "kit-white-ibuprofen"],
+    });
+  });
+
+  it("suggest falls back when no card keyword matches", async () => {
+    const reply = await offlineProvider.ask({
+      command: "suggest",
+      inventory: DEMO_ISS_KIT_SUBSET,
+      caseCtx: { ...chest, protocolId: undefined, narrative: "feeling odd", regionIds: ["head"] },
+    });
     expect(reply.text).toContain("From protocol card General onboard fallback");
+    expect(reply.text).toContain(NO_ONBOARD_ITEM);
   });
 
   it("find searches name and comments", async () => {

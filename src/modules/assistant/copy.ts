@@ -2,7 +2,7 @@
 export const NO_OPEN_CASE_REPLY = "No open case. Start one in Emergency.";
 export const NO_ONBOARD_ITEM = "No onboard item suggested in the demonstration data. Contact the flight surgeon.";
 export const LIVE_FALLBACK_NOTE = "Offline mode: live assistant unavailable";
-export const PROVENANCE_LABEL = "Historical demonstration subset, not a current flight kit";
+export const PROVENANCE_LABEL = "Historical ISS kit list (2015), not a current flight kit";
 export const DOSE_PROMPT = "Pulseframe does not suggest doses. Enter what the flight surgeon directed.";
 export const REJECTED_LINE = "Rejected: not in onboard inventory";
 export const SURGEON_CHECK = "I confirm a flight surgeon approved this";

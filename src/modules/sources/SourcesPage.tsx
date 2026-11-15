@@ -38,7 +38,7 @@ const SOURCES: Source[] = [
   {
     icon: "kit",
     title: "NASA ISS medical kit list",
-    desc: "Historical demonstration subset. Item fields from the source PDF.",
+    desc: "Historical 2015 list, transcribed by the researcher. Item fields from the source PDF. No doses shown.",
     tag: "Kit",
     href: "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
   },
