@@ -5,7 +5,6 @@ import { AssistantDock } from "../assistant/AssistantDock";
 import { Disclaimer } from "../../ui/Disclaimer";
 import { Icon, type IconName } from "../../ui/Icon";
 import { PageMetaContext, type PageMeta } from "../../ui/pageMeta";
-import { NavSyncCount, SyncChip } from "./SyncChip";
 
 const LINKS: { to: string; label: string; icon: IconName }[] = [
   { to: "/", label: "Dashboard", icon: "grid" },
@@ -15,7 +14,6 @@ const LINKS: { to: string; label: string; icon: IconName }[] = [
   { to: "/fitness", label: "Fitness", icon: "dumbbell" },
   { to: "/radiation", label: "Radiation log", icon: "radiation" },
   { to: "/psych", label: "Psych check-in", icon: "smile" },
-  { to: "/sync", label: "Earth sync", icon: "satellite" },
   { to: "/sources", label: "Sources", icon: "book" },
 ];
 
@@ -92,7 +90,6 @@ export function AppShell() {
               <NavLink key={link.to} to={link.to} end={link.to === "/"}>
                 <Icon name={link.icon} size={20} />
                 <span className="grow">{link.label}</span>
-                {link.to === "/sync" ? <NavSyncCount /> : null}
                 {link.to === "/alerts" && openAlerts ? <span className="nav-count urgent">{openAlerts}</span> : null}
               </NavLink>
             ))}
@@ -110,7 +107,6 @@ export function AppShell() {
           <div className="mobile-top mobile-only">
             <Brand sub={crewLabel} />
             <span className="head-chip">{missionDayLabel(MISSION_DAY_TODAY)}</span>
-            <SyncChip short />
           </div>
           <div className="mobile-emergency mobile-only">
             <EmergencyButton caseOpen={Boolean(openCase)} />
@@ -131,7 +127,6 @@ export function AppShell() {
               <Icon name="calendar" size={18} />
               {missionDayLabel(MISSION_DAY_TODAY)}
             </span>
-            <SyncChip />
             <Link
               to="/alerts"
               className="icon-round"

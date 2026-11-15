@@ -33,7 +33,6 @@ interface Summary {
   psychDoneToday: boolean;
   workoutsDone: number;
   workoutsPlanned: number;
-  queued: number;
   checklistDone: number;
   checklistTotal: number;
   latest: Partial<Record<MeasurementKey, Measurement>>;
@@ -45,11 +44,10 @@ const LATEST_KEYS: MeasurementKey[] = ["systolicBP", "diastolicBP", "temperature
 async function loadSummary(): Promise<Summary> {
   const crew = SIM_CREW.id;
   const weekStart = missionDayStart(FIRST_SEED_DAY).toISOString();
-  const [radiation, psych, workouts, packets, checklist, rows] = await Promise.all([
+  const [radiation, psych, workouts, checklist, rows] = await Promise.all([
     store.listRadiation(crew, weekStart),
     store.listPsych(crew, weekStart),
     store.listWorkouts(crew, weekStart),
-    store.listPackets(),
     store.listChecklist(String(MISSION_DAY_TODAY)),
     store.listMeasurements(crew, weekStart),
   ]);
@@ -61,7 +59,6 @@ async function loadSummary(): Promise<Summary> {
     psychDoneToday: psych.some((p) => missionDayOf(p.at) === MISSION_DAY_TODAY),
     workoutsDone: planned.filter((w) => w.completed).length,
     workoutsPlanned: planned.length,
-    queued: packets.filter((p) => p.status !== "sent").length,
     checklistDone: checklist.filter((i) => i.doneAt).length,
     checklistTotal: checklist.length,
     latest,
@@ -272,9 +269,9 @@ function Hazards({ s, openPsych }: { s?: Summary; openPsych: boolean }) {
     },
     {
       id: "distance",
-      to: "/sync",
-      dot: s?.queued ? "accent" : "normal",
-      detail: s ? `${s.queued} packet${s.queued === 1 ? "" : "s"} queued` : "–",
+      to: "/emergency",
+      dot: "normal",
+      detail: "Onboard protocols, no live ground link",
     },
     {
       id: "gravity",
