@@ -1,4 +1,4 @@
-import { HRP_HAZARDS, HRP_HAZARDS_URL, type Workout } from "../../contracts";
+import type { Workout } from "../../contracts";
 import {
   DEMO_WORKOUT_PLAN,
   EXERCISE_SOURCES,
@@ -11,11 +11,10 @@ import {
   store,
   useLive,
 } from "../../data/db";
+import { HazardChip } from "../../ui/HazardChip";
 import { adherence, weekBars } from "./fitnessStats";
 import { LogWorkoutForm } from "./LogWorkoutForm";
 import { WeekChart } from "./WeekChart";
-
-const HAZARD = HRP_HAZARDS.find((h) => h.id === "gravity")!;
 
 function hhmm(hour: number): string {
   return `${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.round((hour % 1) * 60)).padStart(2, "0")}`;
@@ -77,10 +76,7 @@ export function FitnessPage() {
             {SIM_CREW.displayName} (simulated) · {missionDayLabel(FIRST_SEED_DAY)} to {missionDayLabel(MISSION_DAY_TODAY)}
           </p>
         </div>
-        {/* Swap for Dev A's <HazardChip id="gravity" /> when src/ui/HazardChip lands (issue 1). */}
-        <a className="hazard-chip" href={HRP_HAZARDS_URL} target="_blank" rel="noreferrer">
-          NASA HRP hazard: {HAZARD.label}
-        </a>
+        <HazardChip id="gravity" />
       </header>
 
       {error ? <p className="error">Could not load workouts: {error.message}</p> : null}

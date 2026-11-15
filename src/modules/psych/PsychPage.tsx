@@ -1,4 +1,4 @@
-import { HRP_HAZARDS, HRP_HAZARDS_URL } from "../../contracts";
+import { HRP_HAZARDS_URL } from "../../contracts";
 import {
   FIRST_SEED_DAY,
   SIM_CREW,
@@ -8,10 +8,10 @@ import {
   store,
   useLive,
 } from "../../data/db";
+import { HazardChip } from "../../ui/HazardChip";
 import { MetricTrend } from "../../ui/MetricTrend";
 import { CheckInForm } from "./CheckInForm";
 
-const HAZARD = HRP_HAZARDS.find((h) => h.id === "isolation")!;
 const OCHMO_BRIEF = "https://www.nasa.gov/wp-content/uploads/2023/03/behavioral-health-technical-brief-ochmo.pdf";
 
 function timeOf(iso: string): string {
@@ -32,10 +32,7 @@ export function PsychPage() {
           <h1>Psychology checkup</h1>
           <p className="muted">{SIM_CREW.displayName} (simulated)</p>
         </div>
-        {/* Swap for Dev A's <HazardChip id="isolation" /> when src/ui/HazardChip lands (issue 1). */}
-        <a className="hazard-chip" href={HRP_HAZARDS_URL} target="_blank" rel="noreferrer">
-          NASA HRP hazard: {HAZARD.label}
-        </a>
+        <HazardChip id="isolation" />
       </header>
 
       <p className="intro">A simple daily self-report. This is not WinSCAT and not a clinical screen.</p>

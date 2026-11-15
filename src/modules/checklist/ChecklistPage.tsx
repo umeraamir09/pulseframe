@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { HRP_HAZARDS, HRP_HAZARDS_URL, type ChecklistItem } from "../../contracts";
+import type { ChecklistItem } from "../../contracts";
 import { FIRST_SEED_DAY, MISSION_DAY_TODAY, SIM_CREW, missionDayLabel, store, useLive } from "../../data/db";
+import { HazardChip } from "../../ui/HazardChip";
 import { ChecklistRow } from "./ChecklistRow";
 
 const GROUPS: { kind: ChecklistItem["kind"]; title: string }[] = [
@@ -13,7 +14,6 @@ const GROUPS: { kind: ChecklistItem["kind"]; title: string }[] = [
 ];
 
 const DAYS = Array.from({ length: MISSION_DAY_TODAY - FIRST_SEED_DAY + 1 }, (_, i) => FIRST_SEED_DAY + i);
-const HAZARD = HRP_HAZARDS.find((h) => h.id === "environment")!;
 
 export function ChecklistPage() {
   const [md, setMd] = useState(MISSION_DAY_TODAY);
@@ -37,10 +37,7 @@ export function ChecklistPage() {
             {md === MISSION_DAY_TODAY ? " · today" : ""}
           </p>
         </div>
-        {/* Swap for Dev A's <HazardChip id="environment" /> when src/ui/HazardChip lands (issue 1). */}
-        <a className="hazard-chip" href={HRP_HAZARDS_URL} target="_blank" rel="noreferrer">
-          NASA HRP hazard: {HAZARD.label}
-        </a>
+        <HazardChip id="environment" />
       </header>
 
       <div className="day-picker" role="tablist" aria-label="Mission day">
