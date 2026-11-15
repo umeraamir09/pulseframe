@@ -10,13 +10,13 @@ import { AssistantPage } from "./modules/assistant/AssistantPage";
 import { SyncPage } from "./modules/sync/SyncPage";
 import { SourcesPage } from "./modules/sources/SourcesPage";
 import { NotFound } from "./modules/shell/NotFound";
-import { SkeletonView } from "./modules/skeleton/SkeletonView";
+import { SkeletonDemo } from "./modules/skeleton/SkeletonDemo";
 
 function EmergencyWithSkeleton() {
   return (
     <div className="split">
       <EmergencyPage />
-      <SkeletonView />
+      <SkeletonDemo />
     </div>
   );
 }
