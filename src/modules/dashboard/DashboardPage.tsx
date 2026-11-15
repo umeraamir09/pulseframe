@@ -20,6 +20,7 @@ import { Icon, type IconName } from "../../ui/Icon";
 import { TrendChart } from "../../ui/MetricTrend";
 import { fmt, useTrend } from "../../ui/useTrend";
 import { usePageMeta } from "../../ui/pageMeta";
+import { AiBrief } from "./AiBrief";
 
 const RANK: Record<Alert["severity"], number> = { act: 2, watch: 1 };
 
@@ -341,6 +342,7 @@ export function DashboardPage() {
     <div className="dash-grid">
       <div className="dash-left">
         <OpenAlerts open={open} />
+        <AiBrief />
         <TodayCard s={summary} />
       </div>
 
