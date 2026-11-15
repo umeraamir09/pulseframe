@@ -34,3 +34,4 @@ Use a short prefix: `feat:`, `fix:`, `chore:`, `docs:`. Example: `feat: highligh
 - Medical copy is decision support, not medical authority. Keep the disclaimer visible.
 - Umer is 17: no photos, video, or voice of anyone under 18 in the repo, screenshots, or demo assets.
 - Credit 3D model licenses on the Sources page when a model is added.
+- Research lives in `research/`. After editing it, run `npm run knowledge` to rebuild `src/knowledge/pack.json` and `sources.json`, and commit both. A test fails if the committed pack is out of date.

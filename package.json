@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run knowledge && tsc -b && vite build",
+    "knowledge": "tsx scripts/build-knowledge.ts",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run"
@@ -30,6 +31,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "fake-indexeddb": "^6.2.8",
     "oxlint": "^1.90.0",
+    "tsx": "^4.23.15",
     "typescript": "~7.0.2",
     "vite": "^8.3.6",
     "vitest": "^5.1.0"

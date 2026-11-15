@@ -1,0 +1,714 @@
+{
+  "id": "fire-smoke-burns",
+  "title": "Fire, smoke or a burn",
+  "regionIds": [
+    "skin",
+    "head",
+    "chest"
+  ],
+  "keywords": [
+    "fire",
+    "smoke",
+    "burn",
+    "burned",
+    "scald",
+    "hot",
+    "flame",
+    "soot",
+    "fumes",
+    "carbon monoxide",
+    "electrical burn",
+    "shock",
+    "blister",
+    "coughing after smoke"
+  ],
+  "differential": [
+    {
+      "label": "Smoke inhalation. Emergency",
+      "note": "Working idea only. This is not a diagnosis. Signs can be delayed for up to 2 hours."
+    },
+    {
+      "label": "Carbon monoxide poisoning. Emergency",
+      "note": "Working idea only. This is not a diagnosis. A small fire can make a lot of carbon monoxide. The oximeter can read falsely normal."
+    },
+    {
+      "label": "Minor burn: red skin, pain, smaller than the palm",
+      "note": "Working idea only. This is not a diagnosis."
+    },
+    {
+      "label": "Deep or large burn: blisters, white or charred skin, or larger than the palm",
+      "note": "Working idea only. This is not a diagnosis. Needs flight surgeon review now."
+    },
+    {
+      "label": "Electrical burn. Emergency",
+      "note": "Working idea only. This is not a diagnosis. Can hurt the heart and organs even when the skin looks fine."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Pulse",
+      "instruction": "Read the pulse. Enter it. Repeat every 5 minutes.",
+      "inputKey": "heartRate"
+    },
+    {
+      "title": "Blood pressure, top number",
+      "instruction": "Take the blood pressure. Enter the top number. Repeat every 5 minutes.",
+      "inputKey": "systolicBP"
+    },
+    {
+      "title": "Blood pressure, bottom number",
+      "instruction": "Enter the bottom number.",
+      "inputKey": "diastolicBP"
+    },
+    {
+      "title": "Oxygen level",
+      "instruction": "Clip the pulse oximeter on a finger. Enter the oxygen level. Do not trust a normal number after smoke.",
+      "inputKey": "oxygenSat"
+    },
+    {
+      "title": "Breathing rate",
+      "instruction": "Count breaths for 1 minute. Write down the number."
+    },
+    {
+      "title": "Burn size",
+      "instruction": "Count how many of the person’s own palms would cover the burn. Write down the number."
+    },
+    {
+      "title": "Pain score",
+      "instruction": "Enter a pain score from 0 to 10.",
+      "inputKey": "painScore"
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "Fire or smoke: put on your mask first",
+      "instruction": "Put on a protective mask now. Do not wait for air readings. Follow the station fire procedure.",
+      "sourceIds": [
+        "s4",
+        "s5",
+        "s6"
+      ]
+    },
+    {
+      "title": "Get the person out of the smoke",
+      "instruction": "Move the person out of the affected module with the crew. Close the hatch as the fire procedure says. Keep a mask on the person.",
+      "sourceIds": [
+        "s9",
+        "s7",
+        "s29",
+        "s34"
+      ]
+    },
+    {
+      "title": "If they are not breathing, start CPR",
+      "instruction": "Check breathing and pulse. If there is none, start CPR now.",
+      "sourceIds": [
+        "s35"
+      ]
+    },
+    {
+      "title": "Check the airway",
+      "instruction": "Look for soot around the mouth. Look for singed nose hair. Listen for noisy breathing.",
+      "sourceIds": [
+        "s13",
+        "s14",
+        "s15",
+        "s31"
+      ]
+    },
+    {
+      "title": "Take vital signs every 5 minutes",
+      "instruction": "Enter pulse, blood pressure and oxygen level. Count breaths. Repeat every 5 minutes.",
+      "sourceIds": [
+        "s12",
+        "s18"
+      ]
+    },
+    {
+      "title": "Do not trust a normal oxygen reading",
+      "instruction": "Treat the person as poisoned after smoke even if the oxygen level looks normal.",
+      "sourceIds": [
+        "s11",
+        "s8"
+      ]
+    },
+    {
+      "title": "Electrical burn: cut the power first",
+      "instruction": "Do not touch the person until the power is off. Then check pulse and breathing.",
+      "sourceIds": [
+        "s33",
+        "s32",
+        "s17"
+      ]
+    },
+    {
+      "title": "Cool the burn",
+      "instruction": "Cool the burn with a wet gauze pad, a wet towel or a drink bag. Do not use ice.",
+      "sourceIds": [
+        "s20",
+        "s25"
+      ]
+    },
+    {
+      "title": "Leave stuck clothing and blisters",
+      "instruction": "Do not pull off clothing stuck to the burn. Do not break blisters.",
+      "sourceIds": [
+        "s23",
+        "s24"
+      ]
+    },
+    {
+      "title": "Cover the burn",
+      "instruction": "Cover the burn with a clean, dry dressing. Tape it loosely.",
+      "sourceIds": [
+        "s36",
+        "s21"
+      ]
+    },
+    {
+      "title": "Estimate burn size",
+      "instruction": "Use the person’s palm as about 1 percent of the body. Enter how many palms the burn covers.",
+      "sourceIds": [
+        "s19",
+        "s26"
+      ]
+    },
+    {
+      "title": "Send the case to the flight surgeon",
+      "instruction": "Continue to handoff and send the case. Keep watching for 2 hours after smoke.",
+      "sourceIds": [
+        "s27",
+        "s10"
+      ]
+    }
+  ],
+  "candidateItemIds": [
+    "kit-white-acetaminophen",
+    "kit-white-ibuprofen",
+    "kit-white-bacitracin"
+  ],
+  "cautions": "This card is not a diagnosis. It gives no doses. The station fire procedure comes first; this card does not replace it. Put on your own mask before you help. Carbon monoxide can make the oximeter read falsely normal. Do not put ice, creams or ointments on a severe burn. Use any kit item only as the flight surgeon directs.",
+  "sourceNote": "Researcher card, Pulseframe Batch 2, 2026-11-15. Built from NASA IMM data, OCHMO-TB-008 Fire Protection, the 2001 ISS medical checklist (historical), the NASA Human Research Roadmap smoke inhalation page and MedlinePlus first aid. Not a current NASA procedure. Pending second-person safety review.",
+  "redFlagsLifeThreat": [
+    "Not breathing or no pulse.",
+    "Trouble breathing, noisy breathing or wheezing.",
+    "Soot around the mouth or singed nose hair.",
+    "Confusion or any change in mental state.",
+    "Burn larger than the palm, or white or charred skin.",
+    "Any electrical burn."
+  ],
+  "redFlagsCallGround": [
+    "Anyone who breathed smoke, even if they feel fine.",
+    "Any burn with blisters.",
+    "A minor burn that still hurts after 48 hours."
+  ],
+  "timeLimits": [
+    {
+      "item": "Put on masks at once. Do not wait for air readings.",
+      "safety": true,
+      "sourceIds": [
+        "s5",
+        "s6"
+      ]
+    },
+    {
+      "item": "Take vital signs every 5 minutes.",
+      "safety": true,
+      "sourceIds": [
+        "s12",
+        "s18"
+      ]
+    },
+    {
+      "item": "Signs of smoke poisoning can be delayed for up to 2 hours. Keep watching for at least that long.",
+      "safety": true,
+      "sourceIds": [
+        "s10"
+      ]
+    },
+    {
+      "item": "Airway injury symptoms usually start within minutes but can take up to 24 hours.",
+      "safety": true,
+      "sourceIds": [
+        "s30"
+      ]
+    },
+    {
+      "item": "Earth advice for minor burns is to cool for at least 5 to 30 minutes. No source gives a cooling time for the in-flight wet cloth method.",
+      "safety": false,
+      "sourceIds": [
+        "s39",
+        "s20"
+      ]
+    },
+    {
+      "item": "A minor burn that still hurts after 48 hours needs the flight surgeon.",
+      "safety": false,
+      "sourceIds": [
+        "s38"
+      ]
+    }
+  ],
+  "whenGroundUnavailable": {
+    "status": "PARTIAL (historical rule found, no current rule)",
+    "detail": "The 2001 ISS burns procedure says that in an emergency or during loss of signal the crew begins treatment, then calls the surgeon as soon as possible. No current public rule was found. Looked in: OCHMO-TB-008, OCHMO-TB-044, 2001 ISS checklist, HRR smoke inhalation page.",
+    "firstAidThatNeedsNoGround": [
+      "Masks on, move out of the smoke, close the hatch per the fire procedure.",
+      "CPR if not breathing.",
+      "Vital signs every 5 minutes, written down with the time.",
+      "Cool and cover burns.",
+      "Send the case as soon as the link returns."
+    ],
+    "sourceIds": [
+      "s16",
+      "s12"
+    ]
+  },
+  "proposedKeys": [
+    {
+      "key": "respiratoryRate",
+      "unit": "breaths/min",
+      "reason": "Already proposed in new-measurement-keys.csv. Not in keys.ts yet."
+    },
+    {
+      "key": "carbonMonoxideSat",
+      "unit": "% SpCO",
+      "reason": "Already proposed in new-measurement-keys.csv. No SpCO device was found in equipment.json, so this stays unused for now."
+    },
+    {
+      "key": "burnAreaPalms",
+      "unit": "count of palms (about 1 percent body surface each)",
+      "reason": "Appended to new-measurement-keys.csv (2026-11-15). Lets the app flag a burn larger than the palm. Not in keys.ts yet."
+    }
+  ],
+  "candidateItemNotes": "Acetaminophen and ibuprofen are in inventory.json; MedlinePlus says they can relieve burn pain. Bacitracin is listed for minor skin wounds; MedlinePlus mentions an antibiotic lotion for minor burns once cooled, and says no ointment on severe burns. Burn bandage, nonstick bandage, rolled gauze and the 2001 burn creams are in NASA kit lists but not in inventory.json. equipmentIds lists equipment.json ids used by the tests and steps.",
+  "equipmentIds": [
+    "eq-bp-monitor",
+    "eq-blood-oximeter",
+    "eq-manual-pulse",
+    "eq-stethoscope",
+    "eq-aed",
+    "eq-cmrs"
+  ],
+  "gaps": [
+    "No source gives a cooling time for burns in flight, or says how to keep cooling water from floating free beyond a wet cloth.",
+    "No SpCO (carbon monoxide) meter found in equipment.json, yet the oximeter is unreliable after smoke.",
+    "Burn dressings are not in inventory.json.",
+    "IMM burn and smoke rates are model-derived from ISS fire estimates, not flight cases.",
+    "The current ISS smoke and burn procedures are not public; the 2001 version is used."
+  ],
+  "environment": "iss-historical",
+  "safety": true,
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "SMOKE INHALATION 1.12E-02",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s2",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "Burns Secondary to Fire 5.26E-03",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s3",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Notes, p1",
+      "quote": "Incidence rates of Burns Secondary to Fire, Smoke Inhalation, and Toxic Exposure: Ammonia are derived from the ISS Fire",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood is model-derived"
+    },
+    {
+      "id": "s4",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-008-fire-protection.pdf",
+      "title": "OCHMO-TB-008 Rev A, Fire Protection, NASA-STD-3001 Technical Brief",
+      "section": "ISS fire response sequence, step 3, p3",
+      "quote": "Don protective masks",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "mask step"
+    },
+    {
+      "id": "s5",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-008-fire-protection.pdf",
+      "title": "OCHMO-TB-008 Rev A, Fire Protection, NASA-STD-3001 Technical Brief",
+      "section": "Toxicology and mask donning, p4",
+      "quote": "A crewmember in smoke, near the flame, or experiencing symptoms of exposure to combustion products are considered adequate criteria for mask donning.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "mask step"
+    },
+    {
+      "id": "s6",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-008-fire-protection.pdf",
+      "title": "OCHMO-TB-008 Rev A, Fire Protection, NASA-STD-3001 Technical Brief",
+      "section": "Toxicology and mask donning, p4",
+      "quote": "Contaminant Level readings are not required prior to mask donning",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "mask step"
+    },
+    {
+      "id": "s7",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-008-fire-protection.pdf",
+      "title": "OCHMO-TB-008 Rev A, Fire Protection, NASA-STD-3001 Technical Brief",
+      "section": "ISS fire response sequence, step 7, p3",
+      "quote": "the crew will egress and isolate the affected module by closing the hatches",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "move step"
+    },
+    {
+      "id": "s8",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-008-fire-protection.pdf",
+      "title": "OCHMO-TB-008 Rev A, Fire Protection, NASA-STD-3001 Technical Brief",
+      "section": "Lessons learned, p4",
+      "quote": "carbon monoxide, which can be generated in large quantities from a small fire, can cause serious effects on crew health",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "severity"
+    },
+    {
+      "id": "s9",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY (ISS MED/3A - ALL/FIN A), page 1 of 2, PDF p.109",
+      "quote": "Remove individual from further exposure.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "move step"
+    },
+    {
+      "id": "s10",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 1 of 2, PDF p.109",
+      "quote": "Signs of toxicity may be delayed for up to 2 hours following exposure event.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s11",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 2 of 2, PDF p.111",
+      "quote": "SpO2 readings in potential CO poisoning are not reliable.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "oximeter caution"
+    },
+    {
+      "id": "s12",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 2 of 2, PDF p.111",
+      "quote": "Record vitals and continue to monitor every 5 minutes.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "vitals step, time limit"
+    },
+    {
+      "id": "s13",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 2 of 2, PDF p.111",
+      "quote": "Verify airway is not obstructed.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "airway step"
+    },
+    {
+      "id": "s14",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 2 of 2, signs table, PDF p.111",
+      "quote": "Singed nasal hair",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s15",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 2 of 2, signs table, PDF p.111",
+      "quote": "Soot around mouth",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s16",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "BURNS (ISS MED/3A - ALL/FIN), header NOTE, page 1 of 5, PDF p.325",
+      "quote": "In an emergency or during Loss of Signal, begin appropriate treatment; then call Surgeon as soon as possible.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "whenGroundUnavailable"
+    },
+    {
+      "id": "s17",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "BURNS, page 1 of 5, PDF p.325",
+      "quote": "Electrical burns may cause severe organ injury in spite of minimal skin damage.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s18",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "BURNS, page 1 of 5, PDF p.325",
+      "quote": "Evaluate vital signs and record every 5 minutes.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "vitals step"
+    },
+    {
+      "id": "s19",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "BURNS, page 4 of 5, PDF p.331",
+      "quote": "Area of palm of hand equals approximately 1 % (for estimation).",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "size step"
+    },
+    {
+      "id": "s20",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "BURNS, page 4 of 5, PDF p.331",
+      "quote": "Cool burn with Drink Bag or Gauze Pad, Towel moistened with water.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "cool step"
+    },
+    {
+      "id": "s21",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "BURNS, page 4 of 5, PDF p.331",
+      "quote": "Secure dressing in place with Tape, not tightly.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "cover step"
+    },
+    {
+      "id": "s22",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "BURNS, page 2 of 5, PDF p.327",
+      "quote": "Third degree - pain often minimal, skin may appear white, charred,",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s23",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "First Aid, Major burns",
+      "quote": "Do not remove burned clothing that is stuck to the skin.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "clothing step"
+    },
+    {
+      "id": "s24",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "First Aid, Major burns",
+      "quote": "Avoid breaking burn blisters.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "blister step"
+    },
+    {
+      "id": "s25",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "Do Not",
+      "quote": "Do not apply oil, butter, ice, medicines, cream, oil spray, or any household remedy to a severe burn.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "cool step caution"
+    },
+    {
+      "id": "s26",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "When to Contact a Medical Professional",
+      "quote": "The burn is very large, about the size of your palm or larger.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s27",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "When to Contact a Medical Professional",
+      "quote": "The person breathed in smoke.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "call ground"
+    },
+    {
+      "id": "s28",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "First Aid, Minor burns",
+      "quote": "Over-the-counter ibuprofen or acetaminophen can help relieve pain and swelling.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "candidate items"
+    },
+    {
+      "id": "s29",
+      "url": "https://medlineplus.gov/ency/article/002804.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Carbon monoxide poisoning",
+      "section": "Home Care",
+      "quote": "If the person breathed in carbon monoxide, immediately move them to fresh air.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "move step"
+    },
+    {
+      "id": "s30",
+      "url": "https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions/Smoke_Inhalation.pdf",
+      "title": "NASA Human Research Roadmap, HumanResearchWiki: Smoke Inhalation (printed 6/15/2016)",
+      "section": "Introduction, p1",
+      "quote": "An upper airway injury usually produces symptoms within minutes but may occur over several to 24 hours.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s31",
+      "url": "https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions/Smoke_Inhalation.pdf",
+      "title": "NASA Human Research Roadmap, HumanResearchWiki: Smoke Inhalation (printed 6/15/2016)",
+      "section": "Introduction, p1",
+      "quote": "Symptoms include stridor, shortness of breath, wheezing, coughing, and chest pain.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "red flags"
+    },
+    {
+      "id": "s32",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-008-fire-protection.pdf",
+      "title": "OCHMO-TB-008 Rev A, Fire Protection, NASA-STD-3001 Technical Brief",
+      "section": "ISS fire response sequence, step 4, p3",
+      "quote": "Manually remove electrical power",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "electrical step"
+    },
+    {
+      "id": "s33",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "First Aid, Major burns",
+      "quote": "If an electrical injury may have caused the burn, do not touch the victim directly.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "electrical step"
+    },
+    {
+      "id": "s34",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 1 of 2, PDF p.109",
+      "quote": "Maintain crewmember on Russian Gas Mask",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "mask step"
+    },
+    {
+      "id": "s35",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 1 of 2, PDF p.109",
+      "quote": "If UNCONSCIOUS and not breathing, perform",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "CPR step"
+    },
+    {
+      "id": "s36",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "First Aid, Major burns",
+      "quote": "Cover the burned area with a dry sterile bandage (if available) or clean cloth.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "cover step"
+    },
+    {
+      "id": "s37",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "SMOKE INHALATION TREATMENT - EMERGENCY, page 2 of 2, signs table, PDF p.111",
+      "quote": "Change in mental status",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s38",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "When to Contact a Medical Professional",
+      "quote": "For minor burns, contact your health care provider if you still have pain after 48 hours.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s39",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "First Aid, Minor burns",
+      "quote": "Keep the area under water for at least 5 to 30 minutes.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s40",
+      "url": "https://medlineplus.gov/ency/article/000030.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Burns",
+      "section": "First Aid, Minor burns",
+      "quote": "Once the skin has cooled, moisturizing lotion containing aloe and an antibiotic also can help.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "candidate item"
+    },
+    {
+      "id": "s41",
+      "url": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+      "title": "ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6 - ALL/FIN/T), 09 APR 15",
+      "section": "Bandages list, p11",
+      "quote": "Burn Bandage",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "kit gap"
+    }
+  ]
+}

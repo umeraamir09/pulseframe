@@ -1,0 +1,1453 @@
+[
+  {
+    "id": "eq-bp-monitor",
+    "name": "Blood Pressure Monitor with Blood Pressure Cuff (Medical Diagnostic Pack, Blue)",
+    "measures": [
+      "systolicBP",
+      "diastolicBP",
+      "heartRate"
+    ],
+    "unit": "mmHg (BP), bpm (pulse)",
+    "environment": "iss-historical",
+    "stowage": "Medical Diagnostic Pack (Blue): monitor at B4, large and small cuffs at B2 (2015 list)",
+    "selfUsePossible": null,
+    "needsSecondPerson": null,
+    "steps": [
+      "Take the Blood Pressure Monitor and a cuff out of the blue Medical Diagnostic Pack.",
+      "Pick the cuff size that fits the arm (large or small).",
+      "Connect the cuff to the monitor.",
+      "Roll up the sleeve so the arm is bare.",
+      "Wrap the cuff around the upper arm. Line it up with the marks printed on the cuff.",
+      "Make sure the person is held in place (strap or foot loops) so they do not drift.",
+      "Press the On/Off button. The cuff fills and measures by itself.",
+      "Read the pulse and the blood pressure on the screen.",
+      "Write down both numbers and the time."
+    ],
+    "microgravityNotes": "No microgravity change to the cuff method was found in the public procedure. Expect lower readings in flight: one ISS study found 24 h average systolic pressure about 8 mmHg lower than before flight (Norsk 2015). The 2001 checklist takes vital signs with the patient restrained.",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "No reading or error: the device-level fix is in procedure 2.0.304, which is NOT FOUND in public sources. Use manual pulse count (eq-manual-pulse) and tell the ground.",
+      "Cuff wrong size: change to the other cuff (large or small) and repeat."
+    ],
+    "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+    "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+    "quote": "bare arm (using placement markings as guidelines)",
+    "confidence": "A",
+    "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Blood Pressure Monitor and two cuff sizes are in the Medical Diagnostic Pack (Blue)",
+        "sourceUrl": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+        "sourceTitle": "NASA ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6), 09 APR 15",
+        "sourcePage": "PDF p.9; Table 5. Medical Diagnostic Pack (Blue)",
+        "quote": "Blood Pressure Cuff - Large 1 B2 Blood Pressure Cuff - Small 1 B2 Blood Pressure Monitor 1 B4",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Cuff goes on the bare arm, lined up with the cuff markings",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+        "quote": "bare arm (using placement markings as guidelines)",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "The monitor shows both pulse and blood pressure",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+        "quote": "Record pulse and blood pressure from display.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Select the cuff size before use",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.22; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 1 of 3 pages",
+        "quote": "Blood Pressure Cuff (select appropriate size)",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Full device procedure is a separate checklist section that is not in the public release",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+        "quote": "If required, refer to 2.0.304 PROCEDURE - BLOOD PRESSURE MONITOR",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "In-flight 24 h blood pressure is lower than on the ground",
+        "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/25774397/",
+        "sourceTitle": "Norsk P et al. Fluid shifts, vasodilatation and ambulatory blood pressure reduction during long duration spaceflight. J Physiol 2015;593(3):573-84",
+        "sourcePage": "Abstract; Abstract",
+        "quote": "The 24 h average systolic, diastolic and mean arterial pressures (mean ± se) in space were reduced by 8 ± 2 mmHg",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Vital signs are taken with the patient restrained",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.37; BEHAVIORAL - ACUTE PSYCHOSIS - EMERGENCY (ISS MED/3A - ALL/FIN) Page 3 of 3 pages",
+        "quote": "Monitor and record vital signs while the patient is restrained:",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "selfUseBasis": "Not stated in source; left null."
+  },
+  {
+    "id": "eq-abpc",
+    "name": "Automatic Blood Pressure Cuff (ABPC), Advanced Life Support Pack",
+    "measures": [
+      "systolicBP",
+      "diastolicBP",
+      "heartRate"
+    ],
+    "unit": "mmHg (BP), bpm (pulse)",
+    "environment": "iss-historical",
+    "stowage": "Advanced Life Support Pack (ALSP), item ALSP-4 (2001 checklist; listed in ALSP contents in 2011 catalog)",
+    "selfUsePossible": null,
+    "needsSecondPerson": null,
+    "steps": [
+      "Take the automatic cuff (ABPC) out of the Advanced Life Support Pack.",
+      "Plug the cuff hose into the device.",
+      "Bare the upper arm.",
+      "Wrap the cuff on the arm with the rubber tube on the inside of the arm.",
+      "Put the lower edge of the cuff about 2.5 cm (one inch) above the elbow crease.",
+      "Press POWER. Wait until the screen shows 0.",
+      "Press START. The cuff fills by itself and then measures.",
+      "Wait for the beep. The top and bottom blood pressure numbers appear.",
+      "Watch the screen. It switches between blood pressure and pulse every 2 seconds.",
+      "Write down blood pressure and pulse now. The memory keeps blood pressure only, not pulse.",
+      "Press POWER to switch off. Unplug the hose before you pack it away."
+    ],
+    "microgravityNotes": "NOT FOUND: the 2001 procedure gives no microgravity-specific cuff step. Other procedures in the same checklist take vital signs with the patient restrained.",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "No reading: press SELECT to choose the next higher inflation setting, then press START again.",
+      "Pulse lost: pulse is not saved in memory, so repeat the measurement if you missed it."
+    ],
+    "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+    "sourcePage": "PDF p.317; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 1 of 2 pages",
+    "quote": "Fasten ABPC on bare arm with rubber tube on inside of arm.",
+    "confidence": "A",
+    "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Unstow the automatic cuff from the ALSP",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.317; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 1 of 2 pages",
+        "quote": "Unstow ABPC (ALSP-4)",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Plug in the hose",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.317; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 1 of 2 pages",
+        "quote": "Insert cuff hose by plugging into receptacle.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Cuff on bare arm, tube on inside of arm",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.317; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 1 of 2 pages",
+        "quote": "Fasten ABPC on bare arm with rubber tube on inside of arm.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Cuff edge about 2.5 cm above elbow bend",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.317; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 1 of 2 pages",
+        "quote": "Lower ABPC edge should be approximately 2.5 cm (1 inch) above natural bend of elbow",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Power on",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.317; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 1 of 2 pages",
+        "quote": "Depress POWER, all symbols will appear and beeper will sound.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Inflate",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.319; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 2 of 2 pages",
+        "quote": "To inflate ABPC, depress START.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Result display",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.319; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 2 of 2 pages",
+        "quote": "systolic and diastolic pressure are displayed and beeper will sound.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "BP and pulse alternate on screen",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.319; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 2 of 2 pages",
+        "quote": "Blood pressure and pulse rate are alternatively displayed every 2 seconds.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "No reading: higher inflation",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.319; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 2 of 2 pages",
+        "quote": "If no reading, depress SELECT for next higher inflation setting.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Memory does not keep pulse",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.319; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 2 of 2 pages",
+        "quote": "pulse is not stored in memory",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Power off",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.319; BLOOD PRESSURE MEASUREMENT (ISS MED/3A - ALL/FIN) Page 2 of 2 pages",
+        "quote": "To power off ABPC, depress POWER.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "ABPC was part of the ALSP in 2011",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.280; 4.1.2 ALSP Contents List",
+        "quote": "Automatic Blood Pressure Cuff",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "selfUseBasis": "Not stated in source; left null."
+  },
+  {
+    "id": "eq-bp-ecg",
+    "name": "Blood Pressure/Electrocardiograph (BP/ECG) Monitor (Tango BP device + Schiller ECG unit)",
+    "measures": [
+      "systolicBP",
+      "diastolicBP",
+      "heartRate"
+    ],
+    "unit": "mmHg, bpm, ECG waveform",
+    "environment": "iss-historical",
+    "stowage": "BP/ECG Kit (2011 catalog stowage LAB1O5_G1)",
+    "selfUsePossible": null,
+    "needsSecondPerson": null,
+    "steps": [],
+    "microgravityNotes": "NOT FOUND: no public crew procedure. The cuff is labelled to help the crew put it on.",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "NOT FOUND: no public troubleshooting steps."
+    ],
+    "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+    "sourcePage": "PDF p.44; 2.2.1 BP/ECG Description",
+    "quote": "The BP/ECG Monitor provides the capability for automated, auscultative, noninvasive systolic and diastolic blood pressure measurements",
+    "confidence": "A",
+    "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "BP/ECG measures BP and HR/ECG during exercise",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.44; 2.2.1 BP/ECG Description",
+        "quote": "The BP/ECG Monitor provides the capability for automated, auscultative, noninvasive systolic and diastolic blood pressure measurements",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Used for fitness evaluations and contingency",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.44; 2.2.1",
+        "quote": "The BP/ECG Monitor is used during the periodic fitness evaluations,",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Automatic interval mode",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.46; 2.2.2.2 Blood Pressure Device",
+        "quote": "The automatic mode records readings at regular intervals between 1 and 9 minutes.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Cuff labelled to help crew put it on",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.46; 2.2.2.2",
+        "quote": "The BP cuff was labeled to aid the crew in proper donning of the cuff.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "stepsStatus": "NOT FOUND: public step-by-step procedure for this device",
+    "selfUseBasis": "Not stated in source; left null."
+  },
+  {
+    "id": "eq-blood-oximeter",
+    "name": "Blood Oximeter (pulse oximeter), Medical Diagnostic Pack (Blue)",
+    "measures": [
+      "oxygenSat"
+    ],
+    "unit": "%",
+    "environment": "iss-historical",
+    "stowage": "Medical Diagnostic Pack (Blue), location B1 (2015 list)",
+    "selfUsePossible": null,
+    "needsSecondPerson": null,
+    "steps": [
+      "Take the Blood Oximeter out of the blue Medical Diagnostic Pack.",
+      "Put four AA batteries in it.",
+      "Plug the finger sensor into the oximeter.",
+      "Put the sensor on a finger.",
+      "Press the Power button.",
+      "Press the Display button until a red dot sits over SpO2 in the top window.",
+      "Read the SpO2 number and write it down with the time.",
+      "Press and hold Power to switch off.",
+      "When the doctor says you are done, take the batteries out and pack it away."
+    ],
+    "microgravityNotes": "NOT FOUND: no public source describing a microgravity change to pulse oximetry method.",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "No reading or error: device troubleshooting is in procedure 2.0.305 (steps 2.4 to 3), NOT FOUND in public sources. Try another finger and fresh batteries (general practice, not from an ISS source)."
+    ],
+    "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+    "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+    "quote": "Press until red dot is shown over SpO2 in top display window",
+    "confidence": "A",
+    "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Blood Oximeter in the Medical Diagnostic Pack (Blue)",
+        "sourceUrl": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+        "sourceTitle": "NASA ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6), 09 APR 15",
+        "sourcePage": "PDF p.9; Table 5. Medical Diagnostic Pack (Blue)",
+        "quote": "Blood Oximeter 1 B1",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Runs on four AA batteries",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.12; MED C/L 1.103 ALS ALGORITHM (MED CL/HTV5 - ALL/FIN 3/Paper on ISS/T) Page 6 of 7 pages",
+        "quote": "Insert four AA Batteries into Blood Oximeter",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Connect sensor, power on, select SpO2, read",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+        "quote": "Press until red dot is shown over SpO2 in top display window",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Record",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+        "quote": "Record SpO2 reading from display.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Detailed steps are in a separate procedure",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+        "quote": "If required, refer to 2.0.305 PROCEDURE- BLOOD OXIMETER USE, steps 2.4",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Remove batteries and stow when done",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.24; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 3 of 3 pages",
+        "quote": "Blood Oximeter and restow",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Sensor goes on a finger",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.29; ANAPHYLAXIS/ALLERGIC REACTION - SEVERE (ISS MED/3A - ALL/FIN A) Page 4 of 5 pages",
+        "quote": "Attach Pulse Oximeter (Assessment-1) to finger.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "selfUseBasis": "Not stated in source; left null."
+  },
+  {
+    "id": "eq-manual-pulse",
+    "name": "Manual pulse and breathing count (fingers and a clock, no device)",
+    "measures": [
+      "heartRate"
+    ],
+    "unit": "bpm; breaths/min",
+    "environment": "iss-historical",
+    "stowage": "No hardware. Needs a watch or timer.",
+    "selfUsePossible": true,
+    "needsSecondPerson": false,
+    "steps": [
+      "Find the pulse on the inside of the wrist, below the thumb, with two fingers.",
+      "Count the beats for 15 seconds.",
+      "Multiply that number by 4. This is the heart rate per minute.",
+      "Watch the chest rise for 15 seconds and count the breaths.",
+      "Multiply by 4. This is the breathing rate per minute.",
+      "Write both numbers down with the time.",
+      "If a number is not normal or keeps changing, check again about every 5 minutes."
+    ],
+    "microgravityNotes": "No change to the counting method was found. One ISS study found resting heart rate in long flight was unchanged from the ground (Norsk 2015). Pulse sites listed in the 2001 checklist are radial (wrist) and pedal (foot).",
+    "typicalDurationMin": 1,
+    "failureModes": [
+      "Cannot feel the pulse at the wrist: try the foot (pedal pulse), which the 2001 checklist also lists.",
+      "No pulse and no breathing: this is an emergency. Start CPR per the medical checklist."
+    ],
+    "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+    "sourcePage": "PDF p.22; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 1 of 3 pages",
+    "quote": "Measure each by counting for 15 seconds and multiplying by four.",
+    "confidence": "A",
+    "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Count pulse and breathing for 15 s and multiply by 4",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.22; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 1 of 3 pages",
+        "quote": "Measure each by counting for 15 seconds and multiplying by four.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Record for surgeon",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.22; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 1 of 3 pages",
+        "quote": "Record data for later reporting to Surgeon.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Pulse sites listed: radial (wrist) and pedal (foot)",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.37; BEHAVIORAL - ACUTE PSYCHOSIS - EMERGENCY (ISS MED/3A - ALL/FIN) Page 3 of 3 pages",
+        "quote": "Pulse (√ radial (#), pedal (±))",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Repeat every 5 min if unstable, then every 15 min",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.37; BEHAVIORAL - ACUTE PSYCHOSIS - EMERGENCY (ISS MED/3A - ALL/FIN) Page 3 of 3 pages",
+        "quote": "If blood pressure, pulse, or breathing is abnormal or unstable, check vital signs approximately every 5 minutes",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Heart rate unchanged in long flight (ISS)",
+        "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/25774397/",
+        "sourceTitle": "Norsk P et al. Fluid shifts, vasodilatation and ambulatory blood pressure reduction during long duration spaceflight. J Physiol 2015;593(3):573-84",
+        "sourcePage": "Abstract; Abstract",
+        "quote": "heart rate and catecholamine concentrations were unchanged",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "selfUseNote": "selfUsePossible=true is our inference for counting one's own wrist pulse; no source states it. Breathing count needs a second person.",
+    "selfUseBasis": "Team inference: own wrist pulse can be counted alone; breathing count needs an observer. Not stated in source."
+  },
+  {
+    "id": "eq-thermometer-oral",
+    "name": "Oral Disposable Thermometer (Tempa-DOT dot-matrix strip)",
+    "measures": [
+      "temperatureC"
+    ],
+    "unit": "°C",
+    "environment": "iss-historical",
+    "stowage": "2001: Ambulatory Medical Pack P3-A2 and ALSP Assessment-4. 2015: 'Thermometer' in Medical Diagnostic Pack (Blue) at B3, type not stated.",
+    "selfUsePossible": true,
+    "needsSecondPerson": false,
+    "steps": [
+      "Do not eat or drink for 15 minutes before.",
+      "Open one thermometer strip.",
+      "Put it under the tongue, as far back as it goes. The dots can face up or down.",
+      "Press the tongue down on it and keep the mouth closed for 60 seconds.",
+      "Take it out and wait about 10 seconds.",
+      "Find the last blue dot. That is the temperature. Skip any dot that did not turn blue in the middle.",
+      "Write down the temperature and the time.",
+      "Throw the strip away. It is single use.",
+      "If it is above 37.8 °C, contact the flight surgeon."
+    ],
+    "microgravityNotes": "No change to the oral method was found. Expect a higher baseline: a peer-reviewed ISS study found resting core body temperature rose about 1 °C over 2.5 months in flight (Stahn 2017). Use the crew member's in-flight baseline, not the Earth value, when judging fever (team inference; needs surgeon review).",
+    "typicalDurationMin": 2,
+    "failureModes": [
+      "Left in mouth too long: the maker says retake with a new strip.",
+      "Dots already blue before use: the strip was stored too warm. The maker says dots turn blue above 35 °C in storage. Use another strip.",
+      "Below 35.5 °C or above 40.4 °C: the strip cannot read it. Report 'off scale' and tell the ground.",
+      "Steps are from the commercial maker's instructions (grade C). The ISS-specific how-to-use page was NOT FOUND."
+    ],
+    "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+    "sourcePage": "PDF p.345; DIARRHEA (ISS MED/3A - ALL/FIN) Page 1 of 1 page",
+    "quote": "Check oral temperature with Oral Disposable Thermometers (Tempadot)",
+    "confidence": "A",
+    "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "A Thermometer is in the Medical Diagnostic Pack (Blue); type not stated",
+        "sourceUrl": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+        "sourceTitle": "NASA ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6), 09 APR 15",
+        "sourcePage": "PDF p.9; Table 5. Medical Diagnostic Pack (Blue)",
+        "quote": "Thermometer 1 B3",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "ISS used oral disposable Tempadot thermometers",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.345; DIARRHEA (ISS MED/3A - ALL/FIN) Page 1 of 1 page",
+        "quote": "Check oral temperature with Oral Disposable Thermometers (Tempadot)",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Fever threshold to call surgeon",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.345; DIARRHEA (ISS MED/3A - ALL/FIN) Page 1 of 1 page",
+        "quote": "If temperature > 37.8° C (100° F), contact Surgeon.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Oral disposable thermometer is in the ALSP Assessment Pack",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.281; 4.1.2.2 Assessment Pack",
+        "quote": "Oral Disposable Thermometer",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Under tongue, far back",
+        "sourceUrl": "https://www.medicalindicators.com/wp-content/uploads/2025/07/DFU-TempaDot_2025.pdf",
+        "sourceTitle": "Medical Indicators, Tempa-DOT Single-Use Clinical Thermometer, Directions for Use (2025)",
+        "sourcePage": "PDF p.1; Directions for Oral Use, step 1",
+        "quote": "Place under tongue as far back as possible with dots facing either up",
+        "confidence": "C",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Mouth closed 60 s",
+        "sourceUrl": "https://www.medicalindicators.com/wp-content/uploads/2025/07/DFU-TempaDot_2025.pdf",
+        "sourceTitle": "Medical Indicators, Tempa-DOT Single-Use Clinical Thermometer, Directions for Use (2025)",
+        "sourcePage": "PDF p.1; step 2",
+        "quote": "Have patient press tongue down on thermometer and keep mouth closed for 60 seconds.",
+        "confidence": "C",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Wait 10 s then read last blue dot",
+        "sourceUrl": "https://www.medicalindicators.com/wp-content/uploads/2025/07/DFU-TempaDot_2025.pdf",
+        "sourceTitle": "Medical Indicators, Tempa-DOT Single-Use Clinical Thermometer, Directions for Use (2025)",
+        "sourcePage": "PDF p.1; step 3",
+        "quote": "Remove thermometer. Wait approximately 10 seconds.",
+        "confidence": "C",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Read last blue dot",
+        "sourceUrl": "https://www.medicalindicators.com/wp-content/uploads/2025/07/DFU-TempaDot_2025.pdf",
+        "sourceTitle": "Medical Indicators, Tempa-DOT Single-Use Clinical Thermometer, Directions for Use (2025)",
+        "sourcePage": "PDF p.1; step 4",
+        "quote": "Read the last blue dot; ignore any skipped dot",
+        "confidence": "C",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Range",
+        "sourceUrl": "https://www.medicalindicators.com/wp-content/uploads/2025/07/DFU-TempaDot_2025.pdf",
+        "sourceTitle": "Medical Indicators, Tempa-DOT Single-Use Clinical Thermometer, Directions for Use (2025)",
+        "sourcePage": "PDF p.1; Product Description",
+        "quote": "measures body temperature in Celsius range of 35.5°C to 40.4°C.",
+        "confidence": "C",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Wait after eating/drinking",
+        "sourceUrl": "https://www.medicalindicators.com/wp-content/uploads/2025/07/DFU-TempaDot_2025.pdf",
+        "sourceTitle": "Medical Indicators, Tempa-DOT Single-Use Clinical Thermometer, Directions for Use (2025)",
+        "sourcePage": "PDF p.1; To avoid improper readings",
+        "quote": "Wait at least 15 minutes before taking temperature when patient is",
+        "confidence": "C",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Heat exposure turns dots blue",
+        "sourceUrl": "https://www.medicalindicators.com/wp-content/uploads/2025/07/DFU-TempaDot_2025.pdf",
+        "sourceTitle": "Medical Indicators, Tempa-DOT Single-Use Clinical Thermometer, Directions for Use (2025)",
+        "sourcePage": "PDF p.1; Precautions",
+        "quote": "When exposed to temperatures >35°C dots will turn blue.",
+        "confidence": "C",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Resting core temperature rose about 1 C over 2.5 months in flight",
+        "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/29170507/",
+        "sourceTitle": "Stahn AC et al. Increased core body temperature in astronauts during long-duration space missions. Sci Rep 2017;7:16180",
+        "sourcePage": "Abstract; Abstract",
+        "quote": "This increase of about 1 °C developed gradually over 2.5 months",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "selfUseBasis": "Team inference: single-use oral strip can be self-placed. Maker text says 'Have patient press tongue', written for an operator."
+  },
+  {
+    "id": "eq-pcba-istat",
+    "name": "Portable Clinical Blood Analyzer (PCBA, i-STAT) with EC6+ cartridge and Fingerstix",
+    "measures": [
+      "bloodGlucose"
+    ],
+    "unit": "mg/dL (also Na, K, iCa mmol/L, pH, Hct %, Hb g/dL)",
+    "environment": "iss-historical",
+    "stowage": "Ambulatory Medical Pack (AMP), Blood Analyzer Pack (2001 and 2011)",
+    "selfUsePossible": null,
+    "needsSecondPerson": null,
+    "steps": [
+      "Tape a strip of gray tape near you to hold small items so they do not float away.",
+      "Get out gloves, a cleaning wipe, gauze, a bandage, one EC6+ cartridge, a capillary tube, the capillary bulb, and a Fingerstix lancet.",
+      "Open the cartridge packet but leave the cartridge inside for now.",
+      "Put on gloves.",
+      "Warm the finger.",
+      "Clean the fingertip with the wipe. Let it dry.",
+      "Press the Fingerstix hard on the fingertip to prick it. Put the used lancet in the zip bag.",
+      "Squeeze the finger gently. Wipe away the first drop with gauze.",
+      "Squeeze gently again. Touch the end of the capillary tube to the drop.",
+      "Fill the tube two thirds to three quarters full. Check there are no bubbles.",
+      "Press gauze on the finger until bleeding stops. Put on a bandage.",
+      "Hold the cartridge by its sides only. Fix the bulb to the tube.",
+      "Cover the bulb hole with a finger and squeeze gently. Fill the cartridge to the fill mark. Do not overfill.",
+      "If bubbles are stuck, tap the cartridge. If they stay, throw it away and start again with a new one.",
+      "Snap the cartridge lid shut.",
+      "Push the cartridge into the analyzer door as far as it goes. Do not pull it out while LCK shows.",
+      "Type an operator number and a patient number when asked. Press ENT each time.",
+      "Wait 120 seconds for results.",
+      "Write down the Glu number (glucose, mg/dL) and the other results.",
+      "Remove the cartridge. Put all waste in the zip bag, then in biohazard trash."
+    ],
+    "microgravityNotes": "The checklist adds steps for floating items: tape small items down near the work area. A shuttle study found the analyzer reliable in flight, and in-flight changes were likely due to how the blood sample was collected (Smith 1997). Cartridges are reported to have a 6 month shelf life, which limits use (secondary source, see evidence gap).",
+    "typicalDurationMin": 2,
+    "failureModes": [
+      "INSUFFICIENT SAMPLE: repeat the sample with a new cartridge (steps 2 to 21 of the checklist).",
+      "Bubbles stay in the cartridge: discard it and fill another one.",
+      "LCK stays on the screen: do not pull the cartridge out. Contact the surgeon.",
+      "Battery error: battery change procedure is in a separate HMS malfunction section, NOT FOUND in public sources.",
+      "No cartridges in date: no glucose reading is possible with this device. Report it. Urine strip glucose (eq-urine-chemstrip) is a rough backup only."
+    ],
+    "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+    "sourcePage": "PDF p.313; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 8 of 9 pages",
+    "quote": "Glu (mg/dL) 70 --- 105",
+    "confidence": "A",
+    "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "PCBA uses EC6+ cartridges",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.305; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 4 of 9 pages",
+        "quote": "Use EC6+ Sample Cartridges unless Surgeon instructs otherwise.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Warm and clean finger",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.307; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 5 of 9 pages",
+        "quote": "Warm finger prior to stick. Cleanse finger with BK Wipe, let dry.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Puncture",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.307; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 5 of 9 pages",
+        "quote": "Hold Fingerstix firmly to fingertip puncture site. Press down firmly to puncture finger.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Do not squeeze too hard",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.307; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 5 of 9 pages",
+        "quote": "Do not squeeze finger excessively.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Wipe first drop",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.307; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 5 of 9 pages",
+        "quote": "Wipe initial drop of blood with Gauze Pad.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Fill capillary tube",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.307; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 5 of 9 pages",
+        "quote": "fill Capillary Tube to 2/3 --- 3/4 full, ensure no bubbles in tube.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Fill cartridge to mark",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.309; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 6 of 9 pages",
+        "quote": "dispense blood to reach fill mark of Sample Cartridge",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Close cartridge",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.309; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 6 of 9 pages",
+        "quote": "Fold snap closure over sample well and press until closure snaps into",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Insert",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.309; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 6 of 9 pages",
+        "quote": "Insert Sample Cartridge into cartridge door until it will go no further.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "120 s",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.309; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 6 of 9 pages",
+        "quote": "Test results displayed after 120 seconds.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Insufficient sample",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.311; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 7 of 9 pages",
+        "quote": "If ‘INSUFFICIENT SAMPLE’ displayed, repeat steps 2 --- 21.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Bubbles",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.309; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 6 of 9 pages",
+        "quote": "If bubbles remain trapped, discard Sample Cartridge, unstow, and fill",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "LCK stuck",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.305; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 4 of 9 pages",
+        "quote": "If ‘LCK’ prompt remains, do not remove Sample Cartridge, and contact",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Glucose normal range printed in table",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.313; BLOOD ANALYSIS - PORTABLE CLINICAL BLOOD ANALYZER: PCBA (ISS MED/3A - ALL/FIN A) Page 8 of 9 pages",
+        "quote": "Glu (mg/dL) 70 --- 105",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "PCBA kept in the Ambulatory Medical Pack",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.287; 4.2.1 AMP Description",
+        "quote": "The Portable Clinical Blood Analyzer (PCBA) and EC8+ Cartridge",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Validated on shuttle; glucose measured",
+        "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/9191561/",
+        "sourceTitle": "Smith SM et al. Assessment of a portable clinical blood analyzer during space flight. Clin Chem 1997;43(6):1056-65",
+        "sourcePage": "Abstract; Abstract",
+        "quote": "Ionized calcium, pH, electrolytes, glucose, and hematocrit were determined.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Cartridge shelf life limits ISS use",
+        "sourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4833668/",
+        "sourceTitle": "Cummins BM, Ligler FS, Walker GM. Point-of-Care Diagnostics for Niche Applications. Biotechnology Advances (review)",
+        "sourcePage": "Web page; Section 3.3 Devices deployed on the International Space Station",
+        "quote": "is not frequently used because of the 6-month shelf-life of the cartridges",
+        "confidence": "B",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "In-flight differences tied to sample collection",
+        "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/9191561/",
+        "sourceTitle": "Smith SM et al. Assessment of a portable clinical blood analyzer during space flight. Clin Chem 1997;43(6):1056-65",
+        "sourcePage": "Abstract; Abstract",
+        "quote": "Changes during flight were likely related to sample collection technique.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "durationNote": "typicalDurationMin=2 is analysis time only (120 s per source); the full fingerstick procedure takes longer and no source gives a total.",
+    "selfUseBasis": "Not stated in source; left null."
+  },
+  {
+    "id": "eq-urine-chemstrip",
+    "name": "Urine Chemstrip (CHEMSTRIP 10SG) with Color Chart",
+    "measures": [],
+    "unit": "color-chart categories (SpG, pH, leukocytes, nitrite, protein, glucose, ketones, urobilinogen, bilirubin, blood)",
+    "environment": "iss-historical",
+    "stowage": "2015: Topical & Injectable Medication Pack (Brown), B3. 2001: AMP P4-A3.",
+    "selfUsePossible": true,
+    "needsSecondPerson": false,
+    "steps": [
+      "Put on gloves.",
+      "Hold two cotton swabs together under the urine stream until they are soaked.",
+      "Wipe the two swabs over the colored pads on the strip.",
+      "Wait the time printed for the strip.",
+      "Hold the strip next to the color chart and match each pad.",
+      "Write down each result.",
+      "Put the swabs and strip in biohazard trash."
+    ],
+    "microgravityNotes": "Microgravity change: urine is collected on cotton swabs held in the stream, not in a cup, then wiped on the strip.",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "Wait time for reading: 'recommended time' is not stated in the public checklist (NOT FOUND)."
+    ],
+    "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+    "sourcePage": "PDF p.287; BLADDER/KIDNEY INFECTION (ISS MED/3A - ALL/FIN) Page 1 of 6 pages",
+    "quote": "Hold two Cotton Swabs together under urine stream to saturate.",
+    "confidence": "A",
+    "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Urine Chemstrip and color chart in Brown pack",
+        "sourceUrl": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+        "sourceTitle": "NASA ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6), 09 APR 15",
+        "sourcePage": "PDF p.27; Table 11 Topical & Injectable Medication Pack - Other Contents (Brown)",
+        "quote": "Urine Chemstrip 10 B3",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Swabs held under urine stream (no cup)",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.287; BLADDER/KIDNEY INFECTION (ISS MED/3A - ALL/FIN) Page 1 of 6 pages",
+        "quote": "Hold two Cotton Swabs together under urine stream to saturate.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Swabs passed over strip",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.287; BLADDER/KIDNEY INFECTION (ISS MED/3A - ALL/FIN) Page 1 of 6 pages",
+        "quote": "Pass two Cotton Swabs over Chemstrip to saturate colored reagent pads.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Compare to chart",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.287; BLADDER/KIDNEY INFECTION (ISS MED/3A - ALL/FIN) Page 1 of 6 pages",
+        "quote": "Compare with Color Chart after recommended time, record results.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Strip type and fields",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.289; BLADDER/KIDNEY INFECTION (ISS MED/3A - ALL/FIN) Page 2 of 6 pages",
+        "quote": "Urinalysis (CHEMSTRIP 10SG)",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "newKeys": [
+      "urineGlucose",
+      "urineKetones",
+      "urineSpecificGravity"
+    ],
+    "selfUseBasis": "Team inference from the procedure (collect own urine on swabs). Not stated in source."
+  },
+  {
+    "id": "eq-hrm2",
+    "name": "Heart Rate Monitor 2 (HRM2): watch, transmitter and chest strap",
+    "measures": [
+      "heartRate"
+    ],
+    "unit": "bpm",
+    "environment": "iss-historical",
+    "stowage": "HRM Kit (2011 catalog stowage LAB1P3_D2)",
+    "selfUsePossible": true,
+    "needsSecondPerson": false,
+    "steps": [],
+    "microgravityNotes": "NOT FOUND",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "NOT FOUND: no public procedure."
+    ],
+    "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+    "sourcePage": "PDF p.61; 2.4.1 HRM2 Description",
+    "quote": "The HRM2 provides heart rate monitoring capability and exercise level control during exercise",
+    "confidence": "A",
+    "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "HRM2 watch + chest strap for exercise HR",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.61; 2.4.1 HRM2 Description",
+        "quote": "The HRM2 provides heart rate monitoring capability and exercise level control during exercise",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "One set per crew member",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.61; 2.4.1",
+        "quote": "A watch, transmitter, and chest strap are assigned to each crewmember.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "stepsStatus": "NOT FOUND: public step-by-step procedure",
+    "selfUseBasis": "Source: watch, transmitter and chest strap are assigned to each crewmember (personal device)."
+  },
+  {
+    "id": "eq-aed",
+    "name": "Automated External Defibrillator (AED), Medtronic LIFEPAK 1000",
+    "measures": [
+      "heartRate"
+    ],
+    "unit": "bpm, ECG rhythm",
+    "environment": "iss-historical",
+    "stowage": "2011 catalog stowage LAB1O5_D1",
+    "selfUsePossible": false,
+    "needsSecondPerson": true,
+    "steps": [],
+    "microgravityNotes": "Use with the Crew Medical Restraint System, which gives electrical isolation for defibrillation (CHeCS 2011). Resuscitation steps are out of Batch 1 scope.",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "Out of Batch 1 scope; see AED-assisted CPR procedure 1.102 referenced in the 2016 manual."
+    ],
+    "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+    "sourcePage": "PDF p.306; 4.5.1 AED Overview",
+    "quote": "the Medtronic LIFEPAK 1000",
+    "confidence": "A",
+    "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "AED is a LIFEPAK 1000",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.306; 4.5.1 AED Overview",
+        "quote": "the Medtronic LIFEPAK 1000",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "CMRS gives electrical isolation for defibrillation",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.302; 4.4.1 CMRS Description",
+        "quote": "Electrical isolation for defibrillation (to protect the CMOs and ISS from defibrillation",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "stepsStatus": "Not researched in Batch 1 (resuscitation)",
+    "selfUseBasis": "Team inference: a person in cardiac arrest cannot use it on themselves."
+  },
+  {
+    "id": "eq-cmrs",
+    "name": "Crew Medical Restraint System (CMRS)",
+    "measures": [],
+    "unit": "n/a (restraint)",
+    "environment": "iss-historical",
+    "stowage": "Seat Track Anchors stay deployed on the rack (2011 catalog)",
+    "selfUsePossible": false,
+    "needsSecondPerson": true,
+    "steps": [],
+    "microgravityNotes": "Holds the patient and the helper in place so measurements and treatment can be done in microgravity.",
+    "typicalDurationMin": 2,
+    "failureModes": [
+      "NOT FOUND: public set-up steps."
+    ],
+    "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+    "sourcePage": "PDF p.302; 4.4.1",
+    "quote": "The CMRS is designed to be deployed and set-up in two minutes or less",
+    "confidence": "A",
+    "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "CMRS purpose",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.302; 4.4.1 CMRS Description",
+        "quote": "Patient restraint & transport",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Deploy in 2 min",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.302; 4.4.1",
+        "quote": "The CMRS is designed to be deployed and set-up in two minutes or less",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "stepsStatus": "NOT FOUND: public set-up procedure",
+    "selfUseBasis": "Source shows separate patient and CMO restraints (rescuer present). Inference for needsSecondPerson."
+  },
+  {
+    "id": "eq-stethoscope",
+    "name": "Stethoscope",
+    "measures": [],
+    "unit": "n/a (listening)",
+    "environment": "iss-historical",
+    "stowage": "Medical Diagnostic Pack (Blue) B1; also Red pack A1 (2015)",
+    "selfUsePossible": false,
+    "needsSecondPerson": true,
+    "steps": [
+      "Put the earpieces in your ears.",
+      "Place the stethoscope on the chest.",
+      "Listen to both sides of the chest, front and back.",
+      "Note if breath sounds are there on both sides.",
+      "Write down what you heard."
+    ],
+    "microgravityNotes": "NOT FOUND",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "Detailed procedure 2.0.302 NOT FOUND in public sources."
+    ],
+    "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+    "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+    "quote": "Listen to the lungs on both sides of the chest, front and back [Stethoscope].",
+    "confidence": "A",
+    "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Stethoscope in Medical Diagnostic Pack",
+        "sourceUrl": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+        "sourceTitle": "NASA ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6), 09 APR 15",
+        "sourcePage": "PDF p.9; Table 5",
+        "quote": "Stethoscope 1 B1",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Listen both sides, front and back",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.23; 1.108 DIFFICULTY BREATHING (MED CL/HTV5 - ALL/FIN 2/Paper on ISS/T) Page 2 of 3 pages",
+        "quote": "Listen to the lungs on both sides of the chest, front and back [Stethoscope].",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "selfUseBasis": "Team inference: listening to own back is not practical. Not stated in source."
+  },
+  {
+    "id": "eq-eye-chart",
+    "name": "Eye Chart (Visual Acuity Card, near vision)",
+    "measures": [],
+    "unit": "letters correct / letters on line, per eye",
+    "environment": "iss-historical",
+    "stowage": "2015: Medical Diagnostic Pack (Blue), stowed with Locator Card. 2001/2011: AMP Physical Exam Pack (Physical Exam-1).",
+    "selfUsePossible": null,
+    "needsSecondPerson": null,
+    "steps": [
+      "Take the eye chart (visual acuity card) out of the medical kit.",
+      "Hold the card about 40 cm from the person's eyes, or have a helper hold it.",
+      "Cover one eye with a hand.",
+      "Read the lowest line you can.",
+      "Write down how many letters you got right out of how many letters are on that line.",
+      "Cover the other eye and do the same again.",
+      "Write down which eye each result is for."
+    ],
+    "microgravityNotes": "NOT FOUND: no source describes a microgravity change. The card floats, so it must be held or fixed at about 40 cm (team inference, not sourced).",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "Cannot read any line: write 'unable to read top line' for that eye and tell the ground.",
+      "Card not found: the 2015 list stows it with the Locator Card. No backup method was found in the sources."
+    ],
+    "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+    "sourcePage": "PDF p.569; EYE EXAMINATION (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+    "quote": "Cover one eye with hand, read lowest line possible.",
+    "confidence": "A",
+    "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Eye Chart in the Medical Diagnostic Pack (Blue), 2015",
+        "sourceUrl": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+        "sourceTitle": "NASA ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6), 09 APR 15",
+        "sourcePage": "PDF p.9; Table 5. Medical Diagnostic Pack (Blue)",
+        "quote": "Eye Chart 1 with Locator Card",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Visual Acuity Card in the AMP Physical Exam Pack, 2011",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.289; 4.2.2.3 Physical Exam Pack",
+        "quote": "Visual Acuity Card",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Card held about 40 cm from the person",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.569; EYE EXAMINATION (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Deploy Visual Acuity Card - Near Vision (AMP Physical Exam-1)",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Distance",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.569; EYE EXAMINATION (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "approximately 40 cm from subject.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Cover one eye and read lowest line",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.569; EYE EXAMINATION (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Cover one eye with hand, read lowest line possible.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "How to record",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.569; EYE EXAMINATION (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Record number of letters correct/number of letters on line.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Repeat other eye",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.569; EYE EXAMINATION (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Repeat steps 2.2 and 2.3 with other eye covered.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "newKeys": [
+      "visualAcuity"
+    ],
+    "requestedBy": "Conditions & Protocols researcher",
+    "selfUseBasis": "Not stated in source; left null. The checklist wording ('from subject') suggests an examiner, but self-use is not ruled out."
+  },
+  {
+    "id": "eq-eyewash",
+    "name": "Space Station Eyewash (SSE) with eyewash goggles (Crew Contamination Protection Kit)",
+    "measures": [],
+    "unit": "n/a (treatment)",
+    "environment": "iss-historical",
+    "stowage": "2011: Eyewash Kit launched on the CCPK, then velcroed on panel SM-329 near the SVO-ZV water port in the Russian Service Module.",
+    "selfUsePossible": null,
+    "needsSecondPerson": null,
+    "steps": [
+      "Take out contact lenses if the person wears them.",
+      "Flush the eye right away with water from a drink bag and straw. Use towels to soak up water.",
+      "Set up the eyewash next to the water port (SVO-ZV).",
+      "Connect the supply hose to the water port and the waste hose to an empty wastewater bag.",
+      "Put on the goggles with the outflow side on the hurt eye.",
+      "Pump the water port about four times.",
+      "Press the goggles against the face for a better seal.",
+      "Push and hold the red release valve to start water into the goggles.",
+      "Keep the eyes open while the water flows.",
+      "Keep pumping as needed. Soak up leaks with towels.",
+      "When the bag is full, let go of the valve and change to an empty bag.",
+      "Keep flushing until the pain goes away or the surgeon says stop.",
+      "Contact the surgeon."
+    ],
+    "microgravityNotes": "Designed for microgravity: water goes into sealed goggles and out to a wastewater bag so it does not float free. A drink bag and straw are used first. The 2001 procedure also has an optional numbing eye drop step (proparacaine) that needs surgeon direction; it is not included in these plain steps.",
+    "typicalDurationMin": null,
+    "failureModes": [
+      "Hoses come loose from the goggle lenses: a known ground-unit issue, fixed with hose clamps per the 2011 catalog.",
+      "Eyewash not set up yet: keep flushing with the drink bag and straw.",
+      "The 2015 manual names a different port (CBO-3B) and procedure 2.3.304, which is NOT FOUND in public sources. Check which port your vehicle uses."
+    ],
+    "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+    "sourcePage": "PDF p.577; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 1 of 5 pages",
+    "quote": "Don Goggles with outflow side of Goggles on affected eye (affected eye",
+    "confidence": "A",
+    "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+    "accessed": "2026-11-15",
+    "safety": true,
+    "evidence": [
+      {
+        "claim": "Eyewash flushes eyes after chemical contamination",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.296; 4.3.1 CCPK Description",
+        "quote": "The Eyewash Kit, which contains the Eyewash used to flush the eyes following",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Flushes both eyes with about 0.5 L/min of potable water",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.298; 4.3.2.1 Eyewash Kit",
+        "quote": "It will flush both eyes of a",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Water source and flow",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.298; 4.3.2.1 Eyewash Kit",
+        "quote": "crewmember with approximately 0.5L/min of water from the Russian potable water source",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Wastewater collected in bags",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.298; 4.3.2.1 Eyewash Kit",
+        "quote": "All wastewater will be collected in 1.85 L Teflon Eyewash Wastewater Bags.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Stowage near the water port",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.299; 4.3.2.1 Eyewash Kit",
+        "quote": "to near the SVO-ZV, velcroed on the front of panel SM-329.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Components include goggles and tubing",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.299; Table 4.3.2.1-1",
+        "quote": "Eye Goggles and Tubing",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Known failure: hoses come off goggle barbs",
+        "sourceUrl": "https://ntrs.nasa.gov/api/citations/20110022379/downloads/20110022379.pdf",
+        "sourceTitle": "ISS CHeCS Medical Hardware Catalog, Version 10.0, March 2011 (NTRS 20110022379)",
+        "sourcePage": "PDF p.299; 4.3.2.1 Eyewash Kit",
+        "quote": "The hoses/tubing come loose from the",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "First try a drink bag",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.577; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 1 of 5 pages",
+        "quote": "Prior to SSE configuration, attempt eye irrigation with Drink Bag, Drink",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Connect supply and waste",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.577; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 1 of 5 pages",
+        "quote": "Connect supply end of SSE to SVO-ZV and waste end of SSE to a",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Goggles with outflow side on affected eye",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.577; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 1 of 5 pages",
+        "quote": "Don Goggles with outflow side of Goggles on affected eye (affected eye",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Pump about four strokes",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.579; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Pump SVO-ZV to pressurize supply source, approximately four strokes.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Press goggles for seal",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.579; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Crewmember can press Goggles against",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Start flow",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.579; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Push and hold SVO-ZV red release valve to start flow into Goggles.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Keep eyes open",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.579; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Flush eyes. Keep eyes open.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Replace full bag",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.579; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "When Wastewater Collection Bag is full, release SVO-ZV valve to",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Contact surgeon",
+        "sourceUrl": "https://newspaceeconomy.ca/wp-content/uploads/2022/11/163533main_iss_med_cl.pdf",
+        "sourceTitle": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 12 NOV 01 (NASA document; mirror copy, original nasa.gov URL returns 404)",
+        "sourcePage": "PDF p.579; EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN) Page 2 of 5 pages",
+        "quote": "Contact Surgeon.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "2015 procedure: flush with drink bag first, then eyewash station",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.17; 1.106 TOXIC EXPOSURE (MED CL/HTV5 - ALL/FIN 3/Paper on ISS/T) Page 1 of 2 pages",
+        "quote": "Immediately flush with water from Drink Bag.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      },
+      {
+        "claim": "Irrigate until pain resolves or surgeon says stop",
+        "sourceUrl": "https://www.governmentattic.org/19docs/NASA-ISSmedicalEmergManual_2016.pdf",
+        "sourceTitle": "NASA Emergency Medical Procedures Manual for the ISS [partial], 2016 FOIA release (procedures dated 20 APR 15), hosted by governmentattic.org",
+        "sourcePage": "PDF p.17; 1.106 TOXIC EXPOSURE (MED CL/HTV5 - ALL/FIN 3/Paper on ISS/T) Page 1 of 2 pages",
+        "quote": "eye until pain resolves or directed to stop by Surgeon.",
+        "confidence": "A",
+        "accessed": "2026-11-15"
+      }
+    ],
+    "requestedBy": "Conditions & Protocols researcher",
+    "selfUseBasis": "Not stated in source; left null. The note 'Crewmember can press Goggles against face' suggests the patient helps."
+  }
+]

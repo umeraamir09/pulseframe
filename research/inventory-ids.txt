@@ -1,0 +1,32 @@
+kit-white-olopatadine	Olopatadine (Pataday)
+kit-white-oxymetazoline	Oxymetazoline (Afrin)
+kit-white-hypromellose	Hypromellose (Nature’s Tears)
+kit-white-aspirin	Aspirin
+kit-white-melatonin	Melatonin
+kit-white-acetaminophen	Acetaminophen (Tylenol)
+kit-white-ibuprofen	Ibuprofen (Motrin)
+kit-white-loperamide	Loperamide (Imodium)
+kit-white-fexofenadine	Fexofenadine (Allegra)
+kit-white-loratadine	Loratadine (Claritin)
+kit-white-pseudoephedrine	Pseudoephedrine (Sudafed 12 Hour)
+kit-white-zolpidem	Zolpidem (Ambien)
+kit-white-zaleplon	Zaleplon (Sonata)
+kit-white-hydrocortisone	Hydrocortisone
+kit-white-mometasone	Mometasone (Nasonex)
+kit-white-bisacodyl	Bisacodyl (Dulcolax)
+kit-white-sodium-chloride-nasal	Sodium Chloride (AYR Saline)
+kit-white-bacitracin	Bacitracin
+kit-red-epinephrine-autoinjector	Epinephrine (EpiPen)
+kit-red-epinephrine-io	Epinephrine (ALS Medication Kit)
+kit-red-atropine	Atropine (ALS Medication Kit)
+kit-red-lidocaine-io	Lidocaine (ALS Medication Kit)
+kit-purple-promethazine	Promethazine (Phenergan)
+kit-purple-meclizine	Meclizine (Antivert)
+kit-purple-ondansetron	Ondansetron (Zofran ODT)
+kit-purple-nitroglycerin	Nitroglycerin (Nitrostat)
+kit-purple-diphenhydramine	Diphenhydramine (Benadryl)
+kit-purple-amoxicillin	Amoxicillin (Amoxil)
+kit-brown-albuterol	Albuterol (Proventil HFA)
+kit-brown-promethazine-im	Promethazine (Phenergan) injection
+eq-eye-chart	Eye Chart / Visual Acuity Card (device, in equipment.json)
+eq-eyewash	Space Station Eyewash (SSE) with eyewash goggles (device, in equipment.json)
