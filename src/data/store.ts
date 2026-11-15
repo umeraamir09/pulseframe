@@ -19,6 +19,7 @@ import type {
   SyncPacket,
   Workout,
 } from "../contracts";
+import { BASELINE_WINDOW_DAYS, dedupe, scoreMeasurement } from "./anomaly";
 import { notify, subscribeStore } from "./live";
 
 const DB_NAME = "pulseframe";
@@ -119,9 +120,26 @@ export const store: PulseframeStore = {
     return (await store.recordMeasurement(m)).measurement;
   },
   async recordMeasurement(m) {
-    // Anomaly scoring is wired in by PF-6 (issue 8).
-    const measurement = await put<Measurement>("measurements", { ...m, id: id("m") });
-    return { measurement };
+    const db = await connect();
+    const measurement: Measurement = { ...m, id: id("m") };
+    await db.put("measurements", measurement);
+
+    const from = new Date(Date.parse(m.takenAt) - BASELINE_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    const history = await store.listMeasurements(m.crewId, from, m.takenAt);
+    const { draft, baseline } = scoreMeasurement(measurement, history);
+
+    let alert: Alert | undefined;
+    if (draft) {
+      const d = dedupe(draft, await store.listAlerts(m.crewId));
+      if (d.action !== "keep") {
+        if (d.action === "replace") await db.delete("alerts", d.old.id);
+        alert = { ...draft, id: id("al") };
+        await db.put("alerts", alert);
+      }
+    }
+    if (baseline) await db.put("baselines", { ...baseline, id: `${baseline.crewId}:${baseline.key}` });
+    notify();
+    return { measurement, alert };
   },
 
   async listAlerts(crewId) {
