@@ -61,13 +61,6 @@ public/models/     3D body and astronaut GLB files
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Branch from `main` as `feature/pf-<issue>-short-name`, open a PR, and do not break `src/contracts` without telling the other dev.
 
-## Team
-
-| Role | Person | GitHub |
-| --- | --- | --- |
-| Dev A | Umer | [@umeraamir09](https://github.com/umeraamir09) |
-| Dev B | Ahmed | [@AhmedYasirJwd](https://github.com/AhmedYasirJwd) |
-
 ## License and credits
 
 Application code is for the team's Space Apps submission. See the Sources page in the app for all NASA, CSA, and model credits.
