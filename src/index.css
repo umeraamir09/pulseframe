@@ -134,7 +134,8 @@ button:disabled { cursor: default; }
   min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center;
   background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 700;
 }
-.nav-count.emergency { background: var(--act); color: #fff; }
+/* Not ".emergency": that is the emergency page's layout class (flex, ~100vh tall). */
+.nav-count.urgent { background: var(--act); color: #fff; }
 .side-nav a.active .nav-count { background: var(--surface); color: var(--accent); }
 
 .mode-card {

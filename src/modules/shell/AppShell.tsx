@@ -92,7 +92,7 @@ export function AppShell() {
                 <Icon name={link.icon} size={20} />
                 <span className="grow">{link.label}</span>
                 {link.to === "/sync" ? <NavSyncCount /> : null}
-                {link.to === "/alerts" && openAlerts ? <span className="nav-count emergency">{openAlerts}</span> : null}
+                {link.to === "/alerts" && openAlerts ? <span className="nav-count urgent">{openAlerts}</span> : null}
               </NavLink>
             ))}
           </nav>
