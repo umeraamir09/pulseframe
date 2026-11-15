@@ -1,0 +1,389 @@
+{
+  "id": "headache-co2",
+  "title": "Headache in flight (including high CO2)",
+  "regionIds": [
+    "head"
+  ],
+  "keywords": [
+    "headache",
+    "head pain",
+    "head pressure",
+    "full head",
+    "migraine",
+    "CO2",
+    "stuffy",
+    "fatigue",
+    "tired",
+    "foggy"
+  ],
+  "differential": [
+    {
+      "label": "Tension-type headache",
+      "note": "Working idea only. This is not a diagnosis. The most common headache type reported on the ISS."
+    },
+    {
+      "label": "Space adaptation headache",
+      "note": "Working idea only. This is not a diagnosis. Common in the first days of flight."
+    },
+    {
+      "label": "Headache from high cabin CO2",
+      "note": "Working idea only. This is not a diagnosis. Check the CO2 reading and ask crewmates."
+    },
+    {
+      "label": "Migraine-like headache",
+      "note": "Working idea only. This is not a diagnosis. More common in the first week."
+    },
+    {
+      "label": "Stroke, bleeding in the brain or infection. Cannot be ruled out onboard. Needs flight surgeon review",
+      "note": "Working idea only. This is not a diagnosis."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Danger sign check",
+      "instruction": "Ask if the headache started suddenly and was explosive. Check for slurred speech, vision change, weak arms or legs, loss of balance or confusion. Note yes or no."
+    },
+    {
+      "title": "Pain score",
+      "instruction": "Stay restrained. Enter a pain score from 0 to 10.",
+      "inputKey": "painScore"
+    },
+    {
+      "title": "Body temperature",
+      "instruction": "Take a temperature with the oral thermometer and enter it.",
+      "inputKey": "temperatureC"
+    },
+    {
+      "title": "Systolic blood pressure",
+      "instruction": "Stay restrained. Read systolic blood pressure on the monitor and enter it.",
+      "inputKey": "systolicBP"
+    },
+    {
+      "title": "Diastolic blood pressure",
+      "instruction": "Stay restrained. Read diastolic blood pressure on the monitor and enter it.",
+      "inputKey": "diastolicBP"
+    },
+    {
+      "title": "Heart rate",
+      "instruction": "Read heart rate on the monitor and enter it.",
+      "inputKey": "heartRate"
+    },
+    {
+      "title": "Cabin CO2",
+      "instruction": "Read the cabin CO2 value on the vehicle display or ask the ground. Write down the number and the unit. Ask crewmates if they have headaches too."
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "Check for danger signs first",
+      "instruction": "Do the danger sign check. If any answer is yes, call the flight surgeon now.",
+      "sourceIds": [
+        "s11",
+        "s12",
+        "s13",
+        "s15"
+      ]
+    },
+    {
+      "title": "Check the cabin CO2",
+      "instruction": "Read the CO2 value. Ask crewmates if they also have headaches.",
+      "sourceIds": [
+        "s7",
+        "s8"
+      ]
+    },
+    {
+      "title": "Move to an area with good airflow",
+      "instruction": "Move away from closed corners and sleep spots. Stay near moving air.",
+      "sourceIds": [
+        "s9",
+        "s10"
+      ]
+    },
+    {
+      "title": "Rest and drink water",
+      "instruction": "Stop hard work. Drink water.",
+      "sourceIds": [
+        "s6"
+      ]
+    },
+    {
+      "title": "Measure and enter readings",
+      "instruction": "Do the tests on this card. Enter each result.",
+      "sourceIds": [
+        "s13"
+      ]
+    },
+    {
+      "title": "Send the case to the flight surgeon",
+      "instruction": "Continue to handoff and send the case. Include the CO2 value.",
+      "sourceIds": [
+        "s7"
+      ]
+    }
+  ],
+  "candidateItemIds": [
+    "kit-white-acetaminophen",
+    "kit-white-aspirin",
+    "kit-white-ibuprofen"
+  ],
+  "cautions": "This card is not a diagnosis. It gives no doses. If any danger sign is present, do not take anything from the kit before you reach the flight surgeon. A fixed cabin sensor can miss a local pocket of CO2 near the face. Use any kit item only as the flight surgeon directs.",
+  "sourceNote": "Researcher card, Pulseframe Batch 1, 2026-11-15. Built from NASA OCHMO-TB-004 (Carbon Dioxide), OCHMO-MTB-004 (Space Adaptation Sickness), NASA IMM data, van Oosterhout et al. 2024 (Neurology) and MedlinePlus. Not a NASA procedure. The airflow step is a team inference from the CO2 sources, not a NASA instruction. Pending second-person safety review.",
+  "redFlagsLifeThreat": [
+    "Headache started suddenly and was explosive.",
+    "Worst headache ever.",
+    "Slurred speech, vision change, weak arm or leg, loss of balance, confusion or memory loss.",
+    "Headache after a head injury."
+  ],
+  "redFlagsCallGround": [
+    "Headache gets worse over 24 hours.",
+    "Severe pain in one eye with redness in that eye.",
+    "New vision change with the headache.",
+    "More than one crew member has a headache, or the CO2 value is above the 3 mmHg one-hour limit.",
+    "Fever or stiff neck with the headache."
+  ],
+  "timeLimits": [
+    {
+      "item": "Headache getting worse over 24 hours: call the flight surgeon.",
+      "safety": true,
+      "sourceIds": [
+        "s14"
+      ]
+    },
+    {
+      "item": "NASA-STD-3001 limits the 1-hour average cabin CO2 to no more than 3 mmHg. This is a design limit, not a personal symptom threshold.",
+      "safety": true,
+      "sourceIds": [
+        "s8"
+      ]
+    }
+  ],
+  "whenGroundUnavailable": {
+    "status": "PARTIAL (historical rule found, no current rule)",
+    "detail": "The 2001 ISS medical checklist says that in an emergency or during loss of signal the crew begins treatment, then calls the surgeon as soon as possible. This is a 2001 rule. No current public NASA or ESA rule was found. No public NASA procedure covers headache care without ground contact. Looked in: OCHMO-TB-004, OCHMO-MTB-004, HRP 2017 evidence report, van Oosterhout 2024.",
+    "firstAidThatNeedsNoGround": [
+      "Do the danger sign check and record it with the time.",
+      "Check CO2 and move to good airflow.",
+      "Rest and drink water.",
+      "Repeat the danger sign check if the headache gets worse.",
+      "Send the case as soon as the link returns."
+    ],
+    "sourceIds": [
+      "s13",
+      "s7",
+      "s6",
+      "s19"
+    ]
+  },
+  "proposedKeys": [
+    {
+      "key": "cabinCO2",
+      "unit": "mmHg",
+      "reason": "TB-004 ties headache to CO2 partial pressure in mmHg; no key exists"
+    },
+    {
+      "key": "neuroDangerSigns",
+      "unit": "yes/no",
+      "reason": "Danger sign check has no key"
+    }
+  ],
+  "candidateItemNotes": "All three ids are listed under Pain Reliever in inventory.json. MTB-004 names acetaminophen, aspirin and NSAIDs for SAS headache. Ibuprofen is an NSAID. No doses are given here.",
+  "environment": "iss-current",
+  "safety": true,
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "HEADACHE (LATE) 5.92E-01",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s2",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "HEADACHE (CO2 INDUCED) 3.06E-01",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s3",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11033988/",
+      "title": "van Oosterhout et al. 2024, Frequency and Clinical Features of Space Headache Experienced by Astronauts During Long-Haul Space Flights, Neurology",
+      "section": "Abstract, Results",
+      "quote": "Phenotypically, 170/189 (89.9%) episodes were tension-type headache (TTH) and 19/189 (10.1%) were migraine.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential"
+    },
+    {
+      "id": "s4",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11033988/",
+      "title": "van Oosterhout et al. 2024, Frequency and Clinical Features of Space Headache Experienced by Astronauts During Long-Haul Space Flights, Neurology",
+      "section": "Abstract, Conclusions",
+      "quote": "sometimes have migrainous features, particularly during the first week of flight",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential"
+    },
+    {
+      "id": "s5",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Symptoms and Medical Issues Associated with SAS, Headache, p3",
+      "quote": "Headaches are reported by up to 90% of astronauts during the first few days.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential"
+    },
+    {
+      "id": "s6",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+      "title": "OCHMO-MTB-004 Rev A, Space Adaptation Sickness (SAS) and Space Readaptation Syndrome, NASA-STD-3001 Medical Technical Brief (09/25/2025)",
+      "section": "Symptoms and Medical Issues Associated with SAS, Headache, p3",
+      "quote": "Treatment includes sleep, exercise, hydration, coffee intake, and analgesics including acetaminophen, aspirin, or NSAIDS.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "steps, candidate items"
+    },
+    {
+      "id": "s7",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-004-carbon-dioxide.pdf",
+      "title": "OCHMO-TB-004 Rev D, Carbon Dioxide (CO2), NASA-STD-3001 Technical Brief",
+      "section": "Background, anecdotal CO2 symptom associations, p4",
+      "quote": "Headaches at levels between 2.8-4.5 mmHg; worsening with increasing levels of CO2 accompanied by fatigue and malaise flushing.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential, red flags"
+    },
+    {
+      "id": "s8",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-004-carbon-dioxide.pdf",
+      "title": "OCHMO-TB-004 Rev D, Carbon Dioxide (CO2), NASA-STD-3001 Technical Brief",
+      "section": "Background, CO2 requirements, p4",
+      "quote": "limits the average 1-hour CO2 partial pressure (ppCO2) in the habitable volume to no more than 3 mmHg",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "CO2 limit"
+    },
+    {
+      "id": "s9",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-004-carbon-dioxide.pdf",
+      "title": "OCHMO-TB-004 Rev D, Carbon Dioxide (CO2), NASA-STD-3001 Technical Brief",
+      "section": "Background, CO2-induced headaches, p5",
+      "quote": "local fluctuations of CO2 that are not measured by fixed sensors",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "CO2 caution"
+    },
+    {
+      "id": "s10",
+      "url": "https://www.nature.com/articles/s41526-023-00279-y",
+      "title": "Meer, Grob, Antonsen et al. 2023, Ocular conditions and injuries, detection and management in spaceflight, npj Microgravity",
+      "section": "Ocular chemical burn, causes",
+      "quote": "local pockets of C02 developing around the nose and mouth and facial area",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "CO2 caution"
+    },
+    {
+      "id": "s11",
+      "url": "https://medlineplus.gov/ency/article/003024.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Headache",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Your headache comes on suddenly and is explosive or violent. This kind of headache needs medical attention right away.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s12",
+      "url": "https://medlineplus.gov/ency/article/003024.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Headache",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Your headache is \"the worst ever,\" even if you regularly get headaches.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s13",
+      "url": "https://medlineplus.gov/ency/article/003024.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Headache",
+      "section": "When to Contact a Medical Professional",
+      "quote": "You also have slurred speech, a change in vision, problems moving your arms or legs, loss of balance, confusion",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag, neuro check"
+    },
+    {
+      "id": "s14",
+      "url": "https://medlineplus.gov/ency/article/003024.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Headache",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Your headache gets worse over 24 hours.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s15",
+      "url": "https://medlineplus.gov/ency/article/003024.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Headache",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Your headache occurs with a head injury.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s16",
+      "url": "https://medlineplus.gov/ency/article/003024.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Headache",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Your headache is severe and just in one eye, with redness in that eye.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s17",
+      "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-004-carbon-dioxide.pdf",
+      "title": "OCHMO-TB-004 Rev D, Carbon Dioxide (CO2), NASA-STD-3001 Technical Brief",
+      "section": "Physiology, p2",
+      "quote": "The most common symptoms experienced during spaceflight are headaches and vision changes",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "vision change"
+    },
+    {
+      "id": "s18",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 4 rows, p4",
+      "quote": "Stroke (Cerebrovascular Accident) 4.90E-04",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential"
+    },
+    {
+      "id": "s19",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "PAIN RELIEF (ISS MED/3A - ALL/FIN), header NOTE, PDF p.425",
+      "quote": "In an emergency or during Loss of Signal, begin appropriate treatment; then call Surgeon as soon as possible.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "whenGroundUnavailable"
+    }
+  ],
+  "equipmentIds": [],
+  "gaps": [
+    "Current ISS headache procedure is not public. No onboard handheld CO2 reading source was found for the crew to enter."
+  ]
+}

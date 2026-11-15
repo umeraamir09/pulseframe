@@ -1,0 +1,456 @@
+{
+  "id": "eye-foreign-body-abrasion",
+  "title": "Something in the eye or a scratched eye",
+  "regionIds": [
+    "head"
+  ],
+  "keywords": [
+    "eye",
+    "scratch",
+    "gritty",
+    "foreign body",
+    "debris",
+    "dust",
+    "particle",
+    "tearing",
+    "red eye",
+    "chemical",
+    "splash",
+    "blurred vision",
+    "light hurts"
+  ],
+  "differential": [
+    {
+      "label": "Small particle on the eye or under the eyelid",
+      "note": "Working idea only. This is not a diagnosis. Floating debris is the most recorded eye problem in flight."
+    },
+    {
+      "label": "Scratch on the clear front of the eye (corneal abrasion)",
+      "note": "Working idea only. This is not a diagnosis. Pain, tearing, light sensitivity and blurred vision can follow a scratch."
+    },
+    {
+      "label": "Chemical in the eye. Emergency",
+      "note": "Working idea only. This is not a diagnosis. Flush first, then call the flight surgeon."
+    },
+    {
+      "label": "Object stuck in the eye. Emergency",
+      "note": "Working idea only. This is not a diagnosis. Do not remove it. Needs flight surgeon review."
+    },
+    {
+      "label": "Eye infection",
+      "note": "Working idea only. This is not a diagnosis. Needs flight surgeon review."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Pain score",
+      "instruction": "Stay restrained. Enter a pain score from 0 to 10.",
+      "inputKey": "painScore"
+    },
+    {
+      "title": "Vision check, right eye",
+      "instruction": "Cover the left eye with your hand. Read the lowest line you can on the onboard eye chart. Write down the line."
+    },
+    {
+      "title": "Vision check, left eye",
+      "instruction": "Cover the right eye with your hand. Read the lowest line you can on the onboard eye chart. Write down the line."
+    },
+    {
+      "title": "Chemical check",
+      "instruction": "Ask what touched the eye. Note yes if any chemical, cleaning fluid or unknown liquid got in it."
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "If a chemical got in the eye, flush it now",
+      "instruction": "Put on the eyewash goggles with the outflow side on the hurt eye. Flush the eye. Keep flushing for at least 15 minutes. Then call the flight surgeon.",
+      "sourceIds": [
+        "s6",
+        "s24",
+        "s15"
+      ]
+    },
+    {
+      "title": "If something is stuck in the eye, leave it",
+      "instruction": "Do not pull it out. Do not press on it. Loosely cover both eyes. Call the flight surgeon now.",
+      "sourceIds": [
+        "s13",
+        "s14"
+      ]
+    },
+    {
+      "title": "Do not rub the eye",
+      "instruction": "Keep hands off the eye. Do not squeeze the eyelids.",
+      "sourceIds": [
+        "s10"
+      ]
+    },
+    {
+      "title": "Clean your hands",
+      "instruction": "Wash or wipe your hands before you touch the eye or eyelid.",
+      "sourceIds": [
+        "s11"
+      ]
+    },
+    {
+      "title": "Blink",
+      "instruction": "Blink several times. Tears often wash out tiny particles.",
+      "sourceIds": [
+        "s9"
+      ]
+    },
+    {
+      "title": "Rinse with artificial tears",
+      "instruction": "Hold the bottle above the outer corner of the eye. Do not touch the eye with the tip. Let the drops run across the eye.",
+      "sourceIds": [
+        "s5",
+        "s12"
+      ]
+    },
+    {
+      "title": "Use the eyewash goggles if drops do not work",
+      "instruction": "Put on the eyewash goggles. Flush the eye. Keep the water inside the goggles.",
+      "sourceIds": [
+        "s6",
+        "s7"
+      ]
+    },
+    {
+      "title": "Check vision in each eye",
+      "instruction": "Do the vision check for each eye. Enter what you read.",
+      "sourceIds": [
+        "s4",
+        "s21",
+        "s23"
+      ]
+    },
+    {
+      "title": "Send the case to the flight surgeon",
+      "instruction": "Continue to handoff and send the case. Say if vision changed.",
+      "sourceIds": [
+        "s18"
+      ]
+    }
+  ],
+  "candidateItemIds": [
+    "kit-white-hypromellose"
+  ],
+  "cautions": "This card is not a diagnosis. It gives no doses. Do not rub or press the eye. Keep eyewash water inside the goggles so it does not float into equipment. Long use of numbing eye drops can make eye injuries worse, so use them only as the flight surgeon directs. Use any kit item only as the flight surgeon directs.",
+  "sourceNote": "Researcher card, Pulseframe Batch 1, 2026-11-15. Built from NASA IMM data, peer reviewed spaceflight ophthalmology reviews (Suh et al., Meer et al., npj Microgravity) and MedlinePlus first aid. Not a NASA procedure. The ISS medical checklist eye procedure is not public. Pending second-person safety review.",
+  "redFlagsLifeThreat": [
+    "A chemical got in the eye.",
+    "Something is stuck in or through the eye.",
+    "Vision changed: blurred, double or lost.",
+    "Blood is pooling in the eye."
+  ],
+  "redFlagsCallGround": [
+    "Pain or blurred vision continues after the particle is out.",
+    "The eye is painful and red.",
+    "Nausea or headache comes with the eye pain.",
+    "A scratchy feeling lasts more than a day or two."
+  ],
+  "timeLimits": [
+    {
+      "item": "Chemical in the eye: start flushing at once and keep flushing at least 15 minutes.",
+      "safety": true,
+      "sourceIds": [
+        "s15"
+      ]
+    },
+    {
+      "item": "Minor scratchy feeling after a particle is removed should go away within a day or two. If not, call the flight surgeon.",
+      "safety": true,
+      "sourceIds": [
+        "s19",
+        "s18"
+      ]
+    }
+  ],
+  "whenGroundUnavailable": {
+    "status": "PARTIAL (historical rule found, no current rule)",
+    "detail": "The 2001 ISS medical checklist says that in an emergency or during loss of signal the crew begins treatment, then calls the surgeon as soon as possible. This is a 2001 rule. No current public NASA or ESA rule was found. No public NASA or ESA procedure says what a crew should do for an eye injury when the ground cannot answer. Looked in: OCHMO technical briefs index, NASA HRP 2017 in-flight medical conditions evidence report, Suh et al. and Meer et al. (npj Microgravity), public 2015 ISS medical kit checklist.",
+    "firstAidThatNeedsNoGround": [
+      "Keep flushing a chemical eye injury for at least 15 minutes.",
+      "Leave a stuck object in place and loosely cover both eyes.",
+      "Record each vision check with the time.",
+      "Send the case as soon as the link returns."
+    ],
+    "sourceIds": [
+      "s15",
+      "s13",
+      "s14",
+      "s25"
+    ]
+  },
+  "proposedKeys": [
+    {
+      "key": "visualAcuity",
+      "unit": "Snellen fraction",
+      "reason": "Already proposed in new-measurement-keys.csv (section 3). Record one value per eye. Not in keys.ts yet, so the vision tests have no inputKey."
+    }
+  ],
+  "candidateItemNotes": "kit-white-hypromellose is listed for dry eyes in the 2015 ISS kit list. Suh et al. list Hypromellose (Natures Tears) as a corneal abrasion item and say artificial tears may rinse minor particle abrasions. The eye chart and eyewash goggles are equipment, not consumables, so they are listed in equipmentIds (equipment.json ids eq-eye-chart and eq-eyewash), not in candidateItemIds.",
+  "equipmentIds": [
+    "eq-eye-chart",
+    "eq-eyewash"
+  ],
+  "gaps": [
+    "No source we found says whether the onboard eye chart is a near or a distance chart. equipment.json names it a near vision card held at about 40 cm; check that with the Kit researcher before the app gives a distance.",
+    "No public source shows the eyewash goggles are still on board after 2015. The newest sources are the 2015 kit list and older ISS procedures.",
+    "The current ISS eye procedures are not public. This card uses the 2001 ISS checklist, peer reviewed reviews and MedlinePlus."
+  ],
+  "environment": "iss-historical",
+  "safety": true,
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/ranking-of-medical-conditions-by-probability.pdf",
+      "title": "Ranking of Medical Conditions by Probability (NASA IMM Data Request Report, iMED v5.0, dated 2 Feb 2015, linked from NASA IMM Overview page)",
+      "section": "Table 2, p2",
+      "quote": "EYE ABRASION (FOREIGN BODY) 7.22E-01",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "likelihood"
+    },
+    {
+      "id": "s2",
+      "url": "https://www.nature.com/articles/s41526-023-00279-y",
+      "title": "Meer, Grob, Antonsen et al. 2023, Ocular conditions and injuries, detection and management in spaceflight, npj Microgravity",
+      "section": "Abstract",
+      "quote": "There were 70 corneal abrasions, 4 dry eyes, 4 eye debris, 5 complaints of ocular irritation, 6 chemical burns",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "in-flight history"
+    },
+    {
+      "id": "s3",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11897398/",
+      "title": "Suh et al., Management of corneal injuries in spaceflight and recommendations for planetary missions, npj Microgravity",
+      "section": "Results and discussion, corneal abrasion",
+      "quote": "Pain, foreign body sensation, tearing, photophobia, and blurred vision may result from corneal abrasion.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "differential, symptoms"
+    },
+    {
+      "id": "s4",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11897398/",
+      "title": "Suh et al., Management of corneal injuries in spaceflight and recommendations for planetary missions, npj Microgravity",
+      "section": "Results and discussion, management on the ISS",
+      "quote": "visual acuity for each eye can be measured with the available Eye Chart aboard the ISS",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "vision test"
+    },
+    {
+      "id": "s5",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11897398/",
+      "title": "Suh et al., Management of corneal injuries in spaceflight and recommendations for planetary missions, npj Microgravity",
+      "section": "Results and discussion, management on the ISS",
+      "quote": "In the setting of minor particle abrasions, artificial tears may be used to rinse the eye.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "rinse step, candidate item"
+    },
+    {
+      "id": "s6",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11897398/",
+      "title": "Suh et al., Management of corneal injuries in spaceflight and recommendations for planetary missions, npj Microgravity",
+      "section": "Results and discussion, management on the ISS",
+      "quote": "a space eyewash apparatus currently aboard the ISS may be employed, which consists of flushing an eyewash solution through swimming goggles",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "eyewash step"
+    },
+    {
+      "id": "s7",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11897398/",
+      "title": "Suh et al., Management of corneal injuries in spaceflight and recommendations for planetary missions, npj Microgravity",
+      "section": "Results and discussion, management on the ISS",
+      "quote": "prevents loose water from floating around electrical equipment in a microgravity environment",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "microgravity caution"
+    },
+    {
+      "id": "s8",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11897398/",
+      "title": "Suh et al., Management of corneal injuries in spaceflight and recommendations for planetary missions, npj Microgravity",
+      "section": "Results and discussion, corneal abrasion",
+      "quote": "the prolonged use of topical anesthetics is strongly discouraged due to the significant risk of exacerbating ocular injuries over the long term",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "caution"
+    },
+    {
+      "id": "s9",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Small foreign object",
+      "quote": "The eye will often clear itself of tiny objects, like eyelashes and sand, through blinking and tearing.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "blink step"
+    },
+    {
+      "id": "s10",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Small foreign object",
+      "quote": "If not, don't rub the eye or squeeze the eyelids.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "do not rub"
+    },
+    {
+      "id": "s11",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid",
+      "quote": "Always wash your hands with soap and water before touching the eye or eyelid.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "hand step"
+    },
+    {
+      "id": "s12",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Small foreign object",
+      "quote": "Do not touch the eye itself with the dropper or bottle tip.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "rinse step"
+    },
+    {
+      "id": "s13",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Object stuck or embedded in the eye",
+      "quote": "Leave the object in place. Do not try to remove the object.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "stuck object step"
+    },
+    {
+      "id": "s14",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Object stuck or embedded in the eye",
+      "quote": "Loosely bandage both eyes. Covering both eyes helps prevent eye movement.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "stuck object step"
+    },
+    {
+      "id": "s15",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Chemical in the eye",
+      "quote": "Keep flushing the eye with clean water or saline solution for at least 15 minutes.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "chemical step, time limit"
+    },
+    {
+      "id": "s16",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "When to Contact a Medical Professional",
+      "quote": "There is any change in vision (such as blurred or double vision).",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s17",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "When to Contact a Medical Professional",
+      "quote": "Nausea or headache occur with the eye pain (this may be a symptom of glaucoma or stroke).",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s18",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Small foreign object",
+      "quote": "If discomfort or blurred vision continues, get medical help.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "call ground"
+    },
+    {
+      "id": "s19",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Small foreign object",
+      "quote": "This should go away within a day or two.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "time limit"
+    },
+    {
+      "id": "s20",
+      "url": "https://www.nature.com/articles/s41526-023-00279-y",
+      "title": "Meer, Grob, Antonsen et al. 2023, Ocular conditions and injuries, detection and management in spaceflight, npj Microgravity",
+      "section": "Introduction",
+      "quote": "In one assessment, Eye Chemical Burn was the top influential medical condition contributing to the probability of evacuation for certain ISS mission conditions",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "severity"
+    },
+    {
+      "id": "s21",
+      "url": "https://www.nasa.gov/wp-content/uploads/2015/03/medical_kit_checklist_-_full_release.pdf",
+      "title": "ISS Medical Checklist 3.001 Medical Kit - Contents and Reference (MED CL/SpX-6 - ALL/FIN/T), 09 APR 15",
+      "section": "Table 5, Medical Diagnostic Pack (Blue), p9",
+      "quote": "Eye Chart",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "eye chart exists (2015 list)"
+    },
+    {
+      "id": "s22",
+      "url": "https://medlineplus.gov/ency/article/000054.htm",
+      "title": "MedlinePlus Medical Encyclopedia (NLM), Eye emergencies",
+      "section": "First Aid, Eye cut, scratch, or blow to the eye",
+      "quote": "If blood is pooling in the eye, cover both eyes with a clean cloth or sterile dressing.",
+      "accessed": "2026-11-15",
+      "confidence": "C",
+      "usedFor": "red flag"
+    },
+    {
+      "id": "s23",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "EYE EXAMINATION (ISS MED/3A - ALL/FIN), page 2 of 5, PDF p.569",
+      "quote": "Cover one eye with hand, read lowest line possible.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "vision test, eq-eye-chart"
+    },
+    {
+      "id": "s24",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN), page 1 of 5, PDF p.577",
+      "quote": "Don Goggles with outflow side of Goggles on affected eye",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "eyewash step, eq-eyewash"
+    },
+    {
+      "id": "s25",
+      "url": "https://web.archive.org/web/20230519222418/https://www.nasa.gov/centers/johnson/pdf/163533main_ISS_Med_CL.pdf",
+      "title": "ISS Integrated Medical Group (IMG) Medical Checklist, JSC-48522-E4, 2001 (NASA JSC; original nasa.gov URL returns 404, archived copy; also mirrored at newspaceeconomy.ca). Historical, not the current checklist.",
+      "section": "EYE EXAMINATION and EYE PROBLEMS - CHEMICAL BURN (ISS MED/3A - ALL/FIN), header NOTE, PDF p.567 and p.577",
+      "quote": "In an emergency or during Loss of Signal, begin appropriate treatment; then call Surgeon as soon as possible.",
+      "accessed": "2026-11-15",
+      "confidence": "A",
+      "usedFor": "whenGroundUnavailable"
+    }
+  ]
+}
