@@ -2,6 +2,7 @@ import type { InventoryItem, SkeletonRegionId } from "../../contracts";
 import { KEY_LABELS } from "../../contracts";
 import { explainAlert, missionDayLabel, missionDayOf, SIM_CREW, store } from "../../data/db";
 import { getProtocol, matchProtocol } from "../protocols";
+import { ANSWER_KINDS, parseBlocks, type AnswerBlock, type AnswerKind } from "./answerBlocks";
 import { LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, OFFLINE_COMMANDS_ONLY, PROVENANCE_LABEL } from "./copy";
 
 export interface CaseContext {
@@ -32,6 +33,10 @@ export interface AssistantReply {
   citations?: string[];
   /** True when the research pack does not cover the question. */
   notFound?: boolean;
+  /** Live answers only: "research" (cited), "general" (uncited, non-medical) or "notFound". */
+  kind?: AnswerKind;
+  /** Live answers only: visual blocks rendered under the lead text. */
+  blocks?: AnswerBlock[];
 }
 
 export interface AssistantProvider {
@@ -145,7 +150,7 @@ export function isOfflineCommand(raw: string): boolean {
   return verb === "help" || verb === "find" || verb === "item" || verb === "alerts" || verb === "suggest";
 }
 
-function isLiveBody(value: unknown): value is { text: string; draft?: unknown; citations?: unknown; notFound?: unknown } {
+function isLiveBody(value: unknown): value is { text: string; draft?: unknown; citations?: unknown; notFound?: unknown; kind?: unknown; blocks?: unknown } {
   if (!value || typeof value !== "object") return false;
   const text = (value as { text?: unknown }).text;
   return typeof text === "string" && text.trim().length > 0;
@@ -181,7 +186,12 @@ async function postLive(payload: {
     if (Array.isArray(body.citations)) {
       reply.citations = body.citations.filter((id): id is string => typeof id === "string" && id.length > 0);
     }
+    const kind = ANSWER_KINDS.find((k) => k === body.kind);
     if (typeof body.notFound === "boolean") reply.notFound = body.notFound;
+    // Older servers send only notFound; infer the kind from it.
+    reply.kind = kind ?? (reply.notFound ? "notFound" : "research");
+    reply.notFound = reply.kind === "notFound";
+    reply.blocks = reply.kind === "notFound" ? [] : parseBlocks(body.blocks);
     return reply;
   } finally {
     clearTimeout(timer);

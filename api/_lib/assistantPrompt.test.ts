@@ -19,7 +19,9 @@ import {
   inventoryIdOfChunk,
   parseModelAnswer,
   type AssistantRequest,
+  type ModelAnswer,
 } from "./assistantPrompt.ts";
+import { MAX_BLOCK_ITEMS, MAX_BLOCKS, type AnswerBlock } from "../../src/modules/assistant/answerBlocks.ts";
 import { PACK, estimateTokens, retrieve, type RetrieveResult, type RetrievedChunk } from "./retrieve.ts";
 
 const ALL_KIT_IDS = [...SERVER_INVENTORY.keys()];
@@ -149,70 +151,144 @@ describe("filterCitations", () => {
   });
 });
 
+function answer(partial: Partial<ModelAnswer>): ModelAnswer {
+  return { kind: "research", text: "", citations: [], blocks: [], draft: null, ...partial };
+}
+
 describe("finalizeAnswer", () => {
-  const allowed = new Set(["cv:a"]);
+  const allowed = new Set(["cv:a", "cv:b"]);
 
   it("forces the fixed text when notFound", () => {
-    const out = finalizeAnswer({ text: "guess", citations: ["cv:a"], draft: null, notFound: true }, allowed);
-    expect(out).toEqual({ text: NOT_FOUND_TEXT, citations: [], notFound: true });
+    const out = finalizeAnswer(answer({ kind: "notFound", text: "guess", citations: ["cv:a"] }), allowed);
+    expect(out).toEqual({ kind: "notFound", text: NOT_FOUND_TEXT, citations: [], blocks: [], notFound: true });
   });
 
   it("turns an answer with no valid citation into notFound", () => {
-    const out = finalizeAnswer({ text: "Appendicitis is treated by [cond:fake].", citations: ["cond:fake"], notFound: false }, allowed);
+    const out = finalizeAnswer(answer({ text: "Appendicitis is treated by [cond:fake].", citations: ["cond:fake"] }), allowed);
     expect(out.notFound).toBe(true);
+    expect(out.kind).toBe("notFound");
     expect(out.text).toBe(NOT_FOUND_TEXT);
   });
 
   it("passes draft ids on for the client's validateRecommendation to gate", () => {
     const out = finalizeAnswer(
-      {
+      answer({
         text: "Use the kit item [cv:a].",
         citations: ["cv:a"],
         draft: { itemIds: ["kit-white-olopatadine", "kit-invented", "kit-invented"], rationale: "r", cautions: "c" },
-        notFound: false,
-      },
+      }),
       allowed,
     );
     expect(out.draft).toEqual({ itemIds: ["kit-white-olopatadine", "kit-invented"], rationale: "r", cautions: "c" });
   });
 
   it("drops an empty or null draft", () => {
-    expect(finalizeAnswer({ text: "ok [cv:a]", citations: [], draft: null, notFound: false }, allowed).draft).toBeUndefined();
-    expect(
-      finalizeAnswer({ text: "ok [cv:a]", citations: [], draft: { itemIds: [], rationale: "", cautions: "" }, notFound: false }, allowed)
-        .draft,
-    ).toBeUndefined();
+    expect(finalizeAnswer(answer({ text: "ok [cv:a]" }), allowed).draft).toBeUndefined();
+    expect(finalizeAnswer(answer({ text: "ok [cv:a]", draft: { itemIds: [], rationale: "", cautions: "" } }), allowed).draft).toBeUndefined();
+  });
+
+  it("keeps cited block items, drops uncited ones and adds block cites to citations", () => {
+    const blocks: AnswerBlock[] = [
+      { type: "range", label: "Resting heart rate", low: 60, high: 100, unit: "bpm", note: "", cite: ["cv:b", "cond:fake"] },
+      { type: "range", label: "Invented", low: 1, high: 2, unit: "x", note: "", cite: ["cond:fake"] },
+      { type: "range", label: "Backwards", low: 9, high: 2, unit: "x", note: "", cite: ["cv:a"] },
+      {
+        type: "list",
+        title: "Points",
+        items: [
+          { text: "cited [cv:a]", cite: ["cv:a"] },
+          { text: "uncited claim", cite: [] },
+        ],
+      },
+      { type: "warning", title: "Call the flight surgeon", items: [], cite: ["cv:a"] },
+    ];
+    const out = finalizeAnswer(answer({ text: "Heart rate [cv:a].", citations: ["cv:a"], blocks }), allowed);
+    expect(out.kind).toBe("research");
+    expect(out.citations).toEqual(["cv:a", "cv:b"]);
+    expect(out.blocks).toEqual([
+      { type: "range", label: "Resting heart rate", low: 60, high: 100, unit: "bpm", note: "", cite: ["cv:b"] },
+      { type: "list", title: "Points", items: [{ text: "cited", cite: ["cv:a"] }] },
+    ]);
+  });
+
+  it("caps blocks and items", () => {
+    const list: AnswerBlock = { type: "list", title: "t", items: Array.from({ length: 10 }, (_, i) => ({ text: `p${i}`, cite: ["cv:a"] })) };
+    const out = finalizeAnswer(answer({ text: "x [cv:a]", blocks: Array.from({ length: 6 }, () => list) }), allowed);
+    expect(out.blocks).toHaveLength(MAX_BLOCKS);
+    for (const block of out.blocks) expect(block.type === "list" && block.items.length).toBe(MAX_BLOCK_ITEMS);
+  });
+
+  it("returns a general answer with no citations, no draft and no range or warning blocks", () => {
+    const out = finalizeAnswer(
+      answer({
+        kind: "general",
+        text: "Hi! I answer questions about crew health [cv:a].",
+        citations: ["cv:a"],
+        blocks: [
+          { type: "list", title: "Try asking", items: [{ text: "What is normal heart rate?", cite: ["cv:a"] }] },
+          { type: "range", label: "HR", low: 60, high: 100, unit: "bpm", note: "", cite: [] },
+          { type: "warning", title: "w", items: ["x"], cite: [] },
+        ],
+        draft: { itemIds: ["kit-white-aspirin"], rationale: "r", cautions: "c" },
+      }),
+      allowed,
+    );
+    expect(out).toEqual({
+      kind: "general",
+      text: "Hi! I answer questions about crew health.",
+      citations: [],
+      blocks: [{ type: "list", title: "Try asking", items: [{ text: "What is normal heart rate?", cite: [] }] }],
+      notFound: false,
+    });
+  });
+
+  it("turns an empty general answer into notFound", () => {
+    expect(finalizeAnswer(answer({ kind: "general", text: "  " }), allowed).kind).toBe("notFound");
   });
 });
 
 describe("parseModelAnswer", () => {
-  it("accepts a valid answer, with or without a draft", () => {
-    expect(parseModelAnswer('{"text":"t","citations":["cv:a"],"draft":null,"notFound":false}').text).toBe("t");
-    const withDraft = parseModelAnswer(
-      '{"text":"t","citations":[],"draft":{"itemIds":["k"],"rationale":"r","cautions":"c"},"notFound":false}',
+  it("accepts a valid answer, with or without a draft and blocks", () => {
+    expect(parseModelAnswer('{"kind":"research","text":"t","citations":["cv:a"],"blocks":[],"draft":null}').text).toBe("t");
+    const full = parseModelAnswer(
+      JSON.stringify({
+        kind: "research",
+        text: "t",
+        citations: [],
+        blocks: [{ type: "range", label: "HR", low: 60, high: null, unit: "bpm", note: "", cite: ["cv:a"] }],
+        draft: { itemIds: ["k"], rationale: "r", cautions: "c" },
+      }),
     );
-    expect(withDraft.draft?.itemIds).toEqual(["k"]);
+    expect(full.draft?.itemIds).toEqual(["k"]);
+    expect(full.blocks[0]).toMatchObject({ type: "range", high: null });
   });
 
   it("rejects missing fields", () => {
-    expect(() => parseModelAnswer('{"text":"t","citations":[]}')).toThrow(ModelOutputError);
-    expect(() => parseModelAnswer('{"citations":[],"notFound":false}')).toThrow(ModelOutputError);
-    expect(() => parseModelAnswer('{"text":"t","citations":[],"draft":{"itemIds":["k"]},"notFound":false}')).toThrow(
-      ModelOutputError,
-    );
+    expect(() => parseModelAnswer('{"text":"t","citations":[],"blocks":[]}')).toThrow(ModelOutputError);
+    expect(() => parseModelAnswer('{"kind":"general","citations":[],"blocks":[]}')).toThrow(ModelOutputError);
+    expect(() =>
+      parseModelAnswer('{"kind":"research","text":"t","citations":[],"blocks":[],"draft":{"itemIds":["k"]}}'),
+    ).toThrow(ModelOutputError);
   });
 
-  it("rejects bad JSON and wrong types", () => {
+  it("rejects bad JSON, wrong types and unknown block types", () => {
     expect(() => parseModelAnswer("not json {")).toThrow(ModelOutputError);
-    expect(() => parseModelAnswer('{"text":1,"citations":[],"notFound":false}')).toThrow(ModelOutputError);
+    expect(() => parseModelAnswer('{"kind":"research","text":1,"citations":[],"blocks":[]}')).toThrow(ModelOutputError);
+    expect(() => parseModelAnswer('{"kind":"maybe","text":"t","citations":[],"blocks":[]}')).toThrow(ModelOutputError);
+    expect(() => parseModelAnswer('{"kind":"research","text":"t","citations":[],"blocks":[{"type":"chart"}]}')).toThrow(
+      ModelOutputError,
+    );
     expect(() => parseModelAnswer("[]")).toThrow(ModelOutputError);
   });
 
   it("keeps the strict response schema in line with the parser", () => {
     const schema = ANSWER_RESPONSE_FORMAT.json_schema;
     expect(schema.strict).toBe(true);
-    expect(schema.schema.required).toEqual(["text", "citations", "draft", "notFound"]);
+    expect(schema.schema.required).toEqual(["kind", "text", "citations", "blocks", "draft"]);
     expect(schema.schema.additionalProperties).toBe(false);
+    const variants = (schema.schema.properties as { blocks: { items: { anyOf: { properties: { type: { enum: string[] } } }[] } } })
+      .blocks.items.anyOf;
+    expect(variants.map((v) => v.properties.type.enum[0])).toEqual(["facts", "range", "steps", "warning", "list"]);
   });
 });
 

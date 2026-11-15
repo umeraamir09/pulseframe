@@ -12,6 +12,8 @@ export const MODE_LIVE = "Live: Groq";
 export const OFFLINE_COMMANDS_ONLY = "Offline mode answers commands only. Try help.";
 export const NOT_IN_RESEARCH_TITLE = "Not in research";
 export const RESEARCH_ANSWER_TITLE = "From Pulseframe research";
+export const GENERAL_ANSWER_TITLE = "General answer";
+export const GENERAL_NOTE = "General knowledge, not from Pulseframe research. Not medical advice.";
 
 export function canLogGiven(input: { doseText: string; confirmedBy: string; surgeonApproved: boolean }): boolean {
   return input.doseText.trim().length > 0 && input.confirmedBy.trim().length > 0 && input.surgeonApproved;

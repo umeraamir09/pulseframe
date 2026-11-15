@@ -156,6 +156,8 @@ describe("liveProvider", () => {
       citations: ["cv:space-motion-sickness:heartrate.2"],
       draft: { itemIds: [], rationale: "x", cautions: "y" },
       notFound: false,
+      kind: "research",
+      blocks: [],
     });
     expect(calls).toHaveLength(1);
     expect(calls[0]!.url).toBe("/api/assistant");
@@ -187,13 +189,41 @@ describe("liveProvider", () => {
       jsonResponse({ text: "Not in Pulseframe research. Contact the flight surgeon.", citations: [], notFound: true }),
     );
     const reply = await liveProvider.ask({ command: "how do I treat appendicitis?", inventory: [] });
-    expect(reply).toEqual({ text: "Not in Pulseframe research. Contact the flight surgeon.", citations: [], notFound: true });
+    expect(reply).toEqual({
+      text: "Not in Pulseframe research. Contact the flight surgeon.",
+      citations: [],
+      notFound: true,
+      kind: "notFound",
+      blocks: [],
+    });
   });
 
   it("drops a null draft and non-string citation ids", async () => {
     vi.stubGlobal("fetch", async () => jsonResponse({ text: "ok", citations: ["a:b", 3, ""], draft: null, notFound: false }));
     const reply = await liveProvider.ask({ command: "question", inventory: [] });
-    expect(reply).toEqual({ text: "ok", citations: ["a:b"], notFound: false });
+    expect(reply).toEqual({ text: "ok", citations: ["a:b"], notFound: false, kind: "research", blocks: [] });
+  });
+
+  it("passes kind and valid blocks through and drops blocks it cannot read", async () => {
+    const range = { type: "range", label: "Resting heart rate", low: 60, high: 100, unit: "bpm", note: "", cite: ["a:b"] };
+    vi.stubGlobal("fetch", async () =>
+      jsonResponse({
+        kind: "general",
+        text: "Hi!",
+        citations: [],
+        blocks: [range, { type: "chart", data: [] }, { type: "list", title: "t" }],
+        notFound: false,
+      }),
+    );
+    const reply = await liveProvider.ask({ command: "hello", inventory: [] });
+    expect(reply.kind).toBe("general");
+    expect(reply.blocks).toEqual([range]);
+  });
+
+  it("keeps kind and notFound consistent", async () => {
+    vi.stubGlobal("fetch", async () => jsonResponse({ kind: "notFound", text: "Not in research.", citations: [], blocks: [{}] }));
+    const reply = await liveProvider.ask({ command: "q", inventory: [] });
+    expect(reply).toMatchObject({ kind: "notFound", notFound: true, blocks: [] });
   });
 
   it.each(["help", "find aspirin", "item kit-white-aspirin", "alerts", "explain alerts", "suggest", "  HELP  "])(
