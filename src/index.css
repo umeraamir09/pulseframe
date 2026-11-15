@@ -72,6 +72,106 @@ nav a.active, nav a:hover { background: #223044; color: #fff; }
   font-size: 0.8rem;
 }
 
+button {
+  font: inherit;
+  color: #e8edf2;
+  background: #1c2430;
+  border: 1px solid #2f3a48;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+button:hover { background: #243042; }
+button:disabled { opacity: 0.6; cursor: default; }
+button.primary { background: #2563a8; border-color: #2f74c0; }
+button.primary:hover { background: #2d70bb; }
+button.link-btn { background: none; border: none; padding: 0; color: #8ec8ff; }
+.small { font-size: 0.82rem; }
+.error { color: #ff8f7a; font-size: 0.88rem; }
+
+/* Chips and alerts (shared) */
+.chip {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.chip.watch { background: #4a3a10; color: #ffd36b; }
+.chip.act { background: #4a1a14; color: #ff8f7a; }
+.alert-card {
+  margin: 0.5rem 0 0 2rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #3a4552;
+  background: #151b24;
+}
+.alert-card.watch { border-color: #6a5420; }
+.alert-card.act { border-color: #7a2a20; }
+.alert-card p { margin: 0.3rem 0 0; }
+.alert-head { display: flex; gap: 0.5rem; align-items: center; }
+.formula { display: block; margin-top: 0.3rem; font-size: 0.85rem; color: #c9d4de; }
+
+/* Checklist */
+.page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+.page-head h1 { margin: 0.25rem 0 0.1rem; }
+.page-head p { margin: 0; }
+.hazard-chip {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #2f4a66;
+  background: #142233;
+  color: #9fcfff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.day-picker { display: flex; gap: 0.35rem; flex-wrap: wrap; margin: 1rem 0; }
+.day-picker button.active { background: #223044; border-color: #8ec8ff; color: #fff; }
+.progress-wrap { margin-bottom: 1rem; }
+.progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+.edit-past { font-size: 0.88rem; color: #c9d4de; }
+.progress { height: 8px; background: #1c2430; border-radius: 999px; overflow: hidden; }
+.progress span { display: block; height: 100%; background: #3fb27f; transition: width 0.2s; }
+.check-group h2 { font-size: 1.02rem; margin: 1.25rem 0 0.4rem; }
+.check-group ul { list-style: none; margin: 0; padding: 0; border: 1px solid #262e38; border-radius: 8px; }
+.check-row { padding: 0.6rem 0.75rem; border-top: 1px solid #262e38; }
+.check-row:first-child { border-top: none; }
+.check-main { display: flex; gap: 0.7rem; align-items: flex-start; }
+.check-main input[type="checkbox"] { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; accent-color: #3fb27f; }
+.check-dot {
+  width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; flex: none;
+  border-radius: 50%; border: 2px solid #4a5768;
+}
+.check-dot.on { background: #3fb27f; border-color: #3fb27f; }
+.check-text { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.check-row.done .check-label { color: #9aa6b2; }
+.optional { font-size: 0.75rem; color: #7d8a98; text-transform: uppercase; letter-spacing: 0.04em; }
+.check-note { font-size: 0.82rem; }
+.check-side { display: flex; gap: 0.6rem; align-items: center; white-space: nowrap; font-size: 0.88rem; }
+.check-value { font-weight: 600; }
+.check-input { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; margin: 0.5rem 0 0 1.8rem; }
+.check-input input {
+  width: 6.5rem; font: inherit; color: #e8edf2; background: #0e1116;
+  border: 1px solid #2f3a48; border-radius: 6px; padding: 0.3rem 0.5rem;
+}
+.footnote { margin-top: 1.5rem; }
+.meds-confirm {
+  max-width: 26rem; color: #e8edf2; background: #151a22;
+  border: 1px solid #2f3a48; border-radius: 10px; padding: 1.1rem 1.25rem;
+}
+.meds-confirm::backdrop { background: rgb(0 0 0 / 0.6); }
+.meds-confirm h2 { margin: 0 0 0.6rem; font-size: 1.1rem; }
+.meds-name { font-weight: 600; }
+.row-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+
+@media (max-width: 600px) {
+  .check-main { flex-wrap: wrap; }
+  .check-side { width: 100%; padding-left: 1.8rem; }
+}
+
 @media (max-width: 900px) {
   .app { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
