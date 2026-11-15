@@ -4,6 +4,7 @@ import type { Alert, ChecklistItem, InventoryItem } from "../../contracts";
 import { SIM_CREW, store } from "../../data/db";
 import { AlertCard } from "../../ui/AlertCard";
 import { Icon } from "../../ui/Icon";
+import { saveItemValue, slugOf, stampFor, unitFor } from "./checklistActions";
 import { MedsConfirm } from "./MedsConfirm";
 
 const OPEN_LINKS: Partial<Record<ChecklistItem["kind"], { to: string; label: string }>> = {
@@ -11,14 +12,6 @@ const OPEN_LINKS: Partial<Record<ChecklistItem["kind"], { to: string; label: str
   radiation: { to: "/radiation", label: "Read" },
   psych: { to: "/psych", label: "Start" },
 };
-
-/** A timestamp on the item's mission day at the current time of day. */
-function stampFor(missionDay: string): string {
-  const now = new Date();
-  const d = missionDayStart(Number(missionDay));
-  d.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
-  return (d > now ? now : d).toISOString();
-}
 
 function timeOf(iso: string): string {
   return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -52,9 +45,11 @@ export function ChecklistRow({
   // Scheduled meds need the confirm-before-given step; the as-needed log is a plain check.
   const isMeds = item.kind === "meds" && slugOf(item) !== "prn-med";
   const isPsych = item.kind === "psych";
+  const openLink = OPEN_LINKS[item.kind];
   const inventoryItem = item.itemId ? inventory.find((i) => i.id === item.itemId) : undefined;
-  const showInput = Boolean(item.linkedKey) && !readOnly && (!done || editing);
-  const unit = item.linkedKey ? UNITS[item.linkedKey] : "";
+  const showInput = Boolean(unit) && !readOnly && (!done || editing);
+  // Value rows are completed by entering the value, and psych by its own page, so their box is a status indicator.
+  const boxIsToggle = !unit && !isPsych;
 
   async function saveValue(e: FormEvent) {
     e.preventDefault();
@@ -106,16 +101,12 @@ export function ChecklistRow({
   }
 
   const valueText =
-    done && item.value !== undefined && item.linkedKey ? (isBP ? `${item.value}/${item.value2 ?? "?"}` : String(item.value)) : undefined;
+    done && item.value !== undefined && unit ? (isBP ? `${item.value}/${item.value2 ?? "?"}` : String(item.value)) : undefined;
 
   return (
     <>
       <div className={`check-row${done ? " done" : ""}`}>
-        {item.linkedKey ? (
-          <span className={`check-box${done ? " on" : ""}`} aria-hidden="true">
-            {done ? <Icon name="check" size={18} strokeWidth={2.4} /> : null}
-          </span>
-        ) : (
+        {boxIsToggle ? (
           <button
             type="button"
             role="checkbox"
@@ -127,6 +118,10 @@ export function ChecklistRow({
           >
             {done ? <Icon name="check" size={18} strokeWidth={2.4} /> : null}
           </button>
+        ) : (
+          <span className={`check-box${done ? " on" : ""}`} aria-hidden="true">
+            {done ? <Icon name="check" size={18} strokeWidth={2.4} /> : null}
+          </span>
         )}
         <span className="label" title={[item.label, item.note].filter(Boolean).join(". ")}>
           {shortLabel(item.label)}
@@ -145,9 +140,14 @@ export function ChecklistRow({
             {valueText} <small>{unit}</small>
           </button>
         ) : null}
-        {done && !item.linkedKey && item.doneAt ? <span className="muted small">{timeOf(item.doneAt)}</span> : null}
+        {done && !valueText && !showInput && item.doneAt ? (
+          <span className="muted small">
+            {isMeds ? "Given " : ""}
+            {timeOf(item.doneAt)}
+          </span>
+        ) : null}
 
-        {showInput && item.linkedKey ? (
+        {showInput && unit ? (
           <form className="check-entry" onSubmit={(e) => void saveValue(e)}>
             <label className="unit-input sm accent">
               <input
@@ -167,6 +167,7 @@ export function ChecklistRow({
                 <input
                   type="number"
                   step="any"
+                  min={0}
                   inputMode="decimal"
                   placeholder="Dia"
                   value={v2}
@@ -187,20 +188,18 @@ export function ChecklistRow({
           </form>
         ) : null}
 
-        {!done && item.kind === "meds" && !readOnly ? (
+        {!done && isMeds && !readOnly ? (
           <button type="button" className="btn primary sm" onClick={() => setConfirming(true)}>
             <Icon name="shield" size={18} /> Confirm before given
           </button>
         ) : null}
-        {!done && openLink && !readOnly ? (
+        {!done && openLink && !showInput && !readOnly ? (
           <Link to={openLink.to} className="btn secondary sm">
             {openLink.label}
           </Link>
         ) : null}
       </div>
       {error ? <p className="error">{error}</p> : null}
-
-      {error ? <p className="cl-error">{error}</p> : null}
       {alerts.map((a) => (
         <AlertCard key={a.id} alert={a} compact />
       ))}

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import type { ChecklistItem } from "../../contracts";
 import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayLabel, store, useLive } from "../../data/db";
 import { Icon, type IconName } from "../../ui/Icon";
@@ -32,7 +31,6 @@ export function ChecklistPage() {
   const { data: items, loading, error } = useLive(() => store.listChecklist(String(md)), [md]);
   const { data: inventory } = useLive(() => store.listInventory(), []);
 
-  const all = items ?? [];
   const isPast = md < MISSION_DAY_TODAY;
   const readOnly = isPast && !editPast;
   const rows = items ?? [];
@@ -102,7 +100,7 @@ export function ChecklistPage() {
         </div>
       </section>
 
-      {error ? <p className="cl-error">Could not load the checklist: {error.message}</p> : null}
+      {error ? <p className="error">Could not load the checklist: {error.message}</p> : null}
       {loading && !items ? <p className="muted">Loading…</p> : null}
       {items && items.length === 0 ? <p className="muted">No checklist for this day yet.</p> : null}
 
