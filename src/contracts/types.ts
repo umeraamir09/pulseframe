@@ -86,6 +86,8 @@ export interface ProtocolStep {
   inputKey?: MeasurementKey;
   completed: boolean;
   resultValue?: number;
+  /** Free-text result for a test with no measurement key, e.g. a grade or a count. */
+  resultNote?: string;
   order: number;
   completedAt?: IsoDateTime;
   /** Measurement written from this test. */

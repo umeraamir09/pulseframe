@@ -15,6 +15,7 @@ export {
   type SyncSettings,
 } from "./sync";
 export { initData } from "./init";
+export { beginDemoData, endDemoData, demoDataActive, DEMO_SYNC } from "./demoSession";
 export { resetDemoData } from "./seed";
 export { DEMO_WORKOUT_PLAN, EXERCISE_DEVICES, EXERCISE_SOURCES, type PlannedSession } from "./workoutPlan";
 export {

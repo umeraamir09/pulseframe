@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { UNITS, type Alert, type InventoryItem, type MeasurementKey, type ProtocolStep } from "../../contracts";
-import { SIM_CREW, store, useLive } from "../../data/db";
+import { SIM_CREW, store, useLive, useSyncSettings } from "../../data/db";
 import { AlertCard } from "../../ui/AlertCard";
 import { Chip } from "../../ui/Chip";
 import { Progress, UnitInput } from "../../ui/controls";
@@ -191,13 +191,44 @@ export function HandoffPanel({ api, caseAlerts }: { api: EmergencyApi; caseAlert
       <button type="button" className="btn danger block" disabled={busy || sent} onClick={() => void send()}>
         <Icon name="send" size={18} /> {sent ? "Sent to flight surgeon" : "Send to flight surgeon (high priority)"}
       </button>
-      <p className="row muted small">
+      <EarthLink />
+      <p className="row muted small" role="status">
         <Icon name="clock" size={14} />
         {packet
           ? `Packet ${kb(packet.payloadJson)} · ${position ? `queue position ${position} · ` : ""}status: ${packet.status}`
           : "Emergency packets go before routine ones · status: ready"}
       </p>
     </section>
+  );
+}
+
+/**
+ * The simulated Earth link (store-and-forward, PF-11). Packets wait in the outbox while it is down
+ * and go out on their own when it is back. Mars delay: research/comms.csv (NASA Mars Relay Network).
+ */
+function EarthLink() {
+  const linkUp = useSyncSettings((s) => s.linkUp);
+  const set = useSyncSettings((s) => s.set);
+  return (
+    <div className="earth-link">
+      <span className={`dot ${linkUp ? "normal" : "act"}`} aria-hidden="true" />
+      <div className="grow">
+        <p className="t">Earth link {linkUp ? "up" : "down"}</p>
+        <p className="muted small">
+          {linkUp
+            ? "Simulated link. From Mars a message takes 3 to 22 minutes each way."
+            : "No link. The case waits here and sends itself when the link is back."}
+        </p>
+      </div>
+      <button
+        type="button"
+        className="toggle"
+        role="switch"
+        aria-checked={linkUp}
+        aria-label="Earth link"
+        onClick={() => set({ linkUp: !linkUp })}
+      />
+    </div>
   );
 }
 

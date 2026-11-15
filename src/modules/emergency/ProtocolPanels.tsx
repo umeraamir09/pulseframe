@@ -5,6 +5,7 @@ import { UnitInput } from "../../ui/controls";
 import { Icon, type IconName } from "../../ui/Icon";
 import { fmtValue } from "../../ui/alertFormat";
 import { REGION_SHORT } from "../skeleton/regions";
+import { ProtocolDetails } from "./ProtocolDetails";
 import { scoreAgainst, stageIndex, type EmergencyApi } from "./useEmergencyCase";
 
 function diffIcon(label: string): IconName {
@@ -80,6 +81,7 @@ export function DifferentialPanel({ api, openAlerts }: { api: EmergencyApi; open
           </div>
         );
       })}
+      <ProtocolDetails card={card} />
       <p className="muted small">{card.cautions}</p>
       <p className="note act">
         <Icon name="alert" size={16} /> Any Act result: go to steps now.
@@ -167,7 +169,19 @@ function TestCard({
     await api.saveStep({ ...step, completed: !step.completed, completedAt: step.completed ? undefined : new Date().toISOString() });
   }
 
+  /** Tests with no measurement key take an optional short note (a grade, a count) and are marked done. */
+  async function saveNote(e: FormEvent) {
+    e.preventDefault();
+    if (!api.c) return;
+    const note = value.trim();
+    await api.saveStep({ ...step, completed: true, resultNote: note || undefined, completedAt: new Date().toISOString() });
+    if (stageIndex(api.c.stage) < stageIndex("tests")) await api.advance("tests");
+    setValue("");
+    setEditing(false);
+  }
+
   const showInput = key && (!step.completed || editing);
+  const showNoteInput = !key && (!step.completed || editing);
 
   return (
     <div className={`test-card${tone ? ` ${tone}` : ""}${step.completed && !tone ? " done" : ""}`}>
@@ -201,8 +215,27 @@ function TestCard({
               <span className="u">{unit}</span>
             </button>
           </div>
+        ) : showNoteInput ? (
+          <form className="test-entry" onSubmit={(e) => void saveNote(e)}>
+            <span className="field-label">Result</span>
+            <div className="row">
+              <label className="unit-input">
+                <input type="text" maxLength={40} placeholder="Optional" value={value} onChange={(e) => setValue(e.target.value)} aria-label={step.title} />
+              </label>
+              <button type="submit" className="btn primary sm" aria-label={`Mark ${step.title} done`}>
+                <Icon name="check" size={18} />
+              </button>
+            </div>
+          </form>
+        ) : !key && step.resultNote ? (
+          <div className="test-entry">
+            <span className="field-label">Result</span>
+            <button type="button" className="unit-input" style={{ cursor: "pointer" }} onClick={() => setEditing(true)} title="Re-enter">
+              <span style={{ flex: 1, textAlign: "left", fontSize: 18, fontWeight: 500 }}>{step.resultNote}</span>
+            </button>
+          </div>
         ) : !key ? (
-          <button type="button" className="step-check" aria-pressed={step.completed} aria-label={`Mark ${step.title} done`} onClick={() => void toggleDone()}>
+          <button type="button" className="step-check" aria-pressed={step.completed} aria-label={`Mark ${step.title} not done`} onClick={() => void toggleDone()}>
             <Icon name="check" size={24} />
           </button>
         ) : null}

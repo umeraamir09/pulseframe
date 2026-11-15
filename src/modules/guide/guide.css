@@ -1,0 +1,237 @@
+/* Pulse, the mascot guide. Figma "Mascot draft v1": spotlight tint #0E1726 at 50%, target plus 8 px,
+   dashed accent highlight, DEMO tag in watch colors, white bubble with an accent border. */
+
+body.guide-on .app { padding-top: 80px; }
+
+.guide-layer { position: fixed; inset: 0; pointer-events: none; z-index: 9000; }
+.guide-layer > * { pointer-events: none; }
+
+.guide-spot {
+  position: fixed; left: 0; top: 0; width: 0; height: 0; border-radius: var(--r-sm);
+  box-shadow: 0 0 0 200vmax rgb(14 23 38 / 0.5); z-index: 9000; will-change: transform;
+}
+.guide-ring {
+  position: fixed; left: 0; top: 0; border-radius: var(--r-sm); z-index: 9001;
+  outline: 2.5px dashed var(--accent); outline-offset: 0; transition: opacity 0.2s ease; opacity: 0;
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 0.85);
+}
+.guide-blocker { position: fixed; inset: 0; z-index: 9100; pointer-events: auto !important; cursor: default; }
+
+.guide-tag {
+  position: fixed; left: 0; top: 0; z-index: 9200; opacity: 0; transition: opacity 0.2s ease;
+  background: var(--watch-soft); color: var(--watch-ink); border-radius: 999px; padding: 1px 6px;
+  font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: 0.04em;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+.guide-ripple {
+  position: fixed; left: 0; top: 0; width: 56px; height: 56px; border-radius: 50%; z-index: 9550; opacity: 0;
+  background: radial-gradient(circle, var(--accent) 0 5px, transparent 5.5px),
+    radial-gradient(circle, transparent 0 13px, var(--accent) 13.5px 15.5px, transparent 16px),
+    rgb(31 94 255 / 0.15);
+}
+
+/* ------------------------------------------------------------ banner */
+.guide-banner {
+  position: fixed; top: 22px; left: 24px; right: 24px; z-index: 9700; pointer-events: auto !important;
+  display: flex; align-items: center; gap: 12px; min-height: 36px; padding: 6px 8px 6px 16px;
+  background: var(--ink); color: #fff; border-radius: var(--r-sm); box-shadow: var(--shadow-float);
+}
+.guide-chip {
+  display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: 11px; line-height: 14px; font-weight: 600; letter-spacing: 0.04em; flex: none;
+}
+.guide-chip.soft { background: var(--accent-soft); color: var(--accent); }
+.guide-banner-label { flex: 1; min-width: 0; font-size: 14px; line-height: 20px; font-weight: 600; }
+.guide-banner-note { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--faint); white-space: nowrap; }
+.guide-banner .guide-pill { background: rgb(255 255 255 / 0.1); border-color: rgb(255 255 255 / 0.2); color: #fff; }
+
+.guide-controls { display: flex; gap: 4px; align-items: center; flex: none; pointer-events: auto; }
+.guide-pill {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; min-height: 32px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink);
+  font-size: 13px; line-height: 18px; font-weight: 600; pointer-events: auto;
+}
+.guide-pill:hover { border-color: var(--accent); }
+.guide-pill.icon { padding: 4px 8px; }
+
+/* ------------------------------------------------------------ cursor, mascot, bubble */
+.guide-cursor {
+  position: fixed; left: 0; top: 0; width: 28px; height: 28px; z-index: 9650; opacity: 0;
+  transition: opacity 0.25s ease; filter: drop-shadow(0 2px 3px rgb(15 23 41 / 0.25)); will-change: transform;
+}
+.guide-mascot { position: fixed; left: 0; top: 0; width: 132px; height: 132px; z-index: 60; will-change: transform; }
+.guide-mascot-inner { width: 100%; height: 100%; transform-origin: 50% 90%; }
+.guide-mascot-inner canvas { width: 100% !important; height: 100% !important; }
+.guide-mascot-still { width: 100%; height: 100%; object-fit: contain; user-select: none; }
+@media (max-width: 900px) {
+  body:not(.guide-on) .guide-mascot { z-index: 30; }
+}
+
+/* The speech bubble: large, calm type, a tail toward Pulse, and one clear Next button. */
+.guide-bubble {
+  position: fixed; left: 0; top: 0; z-index: 9650; width: 360px; visibility: hidden; pointer-events: auto !important;
+  display: flex; flex-direction: column; gap: 14px; padding: 18px 20px 16px;
+  background: var(--surface); border: 2px solid var(--accent); border-radius: var(--r-md);
+  box-shadow: 0 18px 40px rgb(14 23 38 / 0.28), 0 2px 6px rgb(14 23 38 / 0.12); will-change: transform;
+}
+.guide-bubble::before {
+  content: ""; position: absolute; top: 46px; width: 16px; height: 16px; background: var(--surface);
+  border: 2px solid var(--accent); transform: rotate(45deg);
+}
+.guide-bubble[data-side="right"]::before { left: -10px; border-top: 0; border-right: 0; }
+.guide-bubble[data-side="left"]::before { right: -10px; border-bottom: 0; border-left: 0; }
+.guide-bubble-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.guide-scene { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.guide-overline { font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); }
+.guide-line { font-size: 17px; line-height: 26px; font-weight: 500; color: var(--ink); letter-spacing: -0.005em; animation: guide-pop 0.3s ease-out; }
+.guide-progress { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.guide-progress span { display: block; height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.4s ease; }
+.guide-bubble-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.guide-controls.in-bubble .guide-pill { min-height: 34px; }
+.guide-next {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 112px; height: 44px; padding: 0 18px;
+  border: 0; border-radius: 999px; background: var(--surface2); color: var(--faint); font-size: 15px; font-weight: 700;
+  pointer-events: auto; transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.guide-next.ready { background: var(--accent); color: #fff; box-shadow: 0 0 0 0 rgb(31 94 255 / 0.45); animation: guide-ready 1.8s ease-out infinite; }
+.guide-next.ready:hover { background: #1a4fd9; }
+.guide-working { display: inline-flex; gap: 5px; align-items: center; }
+.guide-working i { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); animation: guide-dot 1.1s ease-in-out infinite; }
+.guide-working i:nth-child(2) { animation-delay: 0.15s; }
+.guide-working i:nth-child(3) { animation-delay: 0.3s; }
+.guide-keys { font-size: 12px; line-height: 16px; color: var(--muted); margin-top: -4px; }
+.guide-keys kbd {
+  display: inline-block; min-width: 22px; padding: 1px 6px; border: 1px solid var(--line); border-bottom-width: 2px;
+  border-radius: 6px; background: var(--surface2); font: inherit; font-weight: 700; color: var(--ink); text-align: center;
+}
+@keyframes guide-ready {
+  0% { box-shadow: 0 0 0 0 rgb(31 94 255 / 0.45); }
+  70% { box-shadow: 0 0 0 12px rgb(31 94 255 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(31 94 255 / 0); }
+}
+@keyframes guide-dot {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+@keyframes guide-pop {
+  0% { opacity: 0; transform: translateY(4px) scale(0.98); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------ picker */
+.guide-picker {
+  position: fixed; z-index: 9640; left: 50%; top: 50%; transform: translate(-50%, -46%); pointer-events: auto !important;
+  width: min(720px, calc(100vw - 32px)); max-height: calc(100vh - 110px); overflow: auto;
+  background: var(--surface); border-radius: var(--r-lg); padding: 28px 32px; box-shadow: 0 24px 60px rgb(14 23 38 / 0.3);
+  display: flex; flex-direction: column; gap: 18px;
+}
+.guide-picker-hero { display: flex; align-items: center; gap: 20px; }
+.guide-picker-mascot {
+  width: 200px; height: 200px; flex: none; border-radius: 50%;
+  background: radial-gradient(circle at 50% 60%, var(--accent-soft) 0 62%, transparent 63%);
+}
+.guide-picker-hello { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.guide-picker h2 { font-size: 26px; line-height: 33px; font-weight: 600; letter-spacing: -0.015em; }
+.guide-picker-hello .muted { font-size: 15px; line-height: 22px; }
+.guide-picker-list { display: flex; flex-direction: column; gap: 10px; }
+.guide-scenario {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; text-align: left; align-items: center;
+  padding: 16px 20px; border-radius: var(--r-md); border: 1.5px solid var(--line); background: var(--surface2);
+}
+.guide-scenario .t { font-size: 17px; line-height: 22px; font-weight: 700; }
+.guide-scenario .d { grid-column: 1; font-size: 14px; line-height: 20px; color: var(--muted); }
+.guide-scenario .go { grid-column: 2; grid-row: 1 / span 2; display: inline-flex; align-items: center; gap: 10px; color: var(--accent); }
+.guide-scenario.preferred { border-color: var(--accent); background: var(--accent-soft); }
+.guide-scenario:hover, .guide-scenario:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.guide-picker-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+@media (max-width: 640px) {
+  .guide-picker { padding: 20px; }
+  .guide-picker-hero { flex-direction: column; text-align: center; gap: 8px; }
+  .guide-picker-mascot { width: 140px; height: 140px; }
+  .guide-picker h2 { font-size: 21px; line-height: 27px; }
+}
+
+/* ------------------------------------------------------------ wipe and confetti */
+.guide-wipe {
+  position: fixed; inset: 0; z-index: 9050;
+  background: linear-gradient(100deg, transparent 0%, rgb(255 255 255 / 0) 35%, rgb(255 255 255 / 0.7) 50%, rgb(255 255 255 / 0) 65%, transparent 100%);
+  background-size: 300% 100%; animation: guide-wipe 1.3s ease-in-out forwards;
+}
+@keyframes guide-wipe {
+  from { background-position: 100% 0; }
+  to { background-position: 0% 0; }
+}
+.guide-confetti { position: fixed; z-index: 9800; width: 0; height: 0; }
+.guide-confetti i {
+  position: absolute; width: 8px; height: 12px; border-radius: 2px; opacity: 0;
+  animation: guide-confetti 1.6s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+@keyframes guide-confetti {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 160px)) rotate(var(--rot)); }
+}
+
+/* ------------------------------------------------------------ dock */
+/* Compact, as in the Figma dock: the tip across the top, Pulse and Replay in one row. About 160 px. */
+.guide-dock {
+  margin-top: auto; background: var(--surface2); border-radius: var(--r-md); padding: 10px;
+  display: flex; flex-direction: column; gap: 6px; flex: none;
+}
+.guide-dock + .mode-card { margin-top: 10px; }
+.guide-dock-tip {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 8px 10px;
+  display: flex; flex-direction: column; gap: 2px; font-size: 12px; line-height: 16px; font-weight: 500;
+}
+.guide-dock-tip p:last-child { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.guide-dock-tip .guide-overline { font-size: 10px; line-height: 13px; }
+.guide-dock-row { display: flex; align-items: center; gap: 8px; }
+.guide-dock-slot { width: 72px; height: 72px; flex: none; border: 0; padding: 0; background: transparent; border-radius: 50%; cursor: pointer; }
+.guide-dock-slot:disabled { cursor: default; }
+.guide-dock.out .guide-dock-slot { border: 1.5px dashed var(--faint); opacity: 0.6; }
+.guide-dock-side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: 1; text-align: right; }
+.guide-replay { border-radius: 999px; height: 34px; }
+/* Short screens: the dock replaces the "Offline-first demo" card so nothing scrolls. */
+@media (max-height: 980px) {
+  .sidebar .guide-dock + .mode-card { display: none; }
+}
+@media (max-height: 760px) {
+  .sidebar .guide-dock-tip { display: none; }
+}
+.guide-dock.is-mobile { margin: 0; flex-direction: row; align-items: center; }
+.guide-dock.is-mobile .guide-dock-tip { flex: 1; order: 2; }
+.guide-dock.is-mobile .guide-dock-row { display: contents; }
+.guide-dock.is-mobile .guide-dock-slot { width: 64px; height: 64px; order: 1; }
+.guide-dock.is-mobile .guide-dock-side { order: 3; flex: none; }
+.guide-dock.is-mobile .guide-dock-side .small { display: none; }
+
+/* ------------------------------------------------------------ "Your turn" */
+.guide-finish { display: flex; flex-direction: column; gap: 12px; padding: 28px 32px; margin-bottom: 24px; box-shadow: var(--shadow-float); }
+.guide-finish h2 { font-size: 32px; line-height: 40px; font-weight: 600; letter-spacing: -0.02em; }
+.guide-finish hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0; width: 100%; }
+.guide-finish-actions { gap: 12px; }
+.guide-finish-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.guide-finish-grid .tile { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.guide-finish-grid .t { font-size: 15px; font-weight: 600; }
+.link-btn { border: 0; background: none; padding: 0; color: var(--accent); font-size: 12px; font-weight: 500; }
+.link-btn:hover { text-decoration: underline; }
+
+/* ------------------------------------------------------------ Earth link in the handoff card */
+.earth-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-sm); background: var(--surface2); }
+.earth-link .t { font-size: 13px; font-weight: 600; }
+
+@media (max-width: 900px) {
+  body.guide-on .app { padding-top: 88px; }
+  .guide-banner { top: 12px; left: 12px; right: 12px; flex-wrap: wrap; gap: 6px 10px; }
+  .guide-banner-note { display: none; }
+  .guide-finish { padding: 20px; }
+  .guide-finish h2 { font-size: 24px; line-height: 30px; }
+  .guide-finish-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-line, .guide-wipe, .guide-confetti, .guide-next.ready, .guide-working i { animation: none; }
+  .guide-wipe { display: none; }
+  .guide-progress span, .guide-ring, .guide-tag, .guide-cursor { transition: none; }
+}

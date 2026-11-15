@@ -52,12 +52,28 @@ export const SEED_TIMES: Partial<Record<MeasurementKey, number>> = {
 
 const MANUAL_KEYS = new Set<MeasurementKey>(["sleepHours", "sleepQuality", "moodScore", "stressScore", "teamStrain"]);
 
-/** Items already done on MD 142 (today). Everything else is open. */
-const TODAY_DONE = new Set(["heart-rate", "blood-pressure", "temperature", "oxygen-sat", "blood-glucose", "sleep", "resistive"]);
-/** Optional items that are part of the normal routine on earlier days. */
-const PAST_OPTIONAL_DONE = new Set(["blood-glucose", "hydration"]);
-/** Aerobic sessions skipped during the sleep slump. */
-const AEROBIC_SKIPPED = new Set([139, 140]);
+/** What a seeded week looks like. The default is the simulated mission; the guide demo uses its own profile. */
+export interface SeedProfile {
+  /** One value per mission day, MD 136 to MD 142. A missing value on a day leaves that reading out. */
+  series: Partial<Record<MeasurementKey, (number | undefined)[]>>;
+  /** Checklist slugs already done on MD 142 (today). Everything else is open. */
+  todayDone: ReadonlySet<string>;
+  /** Optional checklist items that are part of the normal routine on earlier days. */
+  pastOptionalDone: ReadonlySet<string>;
+  /** Mission days whose aerobic session was skipped. */
+  aerobicSkipped: ReadonlySet<number>;
+  /** False leaves today's psych check-in and dosimeter reading open. */
+  todayRoutineDone: boolean;
+}
+
+export const DEFAULT_SEED_PROFILE: SeedProfile = {
+  series: SEED_SERIES,
+  todayDone: new Set(["heart-rate", "blood-pressure", "temperature", "oxygen-sat", "blood-glucose", "sleep", "resistive"]),
+  pastOptionalDone: new Set(["blood-glucose", "hydration"]),
+  // Aerobic sessions skipped during the sleep slump.
+  aerobicSkipped: new Set([139, 140]),
+  todayRoutineDone: true,
+};
 
 export interface SeedBundle {
   measurements: Omit<Measurement, "id">[];
@@ -74,19 +90,17 @@ function at(md: number, hour: number): Date {
   return d;
 }
 
-function seriesValue(key: MeasurementKey, md: number): number | undefined {
-  return SEED_SERIES[key]?.[md - FIRST_SEED_DAY];
-}
-
 /** Pure: same `now` gives the same bundle. Rows later than `now` are dropped. */
-export function buildSeed(now: Date): SeedBundle {
+export function buildSeed(now: Date, profile: SeedProfile = DEFAULT_SEED_PROFILE): SeedBundle {
+  const { todayDone, pastOptionalDone, aerobicSkipped } = profile;
+  const seriesValue = (key: MeasurementKey, md: number): number | undefined => profile.series[key]?.[md - FIRST_SEED_DAY];
   const crewId = SIM_CREW.id;
   const b: SeedBundle = { measurements: [], psych: [], radiation: [], workouts: [], checklist: [], inventory: ACTIVE_INVENTORY };
   let cumulativeMgy = 0;
 
   for (let md = FIRST_SEED_DAY; md <= MISSION_DAY_TODAY; md++) {
     // Measurements
-    for (const key of Object.keys(SEED_SERIES) as MeasurementKey[]) {
+    for (const key of Object.keys(profile.series) as MeasurementKey[]) {
       const value = seriesValue(key, md);
       const t = at(md, SEED_TIMES[key] ?? 7);
       if (value === undefined || t > now) continue;
@@ -102,7 +116,8 @@ export function buildSeed(now: Date): SeedBundle {
 
     // Psych check at 20:00
     const psychAt = at(md, 20);
-    if (psychAt <= now) {
+    const routineToday = md !== MISSION_DAY_TODAY || profile.todayRoutineDone;
+    if (psychAt <= now && routineToday && seriesValue("moodScore", md) !== undefined) {
       b.psych.push({
         crewId,
         at: psychAt.toISOString(),
@@ -114,10 +129,10 @@ export function buildSeed(now: Date): SeedBundle {
     }
 
     // Radiation at 12:00. Cumulative since log start, simulated.
-    const rate = seriesValue("radiationRate", md)!;
-    cumulativeMgy += (rate * 24) / 1000;
+    const rate = seriesValue("radiationRate", md);
+    if (rate !== undefined) cumulativeMgy += (rate * 24) / 1000;
     const radAt = at(md, 12);
-    if (radAt <= now) {
+    if (radAt <= now && rate !== undefined && routineToday) {
       b.radiation.push({
         crewId,
         at: radAt.toISOString(),
@@ -131,7 +146,7 @@ export function buildSeed(now: Date): SeedBundle {
     for (const plan of DEMO_WORKOUT_PLAN) {
       const t = at(md, plan.hour);
       if (t > now) continue;
-      const skipped = plan.kind === "aerobic" && (AEROBIC_SKIPPED.has(md) || md === MISSION_DAY_TODAY);
+      const skipped = plan.kind === "aerobic" && (aerobicSkipped.has(md) || md === MISSION_DAY_TODAY);
       b.workouts.push({
         id: `wo-${md}-${plan.kind}`,
         crewId,
@@ -159,10 +174,10 @@ export function buildSeed(now: Date): SeedBundle {
       const doneAt = at(md, tpl.hour);
       const done =
         md === MISSION_DAY_TODAY
-          ? TODAY_DONE.has(tpl.slug)
+          ? todayDone.has(tpl.slug)
           : tpl.required
-            ? !(tpl.slug === "aerobic" && AEROBIC_SKIPPED.has(md))
-            : PAST_OPTIONAL_DONE.has(tpl.slug);
+            ? !(tpl.slug === "aerobic" && aerobicSkipped.has(md))
+            : pastOptionalDone.has(tpl.slug);
       if (done && doneAt <= now) {
         item.doneAt = doneAt.toISOString();
         if (tpl.linkedKey) item.value = seriesValue(tpl.linkedKey, md);
@@ -178,9 +193,8 @@ export function buildSeed(now: Date): SeedBundle {
   return b;
 }
 
-export async function resetDemoData(): Promise<void> {
-  const now = new Date();
-  const bundle = buildSeed(now);
+/** Clears every store and writes `bundle`, then rebuilds alerts and baselines from it. */
+export async function loadSeedBundle(bundle: SeedBundle): Promise<void> {
   await store.resetAll();
   await Promise.all([
     putRaw("measurements", bundle.measurements.map((m) => ({ ...m, id: `m-seed-${missionDayOf(m.takenAt)}-${m.key}` }))),
@@ -191,6 +205,11 @@ export async function resetDemoData(): Promise<void> {
   ]);
   await store.putInventory(bundle.inventory);
   await rebuildAlerts(SIM_CREW.id);
+}
+
+export async function resetDemoData(): Promise<void> {
+  const now = new Date();
+  await loadSeedBundle(buildSeed(now));
   await store.setMeta("seedVersion", SEED_VERSION);
   await store.setMeta("seededAt", now.toISOString());
 }
