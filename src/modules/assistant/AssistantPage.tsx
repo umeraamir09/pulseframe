@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { DictateButton } from "../../ui/DictateButton";
+import { mergeTranscript } from "../../ui/dictation";
 import { Link } from "react-router-dom";
 import type { Alert, InventoryItem } from "../../contracts";
 import { KEY_LABELS } from "../../contracts";
@@ -237,6 +239,13 @@ export function AssistantPage() {
               aria-label="Assistant command"
               onChange={(event) => setDraft(event.target.value)}
               disabled={pending || inventory.data === undefined}
+            />
+            <DictateButton
+              disabled={pending || inventory.data === undefined}
+              onTranscript={(text) => {
+                setDraft((current) => mergeTranscript(current, text));
+                inputRef.current?.focus();
+              }}
             />
             <button type="submit" className="send-btn" aria-label="Send command" disabled={pending || !draft.trim()}>
               <Icon name="arrowR" size={20} />
