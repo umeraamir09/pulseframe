@@ -1415,3 +1415,67 @@ details.why-more > summary::-webkit-details-marker { display: none; }
   .astro-avatar { width: 104px; height: 116px; }
   .speech::before { display: none; }
 }
+
+/* Voice dictation (issue 30, step 8) */
+:root { --rec: #dc2626; --rec-soft: rgba(220, 38, 38, 0.18); }
+.dictate { display: inline-flex; align-items: center; gap: 8px; flex: none; min-width: 0; }
+.dictate-btn {
+  position: relative; width: 40px; height: 40px; border-radius: 999px; border: 0; background: var(--surface2); color: var(--accent);
+  display: grid; place-items: center; flex: none; cursor: pointer; transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.dictate-btn:hover:not(:disabled) { transform: scale(1.06); }
+.dictate-btn.is-recording { background: var(--rec); color: #fff; animation: dictate-ring 1.4s ease-out infinite; }
+.dictate-btn.is-working { color: var(--accent); }
+.dictate-btn:disabled { opacity: 0.6; cursor: default; }
+.command-form .dictate-btn:not(.is-recording) { background: transparent; }
+
+.dictate-live {
+  display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 999px;
+  background: var(--rec-soft); color: var(--rec); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.dictate-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--rec); animation: dictate-blink 1s steps(2, start) infinite; }
+.dictate-wave { display: inline-flex; align-items: center; gap: 2px; height: 14px; }
+.dictate-wave i { width: 3px; height: 100%; border-radius: 2px; background: var(--rec); animation: dictate-bar 0.9s ease-in-out infinite; }
+.dictate-wave i:nth-child(2) { animation-delay: -0.6s; }
+.dictate-wave i:nth-child(3) { animation-delay: -0.3s; }
+.dictate-wave i:nth-child(4) { animation-delay: -0.75s; }
+.dictate-left { font-weight: 500; opacity: 0.85; }
+
+.dictate-spinner {
+  width: 18px; height: 18px; border-radius: 999px; border: 2.5px solid currentColor; border-right-color: transparent;
+  animation: dictate-spin 0.7s linear infinite;
+}
+.dictate-note { font-size: 12px; color: var(--muted); max-width: 220px; }
+.dictate-working { color: var(--accent); font-weight: 600; }
+.dictate-dots i { font-style: normal; animation: dictate-fade 1.2s infinite; }
+.dictate-dots i:nth-child(2) { animation-delay: 0.2s; }
+.dictate-dots i:nth-child(3) { animation-delay: 0.4s; }
+.em-narrative .dictate { margin-top: 4px; }
+
+/* The field itself reacts: red pulsing outline while recording, a shimmer while transcribing. */
+.command-form, .em-narrative { position: relative; transition: box-shadow 0.2s, border-color 0.2s; }
+.command-form:has(.dictate.is-recording), .em-narrative:has(.dictate.is-recording) {
+  border-color: var(--rec); animation: dictate-field 1.6s ease-in-out infinite;
+}
+.command-form:has(.dictate.is-working), .em-narrative:has(.dictate.is-working) { overflow: hidden; }
+.command-form:has(.dictate.is-working)::after, .em-narrative:has(.dictate.is-working)::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
+  background-size: 200% 100%; animation: dictate-shimmer 1.1s linear infinite;
+}
+
+@keyframes dictate-ring { 0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.55); } 100% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); } }
+@keyframes dictate-field { 0%, 100% { box-shadow: 0 0 0 2px var(--rec-soft); } 50% { box-shadow: 0 0 0 5px var(--rec-soft); } }
+@keyframes dictate-blink { to { visibility: hidden; } }
+@keyframes dictate-bar { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+@keyframes dictate-spin { to { transform: rotate(360deg); } }
+@keyframes dictate-fade { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes dictate-shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dictate-btn.is-recording, .dictate-dot, .dictate-wave i, .dictate-dots i,
+  .command-form:has(.dictate.is-recording), .em-narrative:has(.dictate.is-recording) { animation: none; }
+  .command-form:has(.dictate.is-recording), .em-narrative:has(.dictate.is-recording) { box-shadow: 0 0 0 3px var(--rec-soft); }
+  .command-form:has(.dictate.is-working)::after, .em-narrative:has(.dictate.is-working)::after { animation: none; background: rgba(255, 255, 255, 0.25); }
+  .dictate-spinner { animation-duration: 1.6s; }
+}

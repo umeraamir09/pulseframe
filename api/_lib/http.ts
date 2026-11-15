@@ -5,11 +5,13 @@
  */
 import type { GroqErrorCode } from "./groq.ts";
 
-export type HandlerErrorCode = "method_not_allowed" | "bad_request" | "bad_model_output" | GroqErrorCode | "internal";
+export type HandlerErrorCode = "method_not_allowed" | "bad_request" | "too_large" | "unsupported_type" | "bad_model_output" | GroqErrorCode | "internal";
 
 export const ERROR_STATUS: Record<HandlerErrorCode, number> = {
   method_not_allowed: 405,
   bad_request: 400,
+  too_large: 413,
+  unsupported_type: 415,
   bad_model_output: 502,
   missing_key: 503,
   timeout: 504,

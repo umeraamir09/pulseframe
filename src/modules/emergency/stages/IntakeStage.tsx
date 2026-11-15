@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from "react";
+import { DictateButton } from "../../../ui/DictateButton";
+import { mergeTranscript } from "../../../ui/dictation";
 import { errorMessage } from "../caseActions";
 import { StageCard } from "../StageCard";
 
@@ -65,6 +67,7 @@ export function IntakeStage({ initial = "", onStart }: { initial?: string; onSta
             rows={3}
             onChange={(event) => setText(event.target.value)}
           />
+          <DictateButton disabled={busy} onTranscript={(spoken) => setText((current) => mergeTranscript(current, spoken, 500))} />
           <p className="muted small">Typed by crew. {words === 1 ? "1 word" : `${words} words`}</p>
         </div>
 
