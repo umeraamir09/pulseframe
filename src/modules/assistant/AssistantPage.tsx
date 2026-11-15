@@ -13,11 +13,15 @@ import {
   LIVE_FALLBACK_NOTE,
   MODE_LIVE,
   MODE_OFFLINE,
+  GENERAL_ANSWER_TITLE,
   NOT_IN_RESEARCH_TITLE,
   RESEARCH_ANSWER_TITLE,
 } from "./copy";
 import { getProvider, isOfflineCommand, type LastTurn } from "./providers";
-import { NotInResearch, RejectedItems, ResearchReply } from "./ReplyParts";
+import type { AnswerBlock } from "./answerBlocks";
+import { AstronautAvatar } from "./AstronautAvatar";
+import type { AstronautPose } from "./AstronautScene";
+import { LiveAnswer, NotInResearch, RejectedItems } from "./ReplyParts";
 import { validateRecommendation } from "./validate";
 
 interface Turn {
@@ -29,10 +33,19 @@ interface Turn {
   alerts?: Alert[];
   /** Items matched by `find` or shown by `item`, for card rendering. */
   items?: InventoryItem[];
-  /** Live free-text answer: cited ("answer") or outside the research pack ("notFound"). */
-  research?: "answer" | "notFound";
+  /** Live free-text answer: cited ("answer"), general and uncited ("general"), or outside the research pack ("notFound"). */
+  research?: "answer" | "general" | "notFound";
   citations?: ResolvedCitations;
+  blocks?: AnswerBlock[];
 }
+
+/** Example questions shown before the first message in live mode. */
+const SUGGESTED = [
+  "What is normal in-flight heart rate?",
+  "What causes headaches on the ISS?",
+  "What do I do if a crewmate is choking?",
+  "How does microgravity affect sleep?",
+];
 
 const QUICK: ({ id: string; label: string; icon: IconName } & ({ run: string } | { fill: string }))[] = [
   { id: "suggest", label: "Suggest", icon: "sparkles", run: "suggest" },
@@ -67,13 +80,20 @@ function commandLabel(command: string, inventory: InventoryItem[]): string {
 }
 
 export function AssistantPage() {
-  usePageMeta("AI assistant", "Onboard kit only · answers as cards");
+  usePageMeta(
+    "AI assistant",
+    import.meta.env.VITE_ASSISTANT_MODE === "live" ? "Answers from Pulseframe research · onboard kit" : "Onboard kit only · answers as cards",
+  );
   const inventory = useLive(() => store.listInventory(), []);
   const openCase = useLive(() => store.getOpenCase(SIM_CREW.id), []);
   const alerts = useLive(() => store.listAlerts(SIM_CREW.id), []);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
   const [history, setHistory] = useState<Turn[]>([]);
+  const [pendingCommand, setPendingCommand] = useState<string>();
+  /** Only the newest live answer types itself out. */
+  const [animateId, setAnimateId] = useState<string>();
+  const endRef = useRef<HTMLDivElement>(null);
   const [lastCommand, setLastCommand] = useState("");
   const lastTurn = useRef<LastTurn | undefined>(undefined);
   const [giving, setGiving] = useState<{ item: InventoryItem; caseId?: string } | null>(null);
@@ -95,6 +115,7 @@ export function AssistantPage() {
     const rows = inventory.data;
     if (!command || pending || !rows) return;
     setPending(true);
+    setPendingCommand(command);
     setDraft("");
     setLoggedName(undefined);
     try {
@@ -116,13 +137,20 @@ export function AssistantPage() {
       });
       if (!alive.current) return;
       const offline = provider.name === "offline" || reply.text.includes(LIVE_FALLBACK_NOTE);
-      const research = offline || isOfflineCommand(command) ? undefined : reply.notFound ? "notFound" : "answer";
+      const research: Turn["research"] =
+        offline || isOfflineCommand(command)
+          ? undefined
+          : reply.notFound || reply.kind === "notFound"
+            ? "notFound"
+            : reply.kind === "general"
+              ? "general"
+              : "answer";
       let citations: ResolvedCitations | undefined;
       if (research === "answer") {
         citations = await loadCitations(reply.citations ?? []).catch(() => EMPTY_CITATIONS);
         if (!alive.current) return;
-        lastTurn.current = { question: command, answer: reply.text };
       }
+      if (research === "answer" || research === "general") lastTurn.current = { question: command, answer: reply.text };
       const validation =
         reply.draft !== undefined ? validateRecommendation(reply.draft, rows, current?.id ?? "no-case", offline) : undefined;
       const kept = (validation?.recommendation?.itemIds ?? [])
@@ -136,10 +164,12 @@ export function AssistantPage() {
           ? rows.filter((i) => i.id.toLowerCase() === command.trim().slice(5).trim().toLowerCase())
           : undefined;
       if (items?.length === 1) setSelected(items[0]!.id);
+      const id = crypto.randomUUID();
+      if (research) setAnimateId(id);
       setHistory((turns) => [
         ...turns,
         {
-          id: crypto.randomUUID(),
+          id,
           command,
           text: reply.text,
           rejectedItemIds: validation?.rejectedItemIds ?? [],
@@ -148,6 +178,7 @@ export function AssistantPage() {
           alerts: verb === "alerts" || verb === "explain alerts" ? openAlerts : undefined,
           research,
           citations,
+          blocks: reply.blocks,
         },
       ]);
       setLastCommand(command);
@@ -164,9 +195,16 @@ export function AssistantPage() {
         },
       ]);
     } finally {
-      if (alive.current) setPending(false);
+      if (alive.current) {
+        setPending(false);
+        setPendingCommand(undefined);
+      }
     }
   }
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView?.({ block: "nearest", behavior: "smooth" });
+  }, [history.length, pending]);
 
   function quick(action: (typeof QUICK)[number]) {
     if ("fill" in action) {
@@ -240,30 +278,39 @@ export function AssistantPage() {
               <Icon name="check" size={16} /> Logged {loggedName}. The text saved is only what you typed.
             </p>
           ) : null}
-          {!history.length ? (
-            <div className="reply-card">
-              <div className="reply-head">
-                <span className="icon-badge sm accent sq">
-                  <Icon name="sparkles" size={16} />
-                </span>
-                <h2 className="h3">Ask about the onboard kit</h2>
-                <span className="tag">Protocol card</span>
-              </div>
-              <p className="muted">
-                Try Explain alerts, or type find with part of an item name. Answers come from the onboard formulary and your own alerts
-                only.
-              </p>
-            </div>
-          ) : null}
+          <AssistantPresence
+            pose={pending ? "type" : history.length ? "point" : "wave"}
+            message={presenceMessage(pending, live, history.at(-1))}
+            suggestions={live && !history.length ? SUGGESTED : []}
+            onAsk={(q) => void run(q)}
+          />
           {history.map((turn) => (
             <TurnView
               key={turn.id}
               turn={turn}
+              animate={turn.id === animateId}
               inventory={inventory.data ?? []}
               onRun={(c) => void run(c)}
               onGive={give}
             />
           ))}
+          {pendingCommand ? (
+            <>
+              <p className="command-pill">
+                <Icon name="chat" size={16} />
+                {commandLabel(pendingCommand, inventory.data ?? [])}
+              </p>
+              <div className="bot-row">
+                <BotFace />
+                <div className="typing-bubble" role="status" aria-label="The assistant is typing">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+              </div>
+            </>
+          ) : null}
+          <div ref={endRef} />
           {openCase.data ? <KitSuggestions caseId={openCase.data.id} onGive={give} /> : null}
         </div>
 
@@ -298,13 +345,68 @@ function commandTitle(turn: Turn, lines: string[], rejected: boolean): string {
         : lines[0]!.replace(/[.:]$/, "");
 }
 
+function sourceCount(citations: ResolvedCitations | undefined): string {
+  const n = citations?.sources.length ?? 0;
+  return n ? `${n} source${n === 1 ? "" : "s"}` : "Research";
+}
+
+function presenceMessage(pending: boolean, live: boolean, last: Turn | undefined): string {
+  if (pending) return live ? "Looking through Pulseframe research…" : "Checking the onboard kit…";
+  if (!last) {
+    return live
+      ? "Hi, I'm the Pulseframe assistant. Ask me about crew health, vitals or the onboard kit, or say hello."
+      : "Hi, I'm the Pulseframe assistant. Try Explain alerts, or type find with part of an item name.";
+  }
+  if (last.research === "notFound") return "That isn't in Pulseframe research. For anything serious, contact the flight surgeon.";
+  if (last.research === "general") return "That's general knowledge. Ask me about crew health for a cited answer.";
+  return "Here's what I found. Ask a follow-up any time.";
+}
+
+function BotFace() {
+  return <img className="bot-face" src="/mascot.jpg" alt="" />;
+}
+
+function AssistantPresence({
+  pose,
+  message,
+  suggestions,
+  onAsk,
+}: {
+  pose: AstronautPose;
+  message: string;
+  suggestions: string[];
+  onAsk: (question: string) => void;
+}) {
+  return (
+    <section className="assistant-presence" aria-label="Assistant">
+      <AstronautAvatar pose={pose} label={pose === "type" ? "Astronaut typing" : pose === "point" ? "Astronaut pointing" : "Astronaut waving"} />
+      <div className="presence-body">
+        <p className="speech" aria-live="polite">
+          {message}
+        </p>
+        {suggestions.length ? (
+          <div className="suggest-row" role="group" aria-label="Suggested questions">
+            {suggestions.map((q) => (
+              <button key={q} type="button" className="chip sm" onClick={() => onAsk(q)}>
+                {q}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
 function TurnView({
   turn,
+  animate,
   inventory,
   onRun,
   onGive,
 }: {
   turn: Turn;
+  animate: boolean;
   inventory: InventoryItem[];
   onRun: (command: string) => void;
   onGive: (item: InventoryItem) => void;
@@ -317,9 +419,20 @@ function TurnView({
       ? NOT_IN_RESEARCH_TITLE
       : turn.research === "answer"
         ? RESEARCH_ANSWER_TITLE
-        : commandTitle(turn, lines, rejected);
+        : turn.research === "general"
+          ? GENERAL_ANSWER_TITLE
+          : commandTitle(turn, lines, rejected);
   const body = turn.research || turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(1);
-  const tag = turn.research ? "Research" : rejected ? "Guardrail" : "Protocol card";
+  const tag =
+    turn.research === "general"
+      ? "General"
+      : turn.research === "answer"
+        ? sourceCount(turn.citations)
+        : turn.research
+          ? "Research"
+          : rejected
+            ? "Guardrail"
+            : "Protocol card";
 
   return (
     <>
@@ -327,46 +440,92 @@ function TurnView({
         <Icon name="chat" size={16} />
         {commandLabel(turn.command, inventory)}
       </p>
-      <article className="reply-card">
-        <div className="reply-head">
-          <span className="icon-badge sm accent sq">
-            <Icon name="sparkles" size={16} />
-          </span>
-          <h2 className="h3">{title}</h2>
-          <span className="tag">{tag}</span>
-        </div>
+      <div className="bot-row">
+        <BotFace />
+        <article className={animate ? "reply-card enter" : "reply-card"}>
+          <div className="reply-head">
+            <span className="icon-badge sm accent sq">
+              <Icon name="sparkles" size={16} />
+            </span>
+            <h2 className="h3">{title}</h2>
+            <span className="tag">{tag}</span>
+          </div>
 
-        {turn.research === "notFound" ? <NotInResearch text={turn.text} /> : null}
-        {turn.research === "answer" ? <ResearchReply text={turn.text} citations={turn.citations ?? EMPTY_CITATIONS} /> : null}
+          {turn.research === "notFound" ? <NotInResearch text={turn.text} /> : null}
+          {turn.research === "answer" || turn.research === "general" ? (
+            <LiveAnswer
+              kind={turn.research === "answer" ? "research" : "general"}
+              text={turn.text}
+              citations={turn.citations ?? EMPTY_CITATIONS}
+              blocks={turn.blocks ?? []}
+              animate={animate}
+            />
+          ) : null}
 
-        {turn.alerts ? (
-          <>
-            <AlertBars alerts={turn.alerts} />
-            {why ? (
-              <div className="reply-text muted">
-                {lines.map((l, i) => (
-                  <p key={i}>{l}</p>
-                ))}
+          {turn.alerts ? (
+            <>
+              <AlertBars alerts={turn.alerts} />
+              {why ? (
+                <div className="reply-text muted">
+                  {lines.map((l, i) => (
+                    <p key={i}>{l}</p>
+                  ))}
+                </div>
+              ) : null}
+              <div className="row wrap">
+                <span className="muted small grow">Bar = distance from your own baseline</span>
+                <button type="button" className="btn ghost" aria-expanded={why} onClick={() => setWhy((w) => !w)}>
+                  Why?
+                </button>
+                <Link to="/alerts" className="btn primary">
+                  <Icon name="arrowR" size={18} /> Open alerts
+                </Link>
               </div>
-            ) : null}
-            <div className="row wrap">
-              <span className="muted small grow">Bar = distance from your own baseline</span>
-              <button type="button" className="btn ghost" aria-expanded={why} onClick={() => setWhy((w) => !w)}>
-                Why?
-              </button>
-              <Link to="/alerts" className="btn primary">
-                <Icon name="arrowR" size={18} /> Open alerts
-              </Link>
-            </div>
-          </>
-        ) : null}
+            </>
+          ) : null}
 
-        {turn.items && turn.items.length ? (
-          <div className="stack" style={{ gap: 8 }}>
-            {turn.items.map((item) =>
-              commandVerb(turn.command).startsWith("item") ? (
-                <ItemDetail key={item.id} item={item} onGive={onGive} />
-              ) : (
+          {turn.items && turn.items.length ? (
+            <div className="stack" style={{ gap: 8 }}>
+              {turn.items.map((item) =>
+                commandVerb(turn.command).startsWith("item") ? (
+                  <ItemDetail key={item.id} item={item} onGive={onGive} />
+                ) : (
+                  <div key={item.id} className="item-row">
+                    <span className="icon-badge white">
+                      <Icon name="pill" size={18} />
+                    </span>
+                    <div className="grow">
+                      <div className="t">{item.name}</div>
+                      <div className="d">
+                        {item.strength} · {item.route}
+                      </div>
+                    </div>
+                    <button type="button" className="btn secondary" onClick={() => onRun(`item ${item.id}`)}>
+                      Item details
+                    </button>
+                  </div>
+                ),
+              )}
+            </div>
+          ) : null}
+
+          {body.filter(Boolean).length ? (
+            <div className="reply-text">
+              {body.map((line, index) =>
+                line === "" ? (
+                  <span key={index} style={{ height: 6 }} />
+                ) : (
+                  <p key={index} className={line === LIVE_FALLBACK_NOTE ? "tag" : undefined}>
+                    {line}
+                  </p>
+                ),
+              )}
+            </div>
+          ) : null}
+
+          {turn.kept.length > 0 ? (
+            <div className="stack" style={{ gap: 8 }}>
+              {turn.kept.map((item) => (
                 <div key={item.id} className="item-row">
                   <span className="icon-badge white">
                     <Icon name="pill" size={18} />
@@ -377,52 +536,17 @@ function TurnView({
                       {item.strength} · {item.route}
                     </div>
                   </div>
-                  <button type="button" className="btn secondary" onClick={() => onRun(`item ${item.id}`)}>
-                    Item details
+                  <button type="button" className="btn watch-outline" onClick={() => onGive(item)}>
+                    <Icon name="shield" size={14} /> Confirm before given
                   </button>
                 </div>
-              ),
-            )}
-          </div>
-        ) : null}
+              ))}
+            </div>
+          ) : null}
 
-        {body.filter(Boolean).length ? (
-          <div className="reply-text">
-            {body.map((line, index) =>
-              line === "" ? (
-                <span key={index} style={{ height: 6 }} />
-              ) : (
-                <p key={index} className={line === LIVE_FALLBACK_NOTE ? "tag" : undefined}>
-                  {line}
-                </p>
-              ),
-            )}
-          </div>
-        ) : null}
-
-        {turn.kept.length > 0 ? (
-          <div className="stack" style={{ gap: 8 }}>
-            {turn.kept.map((item) => (
-              <div key={item.id} className="item-row">
-                <span className="icon-badge white">
-                  <Icon name="pill" size={18} />
-                </span>
-                <div className="grow">
-                  <div className="t">{item.name}</div>
-                  <div className="d">
-                    {item.strength} · {item.route}
-                  </div>
-                </div>
-                <button type="button" className="btn watch-outline" onClick={() => onGive(item)}>
-                  <Icon name="shield" size={14} /> Confirm before given
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        <RejectedItems ids={turn.rejectedItemIds} />
-      </article>
+          <RejectedItems ids={turn.rejectedItemIds} />
+        </article>
+      </div>
     </>
   );
 }

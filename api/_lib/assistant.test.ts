@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import handler, { handleAssistant, isDevelopment } from "../assistant.ts";
-import { NOT_FOUND_TEXT } from "./assistantPrompt.ts";
+import { ASSISTANT_MAX_COMPLETION_TOKENS, NOT_FOUND_TEXT } from "./assistantPrompt.ts";
 import { GROQ_CHAT_URL } from "./groq.ts";
 import { retrieve } from "./retrieve.ts";
 
@@ -34,6 +34,8 @@ async function clientWouldFallBack(res: Response): Promise<boolean> {
   return !(typeof body.text === "string" && body.text.trim().length > 0);
 }
 
+const NOT_FOUND_BODY = { kind: "notFound", text: NOT_FOUND_TEXT, citations: [], blocks: [], notFound: true };
+
 const retrievedIds = [...retrieve({ question: QUESTION }).ids];
 
 describe("POST /api/assistant", () => {
@@ -41,19 +43,31 @@ describe("POST /api/assistant", () => {
     expect(retrievedIds.length).toBeGreaterThan(0);
     const good = retrievedIds[0]!;
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
-      groqOk({ text: `Resting heart rate stays in range [${good}] [cond:invented].`, citations: [good, "cond:invented"], draft: null, notFound: false }),
+      groqOk({
+        kind: "research",
+        text: `Resting heart rate stays in range [${good}] [cond:invented].`,
+        citations: [good, "cond:invented"],
+        blocks: [],
+        draft: null,
+      }),
     );
     const res = await handleAssistant(post({ command: QUESTION, inventoryIds: [] }), { env: PROD, fetch: fetchMock });
     expect(res.status).toBe(200);
     const body = (await res.json()) as Record<string, unknown>;
-    expect(body).toEqual({ text: `Resting heart rate stays in range [${good}].`, citations: [good], notFound: false });
+    expect(body).toEqual({
+      kind: "research",
+      text: `Resting heart rate stays in range [${good}].`,
+      citations: [good],
+      blocks: [],
+      notFound: false,
+    });
     expect(body).not.toHaveProperty("usage");
 
     const [url, init] = fetchMock.mock.calls[0]!;
     expect(url).toBe(GROQ_CHAT_URL);
     const sent = JSON.parse(String(init?.body)) as Record<string, unknown> & { messages: Array<{ content: string }> };
     expect(sent.reasoning_effort).toBe("low");
-    expect(sent.max_completion_tokens).toBe(600);
+    expect(sent.max_completion_tokens).toBe(ASSISTANT_MAX_COMPLETION_TOKENS);
     expect(sent.temperature).toBe(0.2);
     expect((sent.response_format as { type: string }).type).toBe("json_schema");
     expect(sent.messages).toHaveLength(2);
@@ -62,7 +76,7 @@ describe("POST /api/assistant", () => {
 
   it("returns usage in development only", async () => {
     const good = retrievedIds[0]!;
-    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk({ text: `ok [${good}]`, citations: [good], draft: null, notFound: false }));
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk({ kind: "research", text: `ok [${good}]`, citations: [good], blocks: [], draft: null }));
     const res = await handleAssistant(post({ command: QUESTION }), { env: DEV, fetch: fetchMock });
     const body = (await res.json()) as { usage: { prompt_tokens: number; estimatedInputTokens: number } };
     expect(body.usage.prompt_tokens).toBe(1800);
@@ -72,18 +86,42 @@ describe("POST /api/assistant", () => {
 
   it("passes the model's notFound through with the fixed text", async () => {
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
-      groqOk({ text: "Appendicitis needs surgery.", citations: [], draft: null, notFound: true }),
+      groqOk({ kind: "notFound", text: "Appendicitis needs surgery.", citations: [], blocks: [], draft: null }),
     );
     const res = await handleAssistant(post({ command: "how do I treat appendicitis?" }), { env: PROD, fetch: fetchMock });
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ text: NOT_FOUND_TEXT, citations: [], notFound: true });
+    expect(await res.json()).toEqual(NOT_FOUND_BODY);
   });
 
-  it("answers notFound without calling Groq when nothing is retrieved", async () => {
-    const fetchMock = vi.fn<typeof fetch>();
+  it("asks the model with an empty CONTEXT when nothing is retrieved, so general questions get an answer", async () => {
+    expect(retrieve({ question: "hello" }).chunks).toHaveLength(0);
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      groqOk({
+        kind: "general",
+        text: "Hello! Ask me about crew health or the onboard kit.",
+        citations: [],
+        blocks: [{ type: "list", title: "Try asking", items: [{ text: "What is normal in-flight heart rate?", cite: [] }] }],
+        draft: null,
+      }),
+    );
+    const res = await handleAssistant(post({ command: "hello" }), { env: PROD, fetch: fetchMock });
+    expect(await res.json()).toEqual({
+      kind: "general",
+      text: "Hello! Ask me about crew health or the onboard kit.",
+      citations: [],
+      blocks: [{ type: "list", title: "Try asking", items: [{ text: "What is normal in-flight heart rate?", cite: [] }] }],
+      notFound: false,
+    });
+    const sent = JSON.parse(String(fetchMock.mock.calls[0]![1]?.body)) as { messages: Array<{ content: string }> };
+    expect(sent.messages[1]!.content).toContain("CONTEXT:\nnone");
+  });
+
+  it("turns a research answer with nothing retrieved into notFound", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      groqOk({ kind: "research", text: "Made up [cond:x].", citations: ["cond:x"], blocks: [], draft: null }),
+    );
     const res = await handleAssistant(post({ command: "zzqx qqzv" }), { env: PROD, fetch: fetchMock });
-    expect(await res.json()).toEqual({ text: NOT_FOUND_TEXT, citations: [], notFound: true });
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(await res.json()).toEqual(NOT_FOUND_BODY);
   });
 
   it("falls back when the key is missing", async () => {

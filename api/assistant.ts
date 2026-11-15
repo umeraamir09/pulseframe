@@ -3,17 +3,18 @@
  *
  * Vercel Function, Web-standard form (`export default { fetch }`).
  *
- * 200 → {text, citations[], draft?, notFound} (plus `usage` outside production).
+ * 200 → {kind, text, citations[], blocks[], draft?, notFound} (plus `usage` outside production).
+ * kind is "research" (cited), "general" (uncited, non-medical) or "notFound".
  * Any failure → a non-2xx JSON body `{error, fallback: true}` with no `text`.
  * liveProvider treats every non-2xx (and any body without text) as "use the
  * offline provider and show LIVE_FALLBACK_NOTE", so the crew never sees a blank screen.
  */
 import {
   ANSWER_RESPONSE_FORMAT,
+  ASSISTANT_MAX_COMPLETION_TOKENS,
   AssistantRequestSchema,
   CONTEXT_BUDGET_TOKENS,
   ModelOutputError,
-  NOT_FOUND_ANSWER,
   buildPrompt,
   finalizeAnswer,
   parseModelAnswer,
@@ -92,13 +93,10 @@ export async function handleAssistant(request: Request, deps: AssistantDeps = {}
     });
     const dev = isDevelopment(env);
 
-    // Nothing in the pack matches: answer notFound without spending a Groq call.
-    if (!retrieved.chunks.length) {
-      const answer: AssistantAnswer & { usage?: AssistantDevUsage } = { ...NOT_FOUND_ANSWER };
-      if (dev) answer.usage = { estimatedInputTokens: 0, contextTokens: 0 };
-      return json(answer);
-    }
-
+    // Even with no retrieved chunks the model is called: the question may be
+    // general ("hello", "what is microgravity?"). With an empty CONTEXT it can
+    // only answer kind "general" or "notFound"; finalizeAnswer turns an
+    // uncited research answer into notFound.
     const prompt = buildPrompt(input, retrieved, card);
     const options: GroqCallOptions = { env, fetch: deps.fetch, signal: request.signal };
     if (deps.deadlineMs !== undefined) options.deadlineMs = deps.deadlineMs;
@@ -107,7 +105,7 @@ export async function handleAssistant(request: Request, deps: AssistantDeps = {}
         messages: prompt.messages,
         response_format: ANSWER_RESPONSE_FORMAT,
         reasoning_effort: "low",
-        max_completion_tokens: 600,
+        max_completion_tokens: ASSISTANT_MAX_COMPLETION_TOKENS,
         temperature: 0.2,
       },
       options,

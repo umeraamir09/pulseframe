@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { SIM_CREW, store } from "../../data/db";
+import { numberMarkers } from "./citations";
 import { getProvider } from "./providers";
 import { spokenToCommand } from "./spoken";
 
@@ -79,7 +80,8 @@ export function AssistantDock() {
             }
           : undefined,
       });
-      setReply({ command, text: res.text });
+      // The dock has no source chips, so live answers lose their raw [chunk-id] markers here.
+      setReply({ command, text: numberMarkers(res.text, {}) });
     } catch (err) {
       setReply({ command, text: err instanceof Error ? err.message : "The assistant could not answer. Try again." });
     } finally {
