@@ -1,3 +1,6 @@
+import { NavLink, Outlet } from "react-router-dom";
+import { MISSION_DAY_TODAY, SIM_CREW, missionDayLabel } from "../../data/db";
+import { AssistantDock } from "../assistant/AssistantDock";
 import { useCallback, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { MISSION_DAY_TODAY, SIM_CREW, missionDayLabel, store, useLive } from "../../data/db";
@@ -162,6 +165,8 @@ export function AppShell() {
           ))}
         </nav>
       </div>
+      <AssistantDock />
+    </div>
     </PageMetaContext.Provider>
   );
 }
