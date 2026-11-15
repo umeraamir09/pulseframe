@@ -1,9 +1,14 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { InventoryItem, MedicationAdmin } from "../../contracts";
 import { SIM_CREW, store } from "../../data/db";
-import { CONFIRMED_BY_DEFAULT, DOSE_PROMPT, SURGEON_CHECK, canLogGiven } from "./copy";
+import { DISCLAIMER_COPY } from "../../ui/disclaimerCopy";
+import { Icon } from "../../ui/Icon";
+import { CONFIRMED_BY_DEFAULT, DOSE_PROMPT, PROVENANCE_LABEL, SURGEON_CHECK, canLogGiven } from "./copy";
 
-const PRESETS = [CONFIRMED_BY_DEFAULT, "Crewmate B"];
+const PEOPLE = [
+  { value: CONFIRMED_BY_DEFAULT, label: "Crew A", initials: "CA" },
+  { value: "Crewmate B", label: "Crewmate B" },
+];
 
 /** Confirm-before-given. The dose field starts empty. Pulseframe never fills it in. */
 export function GivenDialog({
@@ -20,7 +25,6 @@ export function GivenDialog({
   const ref = useRef<HTMLDialogElement>(null);
   const doseRef = useRef<HTMLInputElement>(null);
   const doseId = useId();
-  const byId = useId();
   const checkId = useId();
   const [doseText, setDoseText] = useState("");
   const [confirmedBy, setConfirmedBy] = useState(CONFIRMED_BY_DEFAULT);
@@ -57,6 +61,11 @@ export function GivenDialog({
     }
   }
 
+  function close() {
+    ref.current?.close();
+    onClose();
+  }
+
   return (
     <dialog
       ref={ref}
@@ -64,8 +73,7 @@ export function GivenDialog({
       aria-labelledby="given-title"
       onCancel={(event) => {
         event.preventDefault();
-        ref.current?.close();
-        onClose();
+        close();
       }}
     >
       <form
@@ -75,87 +83,91 @@ export function GivenDialog({
         }}
       >
         <header className="given-head">
-          <span className="given-shield" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                d="M12 3 5 6v6c0 4.2 2.8 7.4 7 8.5 4.2-1.1 7-4.3 7-8.5V6l-7-3z"
-              />
-            </svg>
+          <span className="icon-badge lg watch sq">
+            <Icon name="shield" size={22} />
           </span>
-          <div>
-            <h2 id="given-title">Confirm before given</h2>
+          <div className="grow">
+            <h2 id="given-title" className="h2">
+              Confirm before given
+            </h2>
             <p>Crew enters everything. Pulseframe only records it.</p>
           </div>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">
-            ×
+          <button type="button" className="icon-round" style={{ background: "var(--surface2)" }} onClick={close} aria-label="Close">
+            <Icon name="x" size={20} />
           </button>
         </header>
 
-        <section className="given-item">
-          <h3>{item.name}</h3>
-          <p className="muted">{item.pack}</p>
-          <dl>
-            <div>
-              <dt>Strength</dt>
-              <dd>{item.strength}</dd>
+        <div className="item-row">
+          <span className="icon-badge white" style={{ color: "var(--accent)" }}>
+            <Icon name="pill" size={18} />
+          </span>
+          <div className="grow">
+            <div className="t">{item.name}</div>
+            <div className="d row" style={{ gap: 4 }}>
+              <Icon name="kit" size={12} /> {PROVENANCE_LABEL}
             </div>
-            <div>
-              <dt>Route</dt>
-              <dd>{item.route}</dd>
-            </div>
-            <div>
-              <dt>Comments</dt>
-              <dd>{item.comments || "Not stated in the checklist"}</dd>
-            </div>
-          </dl>
-        </section>
+          </div>
+        </div>
 
-        <label className="dose-field" htmlFor={doseId}>
-          <span>Dose, typed by crew exactly as instructed</span>
-          <span className="field-help">{DOSE_PROMPT}</span>
-          <input
-            ref={doseRef}
-            id={doseId}
-            name="doseText"
-            value={doseText}
-            autoComplete="off"
-            placeholder="Type what the flight surgeon told you"
-            required
-            onChange={(event) => setDoseText(event.target.value)}
-          />
-        </label>
+        <div className="attr-chips">
+          <span>
+            Strength <b>{item.strength}</b>
+          </span>
+          <span>
+            Route <b>{item.route}</b>
+          </span>
+          <span title={item.comments}>
+            Comments <b>{item.comments ? "From source PDF" : "Not stated"}</b>
+          </span>
+        </div>
 
-        <fieldset className="confirm-by">
-          <legend>Confirmed by</legend>
-          <div className="preset-row">
-            {PRESETS.map((preset) => (
+        <div className="field">
+          <label className="field-label" htmlFor={doseId}>
+            Dose, typed by crew exactly as instructed
+          </label>
+          <span className="faint small">{DOSE_PROMPT}</span>
+          <div className="unit-input dose-input">
+            <Icon name="edit" size={18} />
+            <input
+              ref={doseRef}
+              id={doseId}
+              type="text"
+              name="doseText"
+              value={doseText}
+              autoComplete="off"
+              placeholder="Type what the flight surgeon told you"
+              required
+              onChange={(event) => setDoseText(event.target.value)}
+            />
+          </div>
+        </div>
+
+        <fieldset className="field" style={{ border: 0, padding: 0, margin: 0 }}>
+          <legend className="field-label" style={{ marginBottom: 8 }}>
+            Confirmed by
+          </legend>
+          <div className="row wrap" role="radiogroup" aria-label="Confirmed by">
+            {PEOPLE.map((p) => (
               <button
-                key={preset}
+                key={p.value}
                 type="button"
-                className={confirmedBy === preset ? "preset on" : "preset"}
-                onClick={() => setConfirmedBy(preset)}
+                role="radio"
+                aria-checked={confirmedBy === p.value}
+                className={`chip${p.initials ? " person-chip" : ""}`}
+                onClick={() => setConfirmedBy(p.value)}
               >
-                {preset}
+                {p.initials ? (
+                  <span className="crew-badge" style={{ width: 36, height: 36 }} aria-hidden="true">
+                    {p.initials}
+                  </span>
+                ) : null}
+                {p.label}
               </button>
             ))}
           </div>
-          <label htmlFor={byId}>
-            <span className="sr">Name of the person confirming</span>
-            <input
-              id={byId}
-              name="confirmedBy"
-              value={confirmedBy}
-              autoComplete="off"
-              onChange={(event) => setConfirmedBy(event.target.value)}
-              required
-            />
-          </label>
         </fieldset>
 
-        <label className={surgeonApproved ? "surgeon-check on" : "surgeon-check"} htmlFor={checkId}>
+        <label className={surgeonApproved ? "surgeon-row on" : "surgeon-row"} htmlFor={checkId}>
           <input
             id={checkId}
             type="checkbox"
@@ -163,21 +175,26 @@ export function GivenDialog({
             required
             onChange={(event) => setSurgeonApproved(event.target.checked)}
           />
-          <span>{SURGEON_CHECK}</span>
+          <span className={`check-box${surgeonApproved ? " on" : ""}`} aria-hidden="true">
+            {surgeonApproved ? <Icon name="check" size={18} strokeWidth={2.4} /> : null}
+          </span>
+          {surgeonApproved ? "Flight surgeon approved" : SURGEON_CHECK}
         </label>
 
-        <p className="dose-warn">Pulseframe does not suggest doses.</p>
-        <p className="dialog-disclaimer" role="note">
-          Decision support only. This is not a diagnosis. Contact the flight surgeon.
+        <p className="note watch">
+          <Icon name="shield" size={16} /> Pulseframe does not suggest doses.
+        </p>
+        <p className="note act pill" role="note" style={{ alignSelf: "flex-start" }}>
+          <Icon name="shield" size={16} /> {DISCLAIMER_COPY.emergency}
         </p>
         {error ? <p className="error">{error}</p> : null}
 
-        <div className="row-actions">
-          <button type="button" onClick={onClose}>
+        <div className="dialog-actions">
+          <button type="button" className="btn secondary" onClick={close}>
             Cancel
           </button>
-          <button type="submit" className="primary" disabled={!ready}>
-            Log as given
+          <button type="submit" className="btn primary" disabled={!ready}>
+            <Icon name="check" size={18} /> Log as given
           </button>
         </div>
       </form>

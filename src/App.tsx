@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { AppShell } from "./modules/shell/AppShell";
 import { DashboardPage } from "./modules/dashboard/DashboardPage";
+import { AlertsPage } from "./modules/alerts/AlertsPage";
 import { EmergencyPage } from "./modules/emergency/EmergencyPage";
 import { ChecklistPage } from "./modules/checklist/ChecklistPage";
 import { FitnessPage } from "./modules/fitness/FitnessPage";
@@ -10,23 +11,14 @@ import { AssistantPage } from "./modules/assistant/AssistantPage";
 import { SyncPage } from "./modules/sync/SyncPage";
 import { SourcesPage } from "./modules/sources/SourcesPage";
 import { NotFound } from "./modules/shell/NotFound";
-import { SkeletonDemo } from "./modules/skeleton/SkeletonDemo";
-
-function EmergencyWithSkeleton() {
-  return (
-    <div className="split">
-      <EmergencyPage />
-      <SkeletonDemo />
-    </div>
-  );
-}
 
 export default function App() {
   return (
     <Routes>
       <Route element={<AppShell />}>
         <Route path="/" element={<DashboardPage />} />
-        <Route path="/emergency" element={<EmergencyWithSkeleton />} />
+        <Route path="/alerts" element={<AlertsPage />} />
+        <Route path="/emergency" element={<EmergencyPage />} />
         <Route path="/checklist" element={<ChecklistPage />} />
         <Route path="/fitness" element={<FitnessPage />} />
         <Route path="/radiation" element={<RadiationPage />} />

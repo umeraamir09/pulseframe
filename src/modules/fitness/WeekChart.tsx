@@ -1,87 +1,127 @@
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { DayBar } from "./fitnessStats";
+import type { Workout, WorkoutKind } from "../../contracts";
+import { EXERCISE_SOURCES, FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayLabel, missionDayOf } from "../../data/db";
+import { Icon } from "../../ui/Icon";
 
-/** Dark-surface categorical slots 1 and 2 (validated), planned in neutral gray. */
-const COLORS = {
-  planned: "#4a5361",
-  resistive: "#3987e5",
-  aerobic: "#d95926",
-  grid: "#232b36",
-  axis: "#9aa6b2",
-};
-
-function ChartTooltip({ active, payload }: { active?: boolean; payload?: { payload: DayBar }[] }) {
-  if (!active || !payload?.length) return null;
-  const d = payload[0].payload;
-  return (
-    <div className="chart-tip">
-      <strong>{d.label}</strong>
-      <div>Planned: {d.planned} min</div>
-      <div>
-        <i style={{ background: COLORS.resistive }} /> Resistive done: {d.resistive} min
-      </div>
-      <div>
-        <i style={{ background: COLORS.aerobic }} /> Aerobic done: {d.aerobic} min
-      </div>
-    </div>
-  );
+interface DayCell {
+  md: number;
+  kinds: Record<WorkoutKind, { planned: number; done: number; notes?: string } | undefined>;
 }
 
-export function WeekChart({ data }: { data: DayBar[] }) {
+function cells(rows: Workout[]): DayCell[] {
+  const out: DayCell[] = [];
+  for (let md = FIRST_SEED_DAY; md <= MISSION_DAY_TODAY; md++) {
+    const day: DayCell = { md, kinds: { resistive: undefined, aerobic: undefined } };
+    for (const w of rows.filter((r) => missionDayOf(r.at) === md)) {
+      const cur = day.kinds[w.kind] ?? { planned: 0, done: 0 };
+      cur.planned += w.plannedMinutes ?? 0;
+      if (w.completed) cur.done += w.minutes;
+      if (w.notes) cur.notes = w.notes;
+      day.kinds[w.kind] = cur;
+    }
+    out.push(day);
+  }
+  return out;
+}
+
+const KIND_LABEL: Record<WorkoutKind, string> = { resistive: "Resistive", aerobic: "Aerobic" };
+
+/** Planned vs completed by mission day: a full colored bar is a session done, grey is planned and not done. */
+export function WeekChart({ rows }: { rows: Workout[] }) {
+  const days = cells(rows);
+  const max = Math.max(1, ...days.flatMap((d) => Object.values(d.kinds).map((k) => Math.max(k?.planned ?? 0, k?.done ?? 0))));
+  const noted = days.find((d) => d.kinds.resistive?.notes && /chest/i.test(d.kinds.resistive.notes));
+
   return (
-    <figure className="week-chart">
-      <figcaption>Planned vs completed minutes, by mission day</figcaption>
-      <div style={{ height: 260 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} barGap={2} barCategoryGap="22%" margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
-            <CartesianGrid vertical={false} stroke={COLORS.grid} />
-            <XAxis dataKey="label" tick={{ fill: COLORS.axis, fontSize: 12 }} axisLine={{ stroke: COLORS.grid }} tickLine={false} />
-            <YAxis
-              tick={{ fill: COLORS.axis, fontSize: 12 }}
-              axisLine={false}
-              tickLine={false}
-              unit=" m"
-              allowDecimals={false}
-            />
-            <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgb(255 255 255 / 0.04)" }} />
-            <Legend wrapperStyle={{ fontSize: 12, color: COLORS.axis }} iconType="square" />
-            <Bar dataKey="planned" name="Planned" fill={COLORS.planned} radius={[4, 4, 0, 0]} />
-            <Bar dataKey="resistive" name="Resistive done" stackId="done" fill={COLORS.resistive} stroke="#10151c" strokeWidth={1} />
-            <Bar
-              dataKey="aerobic"
-              name="Aerobic done"
-              stackId="done"
-              fill={COLORS.aerobic}
-              stroke="#10151c"
-              strokeWidth={1}
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+    <section className="card" aria-labelledby="week-title">
+      <div className="card-head">
+        <div className="titles">
+          <p className="overline">This week</p>
+          <h2 id="week-title" className="h2">
+            Planned vs completed
+          </h2>
+        </div>
+        <div className="legend" aria-hidden="true">
+          <span>
+            <i style={{ background: "var(--surface2)" }} />
+            Planned
+          </span>
+          <span>
+            <i style={{ background: "var(--accent)" }} />
+            Resistive
+          </span>
+          <span>
+            <i style={{ background: "var(--normal)" }} />
+            Aerobic
+          </span>
+        </div>
       </div>
-      <details className="chart-table">
-        <summary>Show as table</summary>
-        <table>
-          <thead>
-            <tr>
-              <th>Day</th>
-              <th>Planned</th>
-              <th>Resistive done</th>
-              <th>Aerobic done</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((d) => (
-              <tr key={d.md}>
-                <td>{d.label}</td>
-                <td>{d.planned} min</td>
-                <td>{d.resistive} min</td>
-                <td>{d.aerobic} min</td>
+
+      <div className="week-bars" aria-hidden="true">
+        {noted ? (
+          <span className="chart-pill" style={{ position: "absolute", top: 0, right: 0 }}>
+            <span className="dot act" /> Chest tightness after session
+          </span>
+        ) : null}
+        {days.map((d) => (
+          <div key={d.md} className="week-day">
+            {(["resistive", "aerobic"] as const).map((k) => {
+              const v = d.kinds[k];
+              if (!v) return <span key={k} className="b" style={{ height: "6%", opacity: 0.5 }} />;
+              const done = v.done > 0;
+              const h = Math.max(12, ((done ? Math.max(v.done, v.planned) : v.planned) / max) * 100);
+              return <span key={k} className={`b${done ? ` ${k}` : ""}`} style={{ height: `${h}%` }} />;
+            })}
+          </div>
+        ))}
+      </div>
+      <div className="week-labels" aria-hidden="true">
+        {days.map((d) => (
+          <span key={d.md}>{missionDayLabel(d.md)}</span>
+        ))}
+      </div>
+
+      <p className="row muted small" style={{ marginTop: 14 }}>
+        <Icon name="info" size={16} /> Full bar = session done. Grey = planned, not done. Height is minutes.
+      </p>
+
+      <details style={{ marginTop: 10 }}>
+        <summary className="small" style={{ color: "var(--accent)", cursor: "pointer" }}>
+          Show as table
+        </summary>
+        <div className="table-wrap" style={{ marginTop: 10 }}>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                {(["resistive", "aerobic"] as const).map((k) => (
+                  <th key={k}>{KIND_LABEL[k]} done / planned</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {days.map((d) => (
+                <tr key={d.md}>
+                  <td>{missionDayLabel(d.md)}</td>
+                  {(["resistive", "aerobic"] as const).map((k) => (
+                    <td key={k}>{d.kinds[k] ? `${d.kinds[k]!.done} / ${d.kinds[k]!.planned} min` : "–"}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="muted small" style={{ marginTop: 10 }}>
+          Why exercise:{" "}
+          {EXERCISE_SOURCES.map((s, i) => (
+            <span key={s.url}>
+              {i ? " · " : ""}
+              <a href={s.url} target="_blank" rel="noreferrer">
+                {s.title}
+              </a>
+            </span>
+          ))}
+        </p>
       </details>
-    </figure>
+    </section>
   );
 }

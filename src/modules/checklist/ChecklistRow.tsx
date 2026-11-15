@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { UNITS, type Alert, type ChecklistItem, type InventoryItem } from "../../contracts";
 import { SIM_CREW, missionDayStart, store } from "../../data/db";
 import { AlertCard } from "../../ui/AlertCard";
+import { Icon } from "../../ui/Icon";
 import { MedsConfirm } from "./MedsConfirm";
 
-const OPEN_LINKS: Partial<Record<ChecklistItem["kind"], string>> = {
-  exercise: "/fitness",
-  radiation: "/radiation",
-  psych: "/psych",
+const OPEN_LINKS: Partial<Record<ChecklistItem["kind"], { to: string; label: string }>> = {
+  exercise: { to: "/fitness", label: "Log" },
+  radiation: { to: "/radiation", label: "Read" },
+  psych: { to: "/psych", label: "Start" },
 };
 
 /** A timestamp on the item's mission day at the current time of day. */
@@ -21,6 +22,11 @@ function stampFor(missionDay: string): string {
 
 function timeOf(iso: string): string {
   return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+/** Strips the long parenthetical so rows stay one line; the full label stays in the tooltip. */
+function shortLabel(label: string): string {
+  return label.replace(/\s*\(.*\)\s*$/, "");
 }
 
 export function ChecklistRow({
@@ -44,7 +50,8 @@ export function ChecklistRow({
   const isBP = item.linkedKey === "systolicBP";
   const openLink = OPEN_LINKS[item.kind];
   const inventoryItem = item.itemId ? inventory.find((i) => i.id === item.itemId) : undefined;
-  const showInput = item.linkedKey && !readOnly && (!done || editing);
+  const showInput = Boolean(item.linkedKey) && !readOnly && (!done || editing);
+  const unit = item.linkedKey ? UNITS[item.linkedKey] : "";
 
   async function saveValue(e: FormEvent) {
     e.preventDefault();
@@ -115,92 +122,99 @@ export function ChecklistRow({
     setConfirming(false);
   }
 
-  return (
-    <li className={`check-row${done ? " done" : ""}`}>
-      <div className="check-main">
-        {item.linkedKey ? (
-          <span className={`check-dot${done ? " on" : ""}`} aria-hidden="true" />
-        ) : (
-          <input
-            type="checkbox"
-            checked={done}
-            disabled={readOnly}
-            onChange={() => void toggle()}
-            aria-label={item.label}
-          />
-        )}
-        <div className="check-text">
-          <span className="check-label">
-            {item.label}
-            {item.required ? null : <span className="optional"> optional</span>}
-          </span>
-          {item.note ? (
-            <span className="muted check-note">
-              {item.note}
-              {item.sourceUrl ? (
-                <>
-                  {" "}
-                  <a href={item.sourceUrl} target="_blank" rel="noreferrer">
-                    Source
-                  </a>
-                </>
-              ) : null}
-            </span>
-          ) : null}
-        </div>
-        <div className="check-side">
-          {done && item.value !== undefined && item.linkedKey ? (
-            <span className="check-value">
-              {isBP ? `${item.value}/${item.value2 ?? "?"}` : item.value} {UNITS[item.linkedKey]}
-            </span>
-          ) : null}
-          {done && item.doneAt ? <span className="muted">{timeOf(item.doneAt)}</span> : null}
-          {done && item.linkedKey && !readOnly && !editing ? (
-            <button type="button" className="link-btn" onClick={() => setEditing(true)}>
-              Edit
-            </button>
-          ) : null}
-          {openLink ? <Link to={openLink}>Open</Link> : null}
-        </div>
-      </div>
+  const valueText =
+    done && item.value !== undefined && item.linkedKey ? (isBP ? `${item.value}/${item.value2 ?? "?"}` : String(item.value)) : undefined;
 
-      {showInput && item.linkedKey ? (
-        <form className="check-input" onSubmit={(e) => void saveValue(e)}>
-          <input
-            type="number"
-            step="any"
-            inputMode="decimal"
-            placeholder={isBP ? "Systolic" : "Value"}
-            value={v1}
-            onChange={(e) => setV1(e.target.value)}
-            aria-label={isBP ? "Systolic" : item.label}
-          />
-          {isBP ? (
-            <>
-              <span>/</span>
+  return (
+    <>
+      <div className={`check-row${done ? " done" : ""}`}>
+        {item.linkedKey ? (
+          <span className={`check-box${done ? " on" : ""}`} aria-hidden="true">
+            {done ? <Icon name="check" size={18} strokeWidth={2.4} /> : null}
+          </span>
+        ) : (
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={done}
+            aria-label={item.label}
+            className={`check-box${done ? " on" : ""}`}
+            disabled={readOnly}
+            onClick={() => void toggle()}
+          >
+            {done ? <Icon name="check" size={18} strokeWidth={2.4} /> : null}
+          </button>
+        )}
+        <span className="label" title={[item.label, item.note].filter(Boolean).join(". ")}>
+          {shortLabel(item.label)}
+          {item.required ? null : <span className="optional">optional</span>}
+        </span>
+
+        {valueText && !editing ? (
+          <button
+            type="button"
+            className="value-pill"
+            style={{ border: 0, cursor: readOnly ? "default" : "pointer" }}
+            onClick={() => !readOnly && setEditing(true)}
+            disabled={readOnly}
+            title={item.doneAt ? `Logged ${timeOf(item.doneAt)}${readOnly ? "" : ". Click to edit."}` : undefined}
+          >
+            {valueText} <small>{unit}</small>
+          </button>
+        ) : null}
+        {done && !item.linkedKey && item.doneAt ? <span className="muted small">{timeOf(item.doneAt)}</span> : null}
+
+        {showInput && item.linkedKey ? (
+          <form className="check-entry" onSubmit={(e) => void saveValue(e)}>
+            <label className="unit-input sm accent">
               <input
                 type="number"
                 step="any"
                 inputMode="decimal"
-                placeholder="Diastolic"
-                value={v2}
-                onChange={(e) => setV2(e.target.value)}
-                aria-label="Diastolic"
+                placeholder={isBP ? "Sys" : "Enter"}
+                value={v1}
+                onChange={(e) => setV1(e.target.value)}
+                aria-label={isBP ? "Systolic" : item.label}
               />
-            </>
-          ) : null}
-          <span className="muted">{UNITS[item.linkedKey]}</span>
-          <button type="submit" className="primary" disabled={busy}>
-            Save
-          </button>
-          {editing ? (
-            <button type="button" onClick={() => setEditing(false)}>
-              Cancel
+              {isBP ? null : <span className="u">{unit}</span>}
+            </label>
+            {isBP ? (
+              <label className="unit-input sm accent">
+                <input
+                  type="number"
+                  step="any"
+                  inputMode="decimal"
+                  placeholder="Dia"
+                  value={v2}
+                  onChange={(e) => setV2(e.target.value)}
+                  aria-label="Diastolic"
+                />
+                <span className="u">{unit}</span>
+              </label>
+            ) : null}
+            <button type="submit" className="btn primary sm" disabled={busy} aria-label={`Save ${item.label}`}>
+              <Icon name="check" size={18} />
             </button>
-          ) : null}
-          {error ? <span className="error">{error}</span> : null}
-        </form>
-      ) : null}
+            {editing ? (
+              <button type="button" className="btn ghost sm" onClick={() => setEditing(false)} aria-label="Cancel">
+                <Icon name="x" size={18} />
+              </button>
+            ) : null}
+          </form>
+        ) : null}
+
+        {!done && item.kind === "meds" && !readOnly ? (
+          <button type="button" className="btn primary sm" onClick={() => setConfirming(true)}>
+            <Icon name="shield" size={18} /> Confirm before given
+          </button>
+        ) : null}
+        {!done && openLink && !readOnly ? (
+          <Link to={openLink.to} className="btn secondary sm">
+            {openLink.label}
+          </Link>
+        ) : null}
+      </div>
+      {error ? <p className="error">{error}</p> : null}
 
       {alerts.map((a) => (
         <AlertCard key={a.id} alert={a} compact />
@@ -214,6 +228,6 @@ export function ChecklistRow({
           onCancel={() => setConfirming(false)}
         />
       ) : null}
-    </li>
+    </>
   );
 }

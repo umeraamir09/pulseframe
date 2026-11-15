@@ -1,24 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import type { InventoryItem } from "../../contracts";
 import { store, useLive } from "../../data/db";
+import { Icon } from "../../ui/Icon";
 import type { ProtocolCard } from "../protocols";
-import { PROVENANCE_LABEL, REJECTED_LINE } from "./copy";
+import { NO_ONBOARD_ITEM, REJECTED_LINE } from "./copy";
+import { KitItemCard } from "./Formulary";
 import { offlineProvider, type CaseContext } from "./providers";
 import { validateRecommendation } from "./validate";
 
 /**
- * Onboard suggestions for one case. The emergency kit stage can render this
- * with the same props once issue 4 lands. Suggestions come from the offline
- * provider, then validateRecommendation drops any id that is not in inventory.
+ * Onboard suggestions for one case, shared by the assistant and the emergency kit stage.
+ * Suggestions come from the offline provider, then validateRecommendation drops any id that is not in inventory.
  */
 export function KitSuggestions({
   caseId,
   card,
   onGive,
+  embedded,
 }: {
   caseId: string;
   card?: ProtocolCard;
   onGive?: (item: InventoryItem) => void;
+  /** Rendered inside the emergency kit card: no outer card or heading. */
+  embedded?: boolean;
 }) {
   const inventoryLive = useLive(() => store.listInventory(), []);
   const caseLive = useLive(() => store.getCase(caseId), [caseId]);
@@ -66,63 +70,67 @@ export function KitSuggestions({
   const kept = (keptIds ?? [])
     .map((id) => inventory?.find((item) => item.id === id))
     .filter((item): item is InventoryItem => item !== undefined);
+  const lines = text.split("\n").filter(Boolean);
 
-  return (
-    <section className="kit-suggest" aria-labelledby="kit-suggest-title">
-      <header>
-        <h2 id="kit-suggest-title">
-          {keptIds === null
-            ? "Onboard kit"
-            : `${kept.length} ${kept.length === 1 ? "match" : "matches"} in onboard kit`}
-        </h2>
-        <p className="prov-label">{PROVENANCE_LABEL}</p>
-      </header>
+  const content = (
+    <>
       {caseLive.loading || inventoryLive.loading ? <p className="muted">Checking the protocol card…</p> : null}
       {!caseLive.loading && !openCase ? <p>No open case. Start one in Emergency.</p> : null}
       {error ? <p className="error">{error}</p> : null}
-      {text && openCase ? (
-        <div className="reply-text">
-          {text.split("\n").map((line, index) => (
-            <p key={index}>{line}</p>
+      {kept.length > 0 ? (
+        <ul className="formulary-grid" style={{ marginTop: 0 }}>
+          {kept.map((item) => (
+            <KitItemCard key={item.id} item={item} white showProvenance onConfirm={onGive} />
           ))}
+        </ul>
+      ) : keptIds !== null && openCase ? (
+        <div className="kit-card white">
+          <div className="row">
+            <span className="icon-badge sm accent">
+              <Icon name="kit" size={16} />
+            </span>
+            <span className="name">No onboard item suggested</span>
+          </div>
+          <p className="muted small">{lines.find((l) => l === NO_ONBOARD_ITEM) ?? NO_ONBOARD_ITEM}</p>
+          {lines
+            .filter((l) => l !== NO_ONBOARD_ITEM)
+            .map((l, i) => (
+              <p key={i} className="small">
+                {l}
+              </p>
+            ))}
         </div>
       ) : null}
       {kept.length > 0 ? (
-        <ul className="suggest-list">
-          {kept.map((item) => (
-            <li key={item.id} className="kit-card">
-              <h3>{item.name}</h3>
-              <dl>
-                <div>
-                  <dt>Strength</dt>
-                  <dd>{item.strength}</dd>
-                </div>
-                <div>
-                  <dt>Route</dt>
-                  <dd>{item.route}</dd>
-                </div>
-                <div>
-                  <dt>Comments</dt>
-                  <dd>{item.comments || "Not stated in the checklist"}</dd>
-                </div>
-              </dl>
-              <p className="prov-label">{PROVENANCE_LABEL}</p>
-              {onGive ? (
-                <button type="button" className="give-btn" onClick={() => onGive(item)}>
-                  Mark as given
-                </button>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {rejected.length > 0 ? (
-        <p className="rejected-line">
-          {REJECTED_LINE}
-          <span className="rejected-ids">{rejected.join(", ")}</span>
-          <span className="muted">Only onboard kit items are shown.</span>
+        <p className="note watch">
+          <Icon name="shield" size={16} /> Pulseframe does not suggest doses.
         </p>
       ) : null}
+      {rejected.length > 0 ? (
+        <div className="row wrap">
+          <span className="tag act">
+            <Icon name="ban" size={14} /> {REJECTED_LINE}
+          </span>
+          <span className="muted small">Only onboard kit items are shown. Dropped: {rejected.join(", ")}</span>
+        </div>
+      ) : null}
+    </>
+  );
+
+  if (embedded) return <div className="stack">{content}</div>;
+
+  return (
+    <section className="reply-card" aria-labelledby="kit-suggest-title">
+      <div className="reply-head">
+        <span className="icon-badge sm accent sq">
+          <Icon name="kit" size={16} />
+        </span>
+        <h2 id="kit-suggest-title" className="h3">
+          {keptIds === null ? "Onboard kit" : `${kept.length} ${kept.length === 1 ? "match" : "matches"} for the open case`}
+        </h2>
+        <span className="tag">Protocol card</span>
+      </div>
+      {content}
     </section>
   );
 }

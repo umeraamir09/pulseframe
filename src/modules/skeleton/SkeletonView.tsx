@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Mesh, Vector3, type BufferGeometry } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { SKELETON_REGIONS, type SkeletonRegionId } from "../../contracts";
+import { Icon } from "../../ui/Icon";
 import { REGION_LABELS, isSkeletonRegionId } from "./regions";
 
 // Blender Human Base Meshes (CC0), split into one mesh per region with userData.regionId.
@@ -162,6 +163,12 @@ export function SkeletonView({
     c.update();
   };
 
+  const selectedText = selected.length
+    ? `${selected.map((id) => REGION_LABELS[id]).join(", ")} selected`
+    : readOnly
+      ? "No region selected"
+      : "Tap the body to pinpoint";
+
   return (
     <div className="skeleton-view">
       <div className="skeleton-stage">
@@ -172,32 +179,23 @@ export function SkeletonView({
           </Suspense>
           <OrbitControls ref={controls} target={TARGET} enablePan={false} minDistance={1.2} maxDistance={5} />
         </Canvas>
+        <p className="selected-chip" aria-live="polite">
+          <span className={`dot ${selected.length ? "act" : ""}`} aria-hidden="true" />
+          {selectedText}
+        </p>
         <div className="camera-presets" role="group" aria-label="Camera view">
-          <button type="button" onClick={() => setView("front")}>
-            Front
+          <button type="button" className="icon-round float" onClick={() => setView("front")} aria-label="Front view">
+            <Icon name="front" size={20} />
           </button>
-          <button type="button" onClick={() => setView("back")}>
-            Back
+          <button type="button" className="icon-round float" onClick={() => setView("back")} aria-label="Back view">
+            <Icon name="back" size={20} />
+          </button>
+          <button type="button" className="icon-round float" onClick={() => setView("front")} aria-label="Reset view">
+            <Icon name="reset" size={20} />
           </button>
         </div>
+        <p className="viewport-note">Drag to rotate. Body model: Blender Human Base Meshes, CC0.</p>
       </div>
-      <div className="region-buttons" role="group" aria-label="Body regions">
-        {SKELETON_REGIONS.map((id) => (
-          <button
-            key={id}
-            type="button"
-            aria-pressed={selected.includes(id)}
-            className={flagged.includes(id) ? "flagged" : undefined}
-            disabled={readOnly}
-            onClick={() => onToggle?.(id)}
-          >
-            {REGION_LABELS[id]}
-          </button>
-        ))}
-      </div>
-      <p className="muted small">
-        Click regions on the body or use the buttons. You can select more than one. Drag to rotate.
-      </p>
     </div>
   );
 }
