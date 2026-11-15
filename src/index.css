@@ -529,13 +529,7 @@ label.inline { display: flex; align-items: center; gap: 0.4rem; }
 }
 .assistant a { color: #1d4ed8; }
 .assistant .muted { color: #5c6b7c; }
-.assistant .disclaimer.emergency {
-  background: #fdecee;
-  color: #9f1239;
-  border: 1px solid #f6c9d0;
-  border-radius: 999px;
-  margin: 0 0 1rem;
-}
+.assistant .disclaimer-emergency { margin: 0 0 1rem; }
 .assistant h1 { margin: 0; font-size: 1.7rem; letter-spacing: -0.02em; }
 .assistant h2 { margin: 0; font-size: 1.05rem; }
 .assistant-head p { margin: 0.2rem 0 0; color: #5c6b7c; }
