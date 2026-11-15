@@ -9,6 +9,7 @@ import { PsychPage } from "./modules/psych/PsychPage";
 import { AssistantPage } from "./modules/assistant/AssistantPage";
 import { SyncPage } from "./modules/sync/SyncPage";
 import { SourcesPage } from "./modules/sources/SourcesPage";
+import { NotFound } from "./modules/shell/NotFound";
 import { SkeletonView } from "./modules/skeleton/SkeletonView";
 
 function EmergencyWithSkeleton() {
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/assistant" element={<AssistantPage />} />
         <Route path="/sync" element={<SyncPage />} />
         <Route path="/sources" element={<SourcesPage />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

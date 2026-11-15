@@ -1,10 +1,9 @@
-import { HRP_HAZARDS, HRP_HAZARDS_URL } from "../../contracts";
 import { SIM_CREW, missionDayLabel, missionDayOf, store, useLive } from "../../data/db";
+import { HazardChip } from "../../ui/HazardChip";
 import { MetricTrend } from "../../ui/MetricTrend";
 import { AddReadingForm } from "./AddReadingForm";
 import { CumulativeChart } from "./CumulativeChart";
 
-const HAZARD = HRP_HAZARDS.find((h) => h.id === "radiation")!;
 const SOURCES = [
   {
     title: "NASA SRAG: How do we protect the astronauts from space radiation? (Crew Active Dosimeters)",
@@ -31,10 +30,7 @@ export function RadiationPage() {
           <h1>Personal radiation log</h1>
           <p className="muted">{SIM_CREW.displayName} (simulated)</p>
         </div>
-        {/* Swap for Dev A's <HazardChip id="radiation" /> when src/ui/HazardChip lands (issue 1). */}
-        <a className="hazard-chip" href={HRP_HAZARDS_URL} target="_blank" rel="noreferrer">
-          NASA HRP hazard: {HAZARD.label}
-        </a>
+        <HazardChip id="radiation" />
       </header>
 
       <p className="sim-banner" role="note">
