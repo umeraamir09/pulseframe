@@ -12,8 +12,8 @@ import { CHECKLIST_TEMPLATE, checklistItemId } from "./checklistTemplate";
 import { rebuildAlerts } from "./alerts";
 import { ACTIVE_INVENTORY } from "./inventory";
 import { DEMO_WORKOUT_PLAN } from "./workoutPlan";
-import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayStart } from "./mission";
-import { SIM_CREW, id, putRaw, store } from "./store";
+import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayOf, missionDayStart } from "./mission";
+import { SIM_CREW, putRaw, store } from "./store";
 
 /** Bump to force every device to reseed on next load. */
 export const SEED_VERSION = 3;
@@ -180,9 +180,9 @@ export async function resetDemoData(): Promise<void> {
   const bundle = buildSeed(now);
   await store.resetAll();
   await Promise.all([
-    putRaw("measurements", bundle.measurements.map((m) => ({ ...m, id: id("m") }))),
-    putRaw("psych", bundle.psych.map((p) => ({ ...p, id: id("psy") }))),
-    putRaw("radiation", bundle.radiation.map((r) => ({ ...r, id: id("rad") }))),
+    putRaw("measurements", bundle.measurements.map((m) => ({ ...m, id: `m-seed-${missionDayOf(m.takenAt)}-${m.key}` }))),
+    putRaw("psych", bundle.psych.map((p) => ({ ...p, id: `psy-seed-${missionDayOf(p.at)}` }))),
+    putRaw("radiation", bundle.radiation.map((r) => ({ ...r, id: `rad-seed-${missionDayOf(r.at)}` }))),
     putRaw("workouts", bundle.workouts),
     putRaw("checklist", bundle.checklist),
   ]);
