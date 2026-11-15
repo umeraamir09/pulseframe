@@ -5,3 +5,4 @@ export * from "./mission";
 export { queuePacket, queueEmergencyCase } from "./sync";
 export { initData } from "./init";
 export { resetDemoData } from "./seed";
+export { DEMO_WORKOUT_PLAN, EXERCISE_DEVICES, EXERCISE_SOURCES, type PlannedSession } from "./workoutPlan";
