@@ -36,6 +36,7 @@ export function DictateButton({ onTranscript, disabled, className }: { onTranscr
   const online = useOnline();
   const [state, setState] = useState<State>("idle");
   const [note, setNote] = useState<string>();
+  const [elapsed, setElapsed] = useState(0);
   const recorder = useRef<MediaRecorder | null>(null);
   const stopTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const alive = useRef(true);
@@ -43,6 +44,13 @@ export function DictateButton({ onTranscript, disabled, className }: { onTranscr
   useEffect(() => {
     fill.current = onTranscript;
   }, [onTranscript]);
+
+  useEffect(() => {
+    if (state !== "recording") return;
+    const startedAt = Date.now();
+    const tick = setInterval(() => setElapsed(Math.floor((Date.now() - startedAt) / 1000)), 250);
+    return () => clearInterval(tick);
+  }, [state]);
 
   useEffect(() => {
     alive.current = true;
@@ -98,6 +106,7 @@ export function DictateButton({ onTranscript, disabled, className }: { onTranscr
     };
     recorder.current = rec;
     rec.start();
+    setElapsed(0);
     setState("recording");
     stopTimer.current = setTimeout(() => {
       if (rec.state !== "inactive") rec.stop();
@@ -110,30 +119,54 @@ export function DictateButton({ onTranscript, disabled, className }: { onTranscr
   }
 
   const label = state === "recording" ? "Stop dictation" : state === "working" ? "Transcribing" : "Dictate";
+  const left = Math.max(0, MAX_RECORDING_MS / 1000 - elapsed);
   return (
-    <span className={["dictate", className].filter(Boolean).join(" ")}>
+    <span className={["dictate", `is-${state}`, className].filter(Boolean).join(" ")}>
       <button
         type="button"
-        className={`dictate-btn${state === "recording" ? " is-recording" : ""}`}
+        className={`dictate-btn${state === "recording" ? " is-recording" : ""}${state === "working" ? " is-working" : ""}`}
         aria-label={label}
         aria-pressed={state === "recording"}
         title={state === "recording" ? "Stop and transcribe (60 s max)" : "Dictate. The text goes into the box for you to review."}
         disabled={disabled || state === "working"}
         onClick={toggle}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-          {state === "recording" ? (
-            <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" />
-          ) : (
-            <path
-              fill="currentColor"
-              d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11z"
-            />
-          )}
-        </svg>
+        {state === "working" ? (
+          <span className="dictate-spinner" aria-hidden="true" />
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            {state === "recording" ? (
+              <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" />
+            ) : (
+              <path
+                fill="currentColor"
+                d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11z"
+              />
+            )}
+          </svg>
+        )}
       </button>
-      {state === "working" && <span className="dictate-note" role="status">Transcribing…</span>}
-      {note && state !== "working" && (
+      {state === "recording" && (
+        <span className="dictate-live" role="status" aria-label={`Recording, ${elapsed} seconds`}>
+          <span className="dictate-dot" aria-hidden="true" />
+          <span className="dictate-wave" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="dictate-time">
+            {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
+          </span>
+          {left <= 10 && <span className="dictate-left">{left}s left</span>}
+        </span>
+      )}
+      {state === "working" && (
+        <span className="dictate-note dictate-working" role="status">
+          Transcribing<span className="dictate-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span>
+        </span>
+      )}
+      {note && state === "idle" && (
         <span className="dictate-note" role="status">
           {note}
         </span>
