@@ -42,10 +42,11 @@ export const CHECKLIST_TEMPLATE: ChecklistTemplateItem[] = [
   {
     slug: "scheduled-med",
     kind: "meds",
-    label: "Scheduled medication (simulated placeholder, item pending researcher list)",
+    label: "Prescribed medication, as directed by the flight surgeon",
     required: true,
     hour: 7.5,
-    note: "Placeholder until the researcher supplies the onboard medication list.",
+    note: "Confirm you took your scheduled medication. Pulseframe records that it was taken and never suggests a dose.",
+    sourceUrl: SRC.healthCare,
   },
   {
     slug: "prn-med",
