@@ -39,28 +39,35 @@ function groqOk(content: unknown): Response {
   );
 }
 
-const goodBullets = () => ({
-  bullets: [
-    { text: `Heart rate is above your baseline [${ids[0]}].`, cite: [ids[0]] },
-    { text: `Sleep is a little short [${ids[1]}].`, cite: [ids[1]] },
-    { text: `An invented claim [cond:invented].`, cite: ["cond:invented"] },
-    { text: `Radiation is as expected [${ids[2]}].`, cite: [ids[2], "cond:invented"] },
+const goodNotes = () => ({
+  notes: [
+    { key: "heartRate", status: "act", headline: "15 above your normal", action: "Tell the flight surgeon", why: "Fluid shift can load the heart.", cite: [ids[0]] },
+    { key: "sleepHours", status: "watch", headline: "A little short", action: "", why: "", cite: [ids[1]] },
+    { key: "oxygenSat", status: "normal", headline: "An invented claim", action: "", why: "", cite: ["cond:invented"] },
+    { key: "bloodGlucose", status: "normal", headline: "Right on your normal", action: "", why: "", cite: [ids[2], "cond:invented"] },
   ],
 });
 
 describe("POST /api/brief", () => {
-  it("returns cited bullets, drops invented citations, and sends the brief settings", async () => {
+  it("returns one cited note per key, drops invented citations, and sends the brief settings", async () => {
     expect(ids.length).toBeGreaterThanOrEqual(3);
-    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk(goodBullets()));
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk(goodNotes()));
     const res = await handleBrief(post(SUMMARY), { env: PROD, fetch: fetchMock });
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { bullets: Array<{ text: string; citations: string[] }> };
+    const body = (await res.json()) as { notes: Array<{ key: string; headline: string; citations: string[]; arrow?: string }> };
     expect(body).not.toHaveProperty("usage");
-    expect(body.bullets).toEqual([
-      { text: `Heart rate is above your baseline [${ids[0]}].`, citations: [ids[0]] },
-      { text: `Sleep is a little short [${ids[1]}].`, citations: [ids[1]] },
-      { text: `Radiation is as expected [${ids[2]}].`, citations: [ids[2]] },
-    ]);
+    expect(body.notes.map((n) => n.key)).toEqual(["heartRate", "sleepHours", "bloodGlucose"]);
+    expect(body.notes[0]).toMatchObject({
+      key: "heartRate",
+      status: "act",
+      headline: "15 above your normal",
+      action: "Tell the flight surgeon",
+      citations: [ids[0]],
+      arrow: "up",
+    });
+    expect(body.notes[1]).toMatchObject({ key: "sleepHours", headline: "A little short", citations: [ids[1]], arrow: "down" });
+    expect(body.notes[2]).toMatchObject({ key: "bloodGlucose", headline: "Right on your normal", citations: [ids[2]] });
+    expect(JSON.stringify(body)).not.toContain("cond:invented");
 
     const [url, init] = fetchMock.mock.calls[0]!;
     expect(url).toBe(GROQ_CHAT_URL);
@@ -73,9 +80,16 @@ describe("POST /api/brief", () => {
   });
 
   it("returns usage in development", async () => {
-    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk(goodBullets()));
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk(goodNotes()));
     const body = (await (await handleBrief(post(SUMMARY), { env: DEV, fetch: fetchMock })).json()) as { usage: { estimatedInputTokens: number } };
     expect(body.usage.estimatedInputTokens).toBeLessThanOrEqual(3000);
+  });
+
+  it("accepts an empty note list when nothing is notable", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk({ notes: [] }));
+    const res = await handleBrief(post(SUMMARY), { env: PROD, fetch: fetchMock });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ notes: [] });
   });
 
   it("rejects raw rows and unknown fields without calling Groq", async () => {
@@ -87,8 +101,10 @@ describe("POST /api/brief", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("falls back when fewer than 3 cited bullets survive", async () => {
-    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(groqOk({ bullets: [{ text: "Uncited.", cite: [] }] }));
+  it("falls back when every note loses its citation", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      groqOk({ notes: [{ key: "heartRate", status: "watch", headline: "Uncited.", action: "", why: "", cite: [] }] }),
+    );
     const res = await handleBrief(post(SUMMARY), { env: PROD, fetch: fetchMock });
     expect(res.status).toBe(502);
     expect(await res.json()).toEqual({ error: "bad_model_output", fallback: true });
