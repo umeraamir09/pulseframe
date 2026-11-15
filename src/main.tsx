@@ -3,12 +3,15 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
+import { validateRecommendation } from "./modules/assistant/validate";
 import { initData, queueEmergencyCase, queuePacket, rebuildAlerts, resetDemoData, store } from "./data/db";
 
 void initData();
 
 if (import.meta.env.DEV) {
-  Object.assign(window, { pf: { store, queuePacket, queueEmergencyCase, resetDemoData, rebuildAlerts } });
+  Object.assign(window, {
+    pf: { store, queuePacket, queueEmergencyCase, resetDemoData, rebuildAlerts, validateRecommendation },
+  });
 }
 
 createRoot(document.getElementById("root")!).render(

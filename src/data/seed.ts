@@ -15,8 +15,8 @@ import { DEMO_WORKOUT_PLAN } from "./workoutPlan";
 import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayOf, missionDayStart } from "./mission";
 import { SIM_CREW, putRaw, store } from "./store";
 
-/** Bump to force every device to reseed on next load. */
-export const SEED_VERSION = 3;
+/** Bump to force every device to reseed on next load. 4 loads the transcribed ISS kit subset. */
+export const SEED_VERSION = 4;
 
 /** Simulated values, MD 136 to MD 142. Not reference ranges and not ISS data. */
 export const SEED_SERIES: Partial<Record<MeasurementKey, number[]>> = {

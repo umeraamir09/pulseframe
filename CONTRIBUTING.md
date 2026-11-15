@@ -29,7 +29,7 @@ Use a short prefix: `feat:`, `fix:`, `chore:`, `docs:`. Example: `feat: highligh
 
 ## Rules that apply to every PR
 
-- The app must still run if `VITE_LLM_API_KEY` is unset.
+- The app must still run with no assistant API key set. Groq and OpenAI keys are server-only (`GROQ_API_KEY`, `GROQ_MODEL`, `OPENAI_API_KEY`). Never prefix them with `VITE_`. `VITE_ASSISTANT_MODE` may be `offline` (the default) or `live`.
 - Never commit API keys or `.env`.
 - Medical copy is decision support, not medical authority. Keep the disclaimer visible.
 - Umer is 17: no photos, video, or voice of anyone under 18 in the repo, screenshots, or demo assets.
