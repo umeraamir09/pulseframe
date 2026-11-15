@@ -1,4 +1,4 @@
-import type { MeasurementKey, SkeletonRegionId } from "./keys";
+import type { MeasurementKey, SkeletonRegionId } from "./keys.ts";
 
 export type CrewId = string;
 export type IsoDateTime = string;

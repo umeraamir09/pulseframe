@@ -1,4 +1,4 @@
-import type { SkeletonRegionId } from "../../contracts";
+import type { SkeletonRegionId } from "../../contracts/index.ts";
 import bleedingCard from "./cards/bleeding-laceration-abrasion.json" with { type: "json" };
 import chestCard from "./cards/chest-tightness-post-exercise.json" with { type: "json" };
 import chokingCard from "./cards/choking-airway.json" with { type: "json" };
@@ -7,7 +7,7 @@ import fireCard from "./cards/fire-smoke-burns.json" with { type: "json" };
 import fallbackCard from "./cards/general-fallback.json" with { type: "json" };
 import headacheCard from "./cards/headache-co2.json" with { type: "json" };
 import smsCard from "./cards/space-motion-sickness.json" with { type: "json" };
-import { ProtocolCardSchema, type ProtocolCard, type ProtocolSource } from "./schema";
+import { ProtocolCardSchema, type ProtocolCard, type ProtocolSource } from "./schema.ts";
 
 /**
  * Protocol cards shared with the emergency flow (issue 4).

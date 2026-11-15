@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MEASUREMENT_KEYS, SKELETON_REGIONS } from "../../contracts";
+import { MEASUREMENT_KEYS, SKELETON_REGIONS } from "../../contracts/index.ts";
 
 /**
  * Shared with the emergency flow (issue 4). Cards do not give a dose
