@@ -24,7 +24,8 @@ export function SourcesPage() {
           </a>
         </li>
         <li>
-          <a href="https://github.com/Z-Anatomy/Models-of-human-anatomy">Z-Anatomy (CC BY-SA 4.0; also credit BodyParts3D)</a>
+          Body model based on{" "}
+          <a href="https://www.blender.org/download/demo-files/#assets">Blender Human Base Meshes</a>, CC0
         </li>
       </ul>
     </section>

@@ -213,13 +213,31 @@ nav a:focus-visible { outline: 2px solid #2456c8; outline-offset: 2px; }
   gap: 1rem;
   min-height: calc(100vh - 6rem);
 }
+.skeleton-view { display: flex; flex-direction: column; gap: 0.6rem; min-width: 0; }
+.skeleton-view > .muted { margin: 0; }
 .skeleton-stage {
+  position: relative;
   height: 28rem;
-  background: #10151c;
-  border: 1px solid #262e38;
+  background: radial-gradient(ellipse at 50% 38%, #f4f7fa 0%, #dfe5ec 55%, #c9d2dd 100%);
+  border: 1px solid #d3dbe6;
   border-radius: 8px;
   overflow: hidden;
+  touch-action: none;
 }
+.camera-presets {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: flex;
+  gap: 0.35rem;
+}
+.region-label { pointer-events: none; }
+.region-label .tag { white-space: nowrap; }
+.region-buttons { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.region-buttons button.flagged { border-color: #f2b84b; box-shadow: inset 3px 0 0 #f2b84b; }
+.region-buttons button[aria-pressed="true"] { background: #ff6b4a; border-color: #ff8a6e; color: #1a0a05; }
+.region-buttons button:focus-visible,
+.camera-presets button:focus-visible { outline: 2px solid #3b6fd8; outline-offset: 2px; }
 .tag {
   background: #111;
   color: #fff;
@@ -475,7 +493,6 @@ label.inline { display: flex; align-items: center; gap: 0.4rem; }
 .chart-tip,
 .checkin,
 .sync-col,
-.skeleton-stage,
 .trend,
 .hazard-tile,
 .receipt pre {
