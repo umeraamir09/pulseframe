@@ -9,13 +9,14 @@ import type {
   Workout,
 } from "../contracts";
 import { CHECKLIST_TEMPLATE, checklistItemId } from "./checklistTemplate";
+import { rebuildAlerts } from "./alerts";
 import { ACTIVE_INVENTORY } from "./inventory";
 import { DEMO_WORKOUT_PLAN } from "./workoutPlan";
 import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayStart } from "./mission";
 import { SIM_CREW, id, putRaw, store } from "./store";
 
 /** Bump to force every device to reseed on next load. */
-export const SEED_VERSION = 2;
+export const SEED_VERSION = 3;
 
 /** Simulated values, MD 136 to MD 142. Not reference ranges and not ISS data. */
 export const SEED_SERIES: Partial<Record<MeasurementKey, number[]>> = {
@@ -186,7 +187,7 @@ export async function resetDemoData(): Promise<void> {
     putRaw("checklist", bundle.checklist),
   ]);
   await store.putInventory(bundle.inventory);
-  // Alerts are rebuilt here once PF-6 (issue 8) adds rebuildAlerts.
+  await rebuildAlerts(SIM_CREW.id);
   await store.setMeta("seedVersion", SEED_VERSION);
   await store.setMeta("seededAt", now.toISOString());
 }

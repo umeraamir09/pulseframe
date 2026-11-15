@@ -6,3 +6,13 @@ export { queuePacket, queueEmergencyCase } from "./sync";
 export { initData } from "./init";
 export { resetDemoData } from "./seed";
 export { DEMO_WORKOUT_PLAN, EXERCISE_DEVICES, EXERCISE_SOURCES, type PlannedSession } from "./workoutPlan";
+export {
+  explainAlert,
+  rollingBaselineSeries,
+  BASELINE_WINDOW_DAYS,
+  Z_WATCH,
+  Z_ACT,
+  type BaselinePoint,
+} from "./anomaly";
+export { rebuildAlerts } from "./alerts";
+export { DEMO_HARD_BOUNDS } from "./demoBounds";
