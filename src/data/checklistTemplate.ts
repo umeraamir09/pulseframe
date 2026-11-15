@@ -123,7 +123,7 @@ export const CHECKLIST_TEMPLATE: ChecklistTemplateItem[] = [
   {
     slug: "hydration",
     kind: "other",
-    label: "Hydration check",
+    label: "Water intake",
     required: false,
     hour: 21,
     note: "Low fluid intake raises the risk of headaches, weaker exercise performance and kidney stones.",
