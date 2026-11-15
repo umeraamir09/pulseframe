@@ -46,7 +46,7 @@ export function GuideDock({ variant = "sidebar" }: { variant?: "sidebar" | "mobi
   }
 
   return (
-    <section className={`guide-dock ${variant}${driving ? " out" : ""}`} aria-label="Pulse, your guide">
+    <section className={`guide-dock is-${variant}${driving ? " out" : ""}`} aria-label="Pulse, your guide">
       <div className="guide-dock-tip" aria-live="polite">
         <p className="guide-overline">{driving ? "GUIDE IS DRIVING" : "GUIDE TIP"}</p>
         <p>{driving ? "I am out on the screen running the demo. I come back here when it ends." : tip}</p>

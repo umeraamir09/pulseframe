@@ -199,12 +199,12 @@ body.guide-on .app { padding-top: 80px; }
 @media (max-height: 760px) {
   .sidebar .guide-dock-tip { display: none; }
 }
-.guide-dock.mobile { margin: 0; flex-direction: row; align-items: center; }
-.guide-dock.mobile .guide-dock-tip { flex: 1; order: 2; }
-.guide-dock.mobile .guide-dock-row { display: contents; }
-.guide-dock.mobile .guide-dock-slot { width: 64px; height: 64px; order: 1; }
-.guide-dock.mobile .guide-dock-side { order: 3; flex: none; }
-.guide-dock.mobile .guide-dock-side .small { display: none; }
+.guide-dock.is-mobile { margin: 0; flex-direction: row; align-items: center; }
+.guide-dock.is-mobile .guide-dock-tip { flex: 1; order: 2; }
+.guide-dock.is-mobile .guide-dock-row { display: contents; }
+.guide-dock.is-mobile .guide-dock-slot { width: 64px; height: 64px; order: 1; }
+.guide-dock.is-mobile .guide-dock-side { order: 3; flex: none; }
+.guide-dock.is-mobile .guide-dock-side .small { display: none; }
 
 /* ------------------------------------------------------------ "Your turn" */
 .guide-finish { display: flex; flex-direction: column; gap: 12px; padding: 28px 32px; margin-bottom: 24px; box-shadow: var(--shadow-float); }
