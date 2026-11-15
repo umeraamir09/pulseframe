@@ -2,7 +2,7 @@ import "fake-indexeddb/auto";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEMO_ISS_KIT_SUBSET } from "../../data/inventory/demoIssKit";
 import { SIM_CREW, store } from "../../data/store";
-import { LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, OFFLINE_COMMANDS_ONLY, PROVENANCE_LABEL } from "./copy";
+import { GENERAL_LABEL, LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, PROVENANCE_LABEL } from "./copy";
 import {
   LAST_TURN_MAX_CHARS,
   LIVE_TIMEOUT_MS,
@@ -260,7 +260,8 @@ describe("liveProvider", () => {
     vi.stubGlobal("fetch", impl);
     const reply = await liveProvider.ask({ command: HR_QUESTION, inventory: [] });
     expect(reply.text).toContain(LIVE_FALLBACK_NOTE);
-    expect(reply.text).toContain(OFFLINE_COMMANDS_ONLY);
+    expect(reply.text).toContain(GENERAL_LABEL);
+    expect(reply.text).not.toContain("Not in Pulseframe research");
     expect(reply.citations).toBeUndefined();
     expect(reply.notFound).toBeUndefined();
   });
@@ -278,6 +279,16 @@ describe("liveProvider", () => {
     const reply = await pending;
     expect(reply.text).toContain(LIVE_FALLBACK_NOTE);
     expect(reply.text.trim().length).toBeGreaterThan(LIVE_FALLBACK_NOTE.length);
+  });
+
+  it("routes chest pain locally and does not call the network", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const reply = await liveProvider.ask({ command: "I have a hard pain in my chest", inventory: [] });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(reply.kind).toBe("emergency");
+    expect(reply.redFlag).toContain("start CPR");
+    expect(reply.text).not.toContain(LIVE_FALLBACK_NOTE);
   });
 
   it("getProvider stays offline unless VITE_ASSISTANT_MODE is live", () => {

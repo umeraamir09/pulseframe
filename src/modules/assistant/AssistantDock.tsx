@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { SIM_CREW, store } from "../../data/db";
+import { ActionCard } from "./ActionCard";
 import { numberMarkers } from "./citations";
-import { getProvider } from "./providers";
+import { getProvider, type AssistantReply } from "./providers";
 import { spokenToCommand } from "./spoken";
 
 /* The Web Speech API is not in TypeScript's DOM lib, so declare the bits we use. */
@@ -47,7 +48,7 @@ export function AssistantDock() {
   const [draft, setDraft] = useState("");
   const [heard, setHeard] = useState("");
   const [pending, setPending] = useState(false);
-  const [reply, setReply] = useState<{ command: string; text: string }>();
+  const [reply, setReply] = useState<(AssistantReply & { command: string }) | undefined>();
   const [notice, setNotice] = useState<string>();
 
   const recRef = useRef<Recognition | null>(null);
@@ -81,7 +82,7 @@ export function AssistantDock() {
           : undefined,
       });
       // The dock has no source chips, so live answers lose their raw [chunk-id] markers here.
-      setReply({ command, text: numberMarkers(res.text, {}) });
+      setReply({ ...res, command, text: numberMarkers(res.text, {}) });
     } catch (err) {
       setReply({ command, text: err instanceof Error ? err.message : "The assistant could not answer. Try again." });
     } finally {
@@ -226,7 +227,8 @@ export function AssistantDock() {
   }
 
   const replyLines = reply?.text.split("\n").filter((l) => l.trim() !== "") ?? [];
-  const clipped = replyLines.length > MAX_REPLY_LINES;
+  const card = reply?.kind === "emergency" || reply?.kind === "app";
+  const clipped = !card && replyLines.length > MAX_REPLY_LINES;
 
   return (
     <div className={`ai-dock${open ? " is-open" : ""}${recording ? " is-recording" : ""}`}>
@@ -237,9 +239,11 @@ export function AssistantDock() {
           {reply && !pending ? (
             <>
               <p className="ai-dock-cmd">{reply.command}</p>
-              {replyLines.slice(0, MAX_REPLY_LINES).map((line, i) => (
-                <p key={i}>{line}</p>
-              ))}
+              {card ? (
+                <ActionCard reply={reply} />
+              ) : (
+                replyLines.slice(0, MAX_REPLY_LINES).map((line, i) => <p key={i}>{line}</p>)
+              )}
               <p className="ai-dock-foot">
                 {clipped ? "More in the full answer. " : ""}
                 <Link to="/assistant" onClick={() => setOpen(false)}>

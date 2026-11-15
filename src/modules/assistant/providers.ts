@@ -3,7 +3,9 @@ import { KEY_LABELS } from "../../contracts";
 import { explainAlert, missionDayLabel, missionDayOf, SIM_CREW, store } from "../../data/db";
 import { getProtocol, matchProtocol } from "../protocols";
 import { ANSWER_KINDS, parseBlocks, type AnswerBlock, type AnswerKind } from "./answerBlocks";
-import { LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, OFFLINE_COMMANDS_ONLY, PROVENANCE_LABEL } from "./copy";
+import { ASSISTANT_DISCLAIMER, LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, OFFLINE_COMMANDS_ONLY, PROVENANCE_LABEL } from "./copy";
+import { answerLocally } from "./routing";
+import type { ReplyAction, ReplyKind } from "./types";
 
 export interface CaseContext {
   caseId: string;
@@ -33,10 +35,18 @@ export interface AssistantReply {
   citations?: string[];
   /** True when the research pack does not cover the question. */
   notFound?: boolean;
-  /** Live answers only: "research" (cited), "general" (uncited, non-medical) or "notFound". */
-  kind?: AnswerKind;
+  /**
+   * "research" (cited), "general" (uncited), "notFound", or a local card:
+   * "emergency", "app", or "formulary".
+   */
+  kind?: AnswerKind | ReplyKind;
   /** Live answers only: visual blocks rendered under the lead text. */
   blocks?: AnswerBlock[];
+  title?: string;
+  steps?: string[];
+  actions?: ReplyAction[];
+  redFlag?: string;
+  badge?: string;
 }
 
 export interface AssistantProvider {
@@ -75,12 +85,14 @@ function describeItem(item: InventoryItem): string {
 function helpText(): string {
   return [
     "Commands:",
-    "suggest — items named on the open case's protocol card, onboard kit only",
-    "find <text> — search item name and PDF comments",
-    "item <id> — show one onboard item",
-    "alerts — list open alerts",
-    "help — list these commands",
+    "suggest: items named on the open case's protocol card, onboard kit only",
+    "find <text>: search item name and PDF comments",
+    "item <id>: show one onboard item",
+    "alerts: list open alerts",
+    "help: list these commands",
+    "You can also describe a symptom, ask how a page works, or ask a short general question.",
     "Pulseframe does not suggest a dose. A flight surgeon directs anything given.",
+    ASSISTANT_DISCLAIMER,
   ].join("\n");
 }
 
@@ -131,6 +143,11 @@ function suggest(input: AssistantAsk): AssistantReply {
 export const offlineProvider: AssistantProvider = {
   name: "offline",
   async ask(input) {
+    const routed = answerLocally(input.command, input.inventory, {
+      caseOpen: Boolean(input.caseCtx),
+      fallbackGeneral: true,
+    });
+    if (routed?.kind === "emergency") return routed;
     const { verb, arg } = parseCommand(input.command);
     if (verb === "help") return { text: helpText() };
     if (verb === "find") return { text: findText(input.inventory, arg) };
@@ -139,6 +156,7 @@ export const offlineProvider: AssistantProvider = {
       return { text: await alertsText(input.caseCtx?.crewId ?? SIM_CREW.id) };
     }
     if (verb === "suggest") return suggest(input);
+    if (routed) return routed;
     return { text: `Unknown command "${verb}". ${OFFLINE_COMMANDS_ONLY}` };
   },
 };
@@ -186,6 +204,33 @@ async function postLive(payload: {
     if (Array.isArray(body.citations)) {
       reply.citations = body.citations.filter((id): id is string => typeof id === "string" && id.length > 0);
     }
+    const localKind = (["emergency", "app", "formulary"] as const).find((kind) => kind === body.kind);
+    if (localKind) {
+      const record = body as Record<string, unknown>;
+      const steps = Array.isArray(record.steps) ? record.steps.filter((step): step is string => typeof step === "string") : undefined;
+      const actions = Array.isArray(record.actions)
+        ? record.actions.filter(
+            (action): action is ReplyAction =>
+              Boolean(action) &&
+              typeof action === "object" &&
+              typeof (action as ReplyAction).label === "string" &&
+              typeof (action as ReplyAction).to === "string",
+          )
+        : undefined;
+      return {
+        text: body.text,
+        kind: localKind,
+        draft: body.draft ?? undefined,
+        notFound: false,
+        citations: [],
+        blocks: [],
+        title: typeof record.title === "string" ? record.title : undefined,
+        steps,
+        actions,
+        redFlag: typeof record.redFlag === "string" ? record.redFlag : undefined,
+        badge: typeof record.badge === "string" ? record.badge : undefined,
+      };
+    }
     const kind = ANSWER_KINDS.find((k) => k === body.kind);
     if (typeof body.notFound === "boolean") reply.notFound = body.notFound;
     // Older servers send only notFound; infer the kind from it.
@@ -201,6 +246,9 @@ async function postLive(payload: {
 export const liveProvider: AssistantProvider = {
   name: "live",
   async ask(input) {
+    const local = answerLocally(input.command, input.inventory, { caseOpen: Boolean(input.caseCtx) });
+    // Keyword emergency, app help, and formulary never wait on a model.
+    if (local && local.kind !== "general") return local;
     if (isOfflineCommand(input.command)) return offlineProvider.ask(input);
     try {
       const lastTurn = clipTurn(input.lastTurn);
@@ -212,7 +260,7 @@ export const liveProvider: AssistantProvider = {
       });
     } catch {
       const offline = await offlineProvider.ask(input);
-      return { text: `${offline.text}\n${LIVE_FALLBACK_NOTE}`, draft: offline.draft };
+      return { ...offline, text: `${offline.text}\n${LIVE_FALLBACK_NOTE}` };
     }
   },
 };

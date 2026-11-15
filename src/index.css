@@ -640,6 +640,18 @@ details.why-more > summary::-webkit-details-marker { display: none; }
   background: var(--accent); color: #fff; font-size: 15px; font-weight: 500;
 }
 .reply-card { background: var(--surface); border-radius: var(--r-md); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.action-card {
+  display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: var(--r-md);
+  background: var(--surface2); border: 1px solid var(--line);
+}
+.action-card.is-emergency { background: var(--act-soft); border-color: var(--act); }
+.action-flag {
+  display: flex; align-items: flex-start; gap: 8px; margin: 0; font-weight: 700; color: var(--act-ink);
+}
+.action-steps { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 6px; }
+.action-steps li { padding-left: 4px; }
+.action-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.action-actions .btn { height: 44px; white-space: normal; text-align: center; }
 .reply-head { display: flex; align-items: center; gap: 10px; }
 .reply-head .h3 { flex: 1; min-width: 0; }
 .reply-text { font-size: 14px; display: flex; flex-direction: column; gap: 2px; white-space: pre-wrap; }
