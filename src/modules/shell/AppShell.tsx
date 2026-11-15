@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { MISSION_DAY_TODAY, SIM_CREW, missionDayLabel } from "../../data/db";
+import { AssistantDock } from "../assistant/AssistantDock";
 import { Disclaimer } from "../../ui/Disclaimer";
 import { SyncChip as NavSyncCount } from "../../ui/SyncChip";
 import { StationIcon } from "./StationIcon";
@@ -88,6 +89,7 @@ export function AppShell() {
           <Outlet />
         </div>
       </div>
+      <AssistantDock />
     </div>
   );
 }
