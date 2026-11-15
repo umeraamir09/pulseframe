@@ -15,6 +15,17 @@ export type PacketPriority = "routine" | "emergency";
 export type PacketStatus = "queued" | "sending" | "sent" | "failed";
 export type WorkoutKind = "resistive" | "aerobic";
 
+export type EmergencyStage =
+  | "intake"
+  | "pinpoint"
+  | "current-info"
+  | "differential"
+  | "tests"
+  | "immediate"
+  | "kit"
+  | "handoff"
+  | "monitoring";
+
 export interface CrewProfile {
   id: CrewId;
   displayName: string;
@@ -39,11 +50,15 @@ export interface InventoryItem {
   pack: string;
   strength: string;
   route: string;
-  quantityOnBoard: number;
+  /** null when the source does not state it. */
+  quantityOnBoard: number | null;
   location: string;
   sideEffects: string;
   comments: string;
   sourceUrl: string;
+  provenance: "historical-demo-subset" | "researcher-list";
+  /** Page number in the source PDF. */
+  sourcePage?: string;
 }
 
 export interface EmergencyCase {
@@ -54,6 +69,12 @@ export interface EmergencyCase {
   startedAt: IsoDateTime;
   status: "open" | "monitoring" | "closed";
   currentInfoSnapshot?: string;
+  /** Resume the flow after reload. */
+  stage: EmergencyStage;
+  protocolId?: string;
+  /** Emergency SyncPacket id after handoff. */
+  packetId?: string;
+  closedAt?: IsoDateTime;
 }
 
 export interface ProtocolStep {
@@ -65,6 +86,10 @@ export interface ProtocolStep {
   inputKey?: MeasurementKey;
   completed: boolean;
   resultValue?: number;
+  order: number;
+  completedAt?: IsoDateTime;
+  /** Measurement written from this test. */
+  measurementId?: string;
 }
 
 export interface Recommendation {
@@ -96,8 +121,16 @@ export interface ChecklistItem {
   required: boolean;
   doneAt?: IsoDateTime;
   value?: number;
+  /** Second value for paired readings, e.g. diastolic when linkedKey is systolicBP. */
+  value2?: number;
   linkedKey?: MeasurementKey;
   itemId?: string;
+  /** Short guidance shown under the label. Demonstration copy, never a dose. */
+  note?: string;
+  /** Public source that motivates the item. */
+  sourceUrl?: string;
+  /** Display order within the day. */
+  order?: number;
 }
 
 export interface Baseline {
@@ -122,6 +155,10 @@ export interface Alert {
   value: number;
   openedAt: IsoDateTime;
   ackedAt?: IsoDateTime;
+  measurementId?: string;
+  caseId?: string;
+  windowDays?: number;
+  sampleCount?: number;
 }
 
 export interface Workout {
@@ -133,6 +170,8 @@ export interface Workout {
   minutes: number;
   completed: boolean;
   notes?: string;
+  /** Demonstration plan, not a NASA prescription. */
+  plannedMinutes?: number;
 }
 
 export interface RadiationReading {
@@ -157,6 +196,8 @@ export interface PsychCheck {
 
 export interface SyncPacket {
   id: string;
+  crewId: CrewId;
+  kind: "routine-summary" | "emergency-case";
   createdAt: IsoDateTime;
   priority: PacketPriority;
   destination: "earth-surgeon" | "other-portal";
@@ -169,8 +210,19 @@ export interface SyncPacket {
   receivedAt?: IsoDateTime;
 }
 
-/** The surface Dev A writes to and Dev B persists. Implement in src/data. */
+export interface GroundReceipt {
+  /** Same as SyncPacket.id, so retries dedupe. */
+  id: string;
+  receivedAt: IsoDateTime;
+  checksumOk: boolean;
+  priority: PacketPriority;
+  kind: SyncPacket["kind"];
+  payloadJson: string;
+}
+
+/** The surface Dev A writes to and Dev B persists. Implemented in src/data/store.ts. */
 export interface PulseframeStore {
+  // existing
   getCrew(): Promise<CrewProfile>;
   listMeasurements(crewId: CrewId, from?: IsoDateTime, to?: IsoDateTime): Promise<Measurement[]>;
   addMeasurement(m: Omit<Measurement, "id">): Promise<Measurement>;
@@ -179,4 +231,44 @@ export interface PulseframeStore {
   listInventory(): Promise<InventoryItem[]>;
   saveCase(c: EmergencyCase): Promise<EmergencyCase>;
   getOpenCase(crewId: CrewId): Promise<EmergencyCase | undefined>;
+
+  // measurements and alerts
+  recordMeasurement(m: Omit<Measurement, "id">): Promise<{ measurement: Measurement; alert?: Alert }>;
+  saveAlert(a: Alert): Promise<Alert>;
+  ackAlert(id: string, at?: IsoDateTime): Promise<Alert | undefined>;
+  clearAlerts(crewId: CrewId): Promise<void>;
+  saveBaselines(b: Baseline[]): Promise<void>;
+
+  // inventory, cases, steps, recommendations, meds
+  putInventory(items: InventoryItem[]): Promise<void>;
+  getCase(id: string): Promise<EmergencyCase | undefined>;
+  listCases(crewId: CrewId): Promise<EmergencyCase[]>;
+  listSteps(caseId: string): Promise<ProtocolStep[]>;
+  saveSteps(steps: ProtocolStep[]): Promise<void>;
+  saveRecommendation(r: Recommendation): Promise<Recommendation>;
+  listRecommendations(caseId: string): Promise<Recommendation[]>;
+  recordMedicationAdmin(a: Omit<MedicationAdmin, "id">): Promise<MedicationAdmin>;
+  listMedicationAdmins(crewId: CrewId, from?: IsoDateTime): Promise<MedicationAdmin[]>;
+
+  // daily modules
+  listChecklist(missionDay: string): Promise<ChecklistItem[]>;
+  saveChecklistItem(i: ChecklistItem): Promise<ChecklistItem>;
+  listWorkouts(crewId: CrewId, from?: IsoDateTime): Promise<Workout[]>;
+  saveWorkout(w: Workout): Promise<Workout>;
+  listRadiation(crewId: CrewId, from?: IsoDateTime): Promise<RadiationReading[]>;
+  addRadiation(r: Omit<RadiationReading, "id">): Promise<RadiationReading>;
+  listPsych(crewId: CrewId, from?: IsoDateTime): Promise<PsychCheck[]>;
+  addPsych(p: Omit<PsychCheck, "id">): Promise<PsychCheck>;
+
+  // sync
+  listPackets(): Promise<SyncPacket[]>;
+  savePacket(p: SyncPacket): Promise<SyncPacket>;
+  listGroundReceipts(): Promise<GroundReceipt[]>;
+  saveGroundReceipt(r: GroundReceipt): Promise<void>;
+
+  // lifecycle
+  getMeta(key: string): Promise<unknown>;
+  setMeta(key: string, value: unknown): Promise<void>;
+  resetAll(): Promise<void>;
+  subscribe(listener: () => void): () => void;
 }
