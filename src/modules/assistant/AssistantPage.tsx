@@ -8,8 +8,16 @@ import { usePageMeta } from "../../ui/pageMeta";
 import { Formulary } from "./Formulary";
 import { GivenDialog } from "./GivenDialog";
 import { KitSuggestions } from "./KitSuggestions";
-import { LIVE_FALLBACK_NOTE, MODE_LIVE, MODE_OFFLINE, REJECTED_LINE } from "./copy";
-import { getProvider } from "./providers";
+import { EMPTY_CITATIONS, loadCitations, type ResolvedCitations } from "./citations";
+import {
+  LIVE_FALLBACK_NOTE,
+  MODE_LIVE,
+  MODE_OFFLINE,
+  NOT_IN_RESEARCH_TITLE,
+  RESEARCH_ANSWER_TITLE,
+} from "./copy";
+import { getProvider, isOfflineCommand, type LastTurn } from "./providers";
+import { NotInResearch, RejectedItems, ResearchReply } from "./ReplyParts";
 import { validateRecommendation } from "./validate";
 
 interface Turn {
@@ -21,6 +29,9 @@ interface Turn {
   alerts?: Alert[];
   /** Items matched by `find` or shown by `item`, for card rendering. */
   items?: InventoryItem[];
+  /** Live free-text answer: cited ("answer") or outside the research pack ("notFound"). */
+  research?: "answer" | "notFound";
+  citations?: ResolvedCitations;
 }
 
 const QUICK: ({ id: string; label: string; icon: IconName } & ({ run: string } | { fill: string }))[] = [
@@ -64,6 +75,7 @@ export function AssistantPage() {
   const [pending, setPending] = useState(false);
   const [history, setHistory] = useState<Turn[]>([]);
   const [lastCommand, setLastCommand] = useState("");
+  const lastTurn = useRef<LastTurn | undefined>(undefined);
   const [giving, setGiving] = useState<{ item: InventoryItem; caseId?: string } | null>(null);
   const [selected, setSelected] = useState<string>();
   const [loggedName, setLoggedName] = useState<string>();
@@ -91,6 +103,7 @@ export function AssistantPage() {
       const reply = await provider.ask({
         command,
         inventory: rows,
+        lastTurn: lastTurn.current,
         caseCtx: current
           ? {
               caseId: current.id,
@@ -103,6 +116,13 @@ export function AssistantPage() {
       });
       if (!alive.current) return;
       const offline = provider.name === "offline" || reply.text.includes(LIVE_FALLBACK_NOTE);
+      const research = offline || isOfflineCommand(command) ? undefined : reply.notFound ? "notFound" : "answer";
+      let citations: ResolvedCitations | undefined;
+      if (research === "answer") {
+        citations = await loadCitations(reply.citations ?? []).catch(() => EMPTY_CITATIONS);
+        if (!alive.current) return;
+        lastTurn.current = { question: command, answer: reply.text };
+      }
       const validation =
         reply.draft !== undefined ? validateRecommendation(reply.draft, rows, current?.id ?? "no-case", offline) : undefined;
       const kept = (validation?.recommendation?.itemIds ?? [])
@@ -126,6 +146,8 @@ export function AssistantPage() {
           kept,
           items,
           alerts: verb === "alerts" || verb === "explain alerts" ? openAlerts : undefined,
+          research,
+          citations,
         },
       ]);
       setLastCommand(command);
@@ -173,7 +195,7 @@ export function AssistantPage() {
             <input
               ref={inputRef}
               value={draft}
-              placeholder="Ask about the onboard kit or your alerts"
+              placeholder={live ? "Ask a question, or type a command like find" : "Ask about the onboard kit or your alerts"}
               aria-label="Assistant command"
               onChange={(event) => setDraft(event.target.value)}
               disabled={pending || inventory.data === undefined}
@@ -264,6 +286,18 @@ export function AssistantPage() {
   );
 }
 
+function commandTitle(turn: Turn, lines: string[], rejected: boolean): string {
+  return turn.alerts
+    ? `${turn.alerts.length} open alert${turn.alerts.length === 1 ? "" : "s"}`
+    : rejected
+      ? "Not available"
+      : turn.items && commandVerb(turn.command).startsWith("find")
+        ? turn.items.length
+          ? `${turn.items.length} match${turn.items.length === 1 ? "" : "es"} in onboard kit`
+          : "No match in onboard kit"
+        : lines[0]!.replace(/[.:]$/, "");
+}
+
 function TurnView({
   turn,
   inventory,
@@ -278,16 +312,14 @@ function TurnView({
   const [why, setWhy] = useState(false);
   const lines = turn.text.split("\n");
   const rejected = turn.rejectedItemIds.length > 0;
-  const title = turn.alerts
-    ? `${turn.alerts.length} open alert${turn.alerts.length === 1 ? "" : "s"}`
-    : rejected
-      ? "Not available"
-      : turn.items && commandVerb(turn.command).startsWith("find")
-        ? turn.items.length
-          ? `${turn.items.length} match${turn.items.length === 1 ? "" : "es"} in onboard kit`
-          : "No match in onboard kit"
-        : lines[0]!.replace(/[.:]$/, "");
-  const body = turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(1);
+  const title =
+    turn.research === "notFound"
+      ? NOT_IN_RESEARCH_TITLE
+      : turn.research === "answer"
+        ? RESEARCH_ANSWER_TITLE
+        : commandTitle(turn, lines, rejected);
+  const body = turn.research || turn.alerts || (turn.items && turn.items.length) ? [] : lines.slice(1);
+  const tag = turn.research ? "Research" : rejected ? "Guardrail" : "Protocol card";
 
   return (
     <>
@@ -301,8 +333,11 @@ function TurnView({
             <Icon name="sparkles" size={16} />
           </span>
           <h2 className="h3">{title}</h2>
-          <span className="tag">{rejected ? "Guardrail" : "Protocol card"}</span>
+          <span className="tag">{tag}</span>
         </div>
+
+        {turn.research === "notFound" ? <NotInResearch text={turn.text} /> : null}
+        {turn.research === "answer" ? <ResearchReply text={turn.text} citations={turn.citations ?? EMPTY_CITATIONS} /> : null}
 
         {turn.alerts ? (
           <>
@@ -386,14 +421,7 @@ function TurnView({
           </div>
         ) : null}
 
-        {rejected ? (
-          <div className="row wrap">
-            <span className="tag act" style={{ height: 36, padding: "0 14px", fontSize: 14 }}>
-              <Icon name="ban" size={16} /> {REJECTED_LINE}
-            </span>
-            <span className="muted small">Only onboard kit items are shown. Dropped: {turn.rejectedItemIds.join(", ")}</span>
-          </div>
-        ) : null}
+        <RejectedItems ids={turn.rejectedItemIds} />
       </article>
     </>
   );

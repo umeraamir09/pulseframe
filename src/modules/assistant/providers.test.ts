@@ -2,8 +2,16 @@ import "fake-indexeddb/auto";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEMO_ISS_KIT_SUBSET } from "../../data/inventory/demoIssKit";
 import { SIM_CREW, store } from "../../data/store";
-import { LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, PROVENANCE_LABEL } from "./copy";
-import { LIVE_TIMEOUT_MS, getProvider, liveProvider, offlineProvider, type CaseContext } from "./providers";
+import { LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, OFFLINE_COMMANDS_ONLY, PROVENANCE_LABEL } from "./copy";
+import {
+  LAST_TURN_MAX_CHARS,
+  LIVE_TIMEOUT_MS,
+  getProvider,
+  isOfflineCommand,
+  liveProvider,
+  offlineProvider,
+  type CaseContext,
+} from "./providers";
 
 const chest: CaseContext = {
   caseId: "case-1",
@@ -116,37 +124,115 @@ describe("offlineProvider", () => {
   });
 });
 
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+}
+
+const HR_QUESTION = "what is normal in-flight heart rate?";
+
 describe("liveProvider", () => {
-  afterEach(() => {
+  afterEach(async () => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
+    await store.resetAll();
   });
 
-  it("returns the live text when /api/assistant answers", async () => {
-    const bodies: unknown[] = [];
-    vi.stubGlobal("fetch", async (_url: string, init: RequestInit) => {
-      bodies.push(JSON.parse(String(init?.body)));
-      return new Response(JSON.stringify({ text: "live ok", draft: { itemIds: [], rationale: "x", cautions: "y" } }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
+  it("sends free text to /api/assistant and returns text, citations, notFound and draft", async () => {
+    const calls: { url: string; body: unknown }[] = [];
+    vi.stubGlobal("fetch", async (url: string, init: RequestInit) => {
+      calls.push({ url, body: JSON.parse(String(init?.body)) });
+      return jsonResponse({
+        text: "Mean 24 h heart rate is unchanged in flight [cv:space-motion-sickness:heartrate.2].",
+        citations: ["cv:space-motion-sickness:heartrate.2"],
+        draft: { itemIds: [], rationale: "x", cautions: "y" },
+        notFound: false,
+        usage: { estimatedInputTokens: 1200 },
       });
     });
-    const reply = await liveProvider.ask({ command: "help", inventory: DEMO_ISS_KIT_SUBSET, caseCtx: chest });
-    expect(reply.text).toBe("live ok");
-    expect(reply.text).not.toContain(LIVE_FALLBACK_NOTE);
-    expect(bodies[0]).toEqual({
-      command: "help",
+    const reply = await liveProvider.ask({ command: `  ${HR_QUESTION} `, inventory: DEMO_ISS_KIT_SUBSET, caseCtx: chest });
+    expect(reply).toEqual({
+      text: "Mean 24 h heart rate is unchanged in flight [cv:space-motion-sickness:heartrate.2].",
+      citations: ["cv:space-motion-sickness:heartrate.2"],
+      draft: { itemIds: [], rationale: "x", cautions: "y" },
+      notFound: false,
+    });
+    expect(calls).toHaveLength(1);
+    expect(calls[0]!.url).toBe("/api/assistant");
+    expect(calls[0]!.body).toEqual({
+      command: HR_QUESTION,
       caseCtx: chest,
       inventoryIds: DEMO_ISS_KIT_SUBSET.map((item) => item.id),
     });
   });
 
-  it("falls back when /api/assistant is missing", async () => {
-    vi.stubGlobal("fetch", async () => new Response("missing", { status: 404 }));
-    const reply = await liveProvider.ask({ command: "help", inventory: [] });
-    expect(reply.text).toContain("Commands:");
+  it("sends the previous Q/A pair as lastTurn, clipped", async () => {
+    const bodies: Record<string, unknown>[] = [];
+    vi.stubGlobal("fetch", async (_url: string, init: RequestInit) => {
+      bodies.push(JSON.parse(String(init?.body)));
+      return jsonResponse({ text: "ok", citations: ["x:y"], notFound: false });
+    });
+    await liveProvider.ask({
+      command: "and when asleep?",
+      inventory: [],
+      lastTurn: { question: HR_QUESTION, answer: "a".repeat(LAST_TURN_MAX_CHARS + 50) },
+    });
+    expect(bodies[0]!.lastTurn).toEqual({ question: HR_QUESTION, answer: "a".repeat(LAST_TURN_MAX_CHARS) });
+    await liveProvider.ask({ command: "next", inventory: [], lastTurn: { question: " ", answer: "x" } });
+    expect(bodies[1]).not.toHaveProperty("lastTurn");
+  });
+
+  it("passes notFound through with no citations", async () => {
+    vi.stubGlobal("fetch", async () =>
+      jsonResponse({ text: "Not in Pulseframe research. Contact the flight surgeon.", citations: [], notFound: true }),
+    );
+    const reply = await liveProvider.ask({ command: "how do I treat appendicitis?", inventory: [] });
+    expect(reply).toEqual({ text: "Not in Pulseframe research. Contact the flight surgeon.", citations: [], notFound: true });
+  });
+
+  it("drops a null draft and non-string citation ids", async () => {
+    vi.stubGlobal("fetch", async () => jsonResponse({ text: "ok", citations: ["a:b", 3, ""], draft: null, notFound: false }));
+    const reply = await liveProvider.ask({ command: "question", inventory: [] });
+    expect(reply).toEqual({ text: "ok", citations: ["a:b"], notFound: false });
+  });
+
+  it.each(["help", "find aspirin", "item kit-white-aspirin", "alerts", "explain alerts", "suggest", "  HELP  "])(
+    "runs the command %j offline with no fetch call",
+    async (command) => {
+      const fetchSpy = vi.fn();
+      vi.stubGlobal("fetch", fetchSpy);
+      const reply = await liveProvider.ask({ command, inventory: DEMO_ISS_KIT_SUBSET, caseCtx: chest });
+      expect(fetchSpy).not.toHaveBeenCalled();
+      expect(reply.text).not.toContain(LIVE_FALLBACK_NOTE);
+      expect(reply).toEqual(await offlineProvider.ask({ command, inventory: DEMO_ISS_KIT_SUBSET, caseCtx: chest }));
+    },
+  );
+
+  it("isOfflineCommand matches only the offline verbs", () => {
+    for (const command of ["help", "find x", "item y", "alerts", "Explain alerts", "suggest headache"]) {
+      expect(isOfflineCommand(command), command).toBe(true);
+    }
+    for (const command of [HR_QUESTION, "explain my heart rate", "helpful tips?", "finding"]) {
+      expect(isOfflineCommand(command), command).toBe(false);
+    }
+  });
+
+  it.each([
+    ["404 (no /api)", async () => new Response("missing", { status: 404 })],
+    ["503 missing key", async () => jsonResponse({ error: "missing_key", fallback: true }, 503)],
+    ["503 rate limited", async () => jsonResponse({ error: "rate_limited", fallback: true }, 503)],
+    ["502 bad model output", async () => jsonResponse({ error: "bad_model_output", fallback: true }, 502)],
+    ["504 timeout", async () => jsonResponse({ error: "timeout", fallback: true }, 504)],
+    ["network error", async () => Promise.reject(new TypeError("Failed to fetch"))],
+    ["200 with empty text", async () => jsonResponse({ text: "  ", citations: [], notFound: false })],
+    ["200 with non-JSON body", async () => new Response("<html>", { status: 200 })],
+  ])("falls back offline with the note on %s", async (_name, impl) => {
+    vi.stubGlobal("fetch", impl);
+    const reply = await liveProvider.ask({ command: HR_QUESTION, inventory: [] });
     expect(reply.text).toContain(LIVE_FALLBACK_NOTE);
+    expect(reply.text).toContain(OFFLINE_COMMANDS_ONLY);
+    expect(reply.citations).toBeUndefined();
+    expect(reply.notFound).toBeUndefined();
   });
 
   it("falls back within 9 seconds when the live call hangs", async () => {
@@ -157,11 +243,11 @@ describe("liveProvider", () => {
         init.signal?.addEventListener("abort", () => reject(new Error("aborted")));
       });
     });
-    const pending = liveProvider.ask({ command: "help", inventory: [] });
+    const pending = liveProvider.ask({ command: HR_QUESTION, inventory: [] });
     await vi.advanceTimersByTimeAsync(LIVE_TIMEOUT_MS);
     const reply = await pending;
     expect(reply.text).toContain(LIVE_FALLBACK_NOTE);
-    expect(reply.text).toContain("Commands:");
+    expect(reply.text.trim().length).toBeGreaterThan(LIVE_FALLBACK_NOTE.length);
   });
 
   it("getProvider stays offline unless VITE_ASSISTANT_MODE is live", () => {
