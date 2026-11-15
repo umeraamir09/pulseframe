@@ -64,6 +64,33 @@ const SOURCES: Source[] = [
     href: "https://www.blender.org/download/demo-files/#assets",
   },
   {
+    icon: "signal",
+    title: "Kenney UI Audio",
+    desc: "Click sound for the Pulse guide. CC0 1.0, credit is not required but given. Kenney, kenney.nl.",
+    tag: "Audio",
+    href: "https://kenney.nl/assets/ui-audio",
+  },
+  {
+    icon: "signal",
+    title: "Kenney Interface Sounds",
+    desc: "Typing, whoosh, bubble, alert and link sounds for the Pulse guide. CC0 1.0, credit is not required but given.",
+    tag: "Audio",
+    href: "https://kenney.nl/assets/interface-sounds",
+  },
+  {
+    icon: "signal",
+    title: "Kenney Music Jingles",
+    desc: "Success jingle for the Pulse guide. CC0 1.0 (creativecommons.org/publicdomain/zero/1.0), credit is not required but given.",
+    tag: "Audio",
+    href: "https://kenney.nl/assets/music-jingles",
+  },
+  {
+    icon: "smile",
+    title: "Pulse mascot and 3D models",
+    desc: "The astronaut models and mascot renders were made by the team for this project.",
+    tag: "3D",
+  },
+  {
     icon: "book",
     title: "Manrope typeface",
     desc: "Open Font License, via Google Fonts.",

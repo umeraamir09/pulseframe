@@ -8,6 +8,7 @@ import { fmt } from "../../ui/useTrend";
 import { SkeletonView } from "../skeleton/SkeletonView";
 import { REGION_SHORT, toggleRegion } from "../skeleton/regions";
 import { stageIndex, type CaseIntake, type EmergencyApi } from "./useEmergencyCase";
+import { guideDriving, useGuide } from "../guide/guideStore";
 
 const QUICK: { label: string; icon: IconName }[] = [
   { label: "Chest pain", icon: "heart" },
@@ -37,6 +38,7 @@ export function IntakePanel({ api }: { api: EmergencyApi }) {
   const [details, setDetails] = useState<CaseIntake>(intake ?? { started: "Under 1 h", strength: 3 });
   const [busy, setBusy] = useState(false);
   const locked = c ? stageIndex(c.stage) >= stageIndex("differential") : false;
+  const byGuide = useGuide((s) => guideDriving(s.status));
 
   function patch(p: Partial<CaseIntake>) {
     const next = { ...details, ...p };
@@ -78,7 +80,7 @@ export function IntakePanel({ api }: { api: EmergencyApi }) {
           }}
         />
         <p className="meta">
-          <Icon name="edit" size={14} /> Typed by crew, {words(narrative)} words
+          <Icon name="edit" size={14} /> Typed by {byGuide ? "the guide" : "crew"}, {words(narrative)} words
         </p>
       </div>
 

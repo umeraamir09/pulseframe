@@ -97,3 +97,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Branch from `main` as `feature/pf-<issue
 ## License and credits
 
 Application code is for the team's Space Apps submission. 3D models added later must keep their original licenses (Z-Anatomy and BodyParts3D are CC BY-SA; credit them on the Sources page and in the submission References field).
+
+The sound effects in `public/sfx` are CC0 1.0 from Kenney (see `public/sfx/LICENSES.md`). The mascot models and renders are the team's own.

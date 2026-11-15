@@ -2,6 +2,10 @@ import { useCallback, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { MISSION_DAY_TODAY, SIM_CREW, missionDayLabel, store, useLive } from "../../data/db";
 import { AssistantDock } from "../assistant/AssistantDock";
+import { GuideDock } from "../guide/GuideDock";
+import { GuideFinish } from "../guide/GuideFinish";
+import { GuideLayer } from "../guide/GuideLayer";
+import "../guide/guide.css";
 import { Disclaimer } from "../../ui/Disclaimer";
 import { Icon, type IconName } from "../../ui/Icon";
 import { PageMetaContext, type PageMeta } from "../../ui/pageMeta";
@@ -94,6 +98,7 @@ export function AppShell() {
               </NavLink>
             ))}
           </nav>
+          <GuideDock />
           <div className="mode-card">
             <strong>
               <span className="dot normal" aria-hidden="true" />
@@ -138,7 +143,11 @@ export function AppShell() {
           </header>
 
           <div className="stage">
+            <GuideFinish />
             <Outlet />
+          </div>
+          <div className="mobile-only">
+            <GuideDock variant="mobile" />
           </div>
           <Disclaimer variant={strong ? "emergency" : "banner"} />
         </div>
@@ -158,6 +167,7 @@ export function AppShell() {
           ))}
         </nav>
         <AssistantDock />
+        <GuideLayer />
       </div>
     </PageMetaContext.Provider>
   );
