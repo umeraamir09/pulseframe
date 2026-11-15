@@ -9,6 +9,9 @@ export const SURGEON_CHECK = "I confirm a flight surgeon approved this";
 export const CONFIRMED_BY_DEFAULT = "Crew A (simulated)";
 export const MODE_OFFLINE = "Offline mode: protocol cards";
 export const MODE_LIVE = "Live: Groq";
+export const OFFLINE_COMMANDS_ONLY = "Offline mode answers commands only. Try help.";
+export const NOT_IN_RESEARCH_TITLE = "Not in research";
+export const RESEARCH_ANSWER_TITLE = "From Pulseframe research";
 
 export function canLogGiven(input: { doseText: string; confirmedBy: string; surgeonApproved: boolean }): boolean {
   return input.doseText.trim().length > 0 && input.confirmedBy.trim().length > 0 && input.surgeonApproved;

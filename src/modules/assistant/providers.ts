@@ -2,7 +2,7 @@ import type { InventoryItem, SkeletonRegionId } from "../../contracts";
 import { KEY_LABELS } from "../../contracts";
 import { explainAlert, missionDayLabel, missionDayOf, SIM_CREW, store } from "../../data/db";
 import { getProtocol, matchProtocol } from "../protocols";
-import { LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, PROVENANCE_LABEL } from "./copy";
+import { LIVE_FALLBACK_NOTE, NO_ONBOARD_ITEM, NO_OPEN_CASE_REPLY, OFFLINE_COMMANDS_ONLY, PROVENANCE_LABEL } from "./copy";
 
 export interface CaseContext {
   caseId: string;
@@ -12,15 +12,26 @@ export interface CaseContext {
   protocolId?: string;
 }
 
+export interface LastTurn {
+  question: string;
+  answer: string;
+}
+
 export interface AssistantAsk {
   command: string;
   caseCtx?: CaseContext;
   inventory: InventoryItem[];
+  /** Previous live Q/A pair; only sent with free-text questions. The server trims it to 200 tokens. */
+  lastTurn?: LastTurn;
 }
 
 export interface AssistantReply {
   text: string;
   draft?: unknown;
+  /** Pack chunk ids (e.g. "cv:headache-co2:heartrate"), live answers only. */
+  citations?: string[];
+  /** True when the research pack does not cover the question. */
+  notFound?: boolean;
 }
 
 export interface AssistantProvider {
@@ -29,6 +40,9 @@ export interface AssistantProvider {
 }
 
 export const LIVE_TIMEOUT_MS = 8000;
+
+/** Longest lastTurn field the client sends; the server schema allows 5,000 and trims to 200 tokens. */
+export const LAST_TURN_MAX_CHARS = 1000;
 
 function parseCommand(raw: string): { verb: string; arg: string } {
   const trimmed = raw.trim().replace(/\s+/g, " ");
@@ -120,20 +134,36 @@ export const offlineProvider: AssistantProvider = {
       return { text: await alertsText(input.caseCtx?.crewId ?? SIM_CREW.id) };
     }
     if (verb === "suggest") return suggest(input);
-    return { text: `Unknown command "${verb}". Try help.` };
+    return { text: `Unknown command "${verb}". ${OFFLINE_COMMANDS_ONLY}` };
   },
 };
 
-function isLiveBody(value: unknown): value is { text: string; draft?: unknown } {
+/** Commands the offline provider answers; these never reach /api/assistant. */
+export function isOfflineCommand(raw: string): boolean {
+  const { verb, arg } = parseCommand(raw);
+  if (verb === "explain") return arg.toLowerCase() === "alerts";
+  return verb === "help" || verb === "find" || verb === "item" || verb === "alerts" || verb === "suggest";
+}
+
+function isLiveBody(value: unknown): value is { text: string; draft?: unknown; citations?: unknown; notFound?: unknown } {
   if (!value || typeof value !== "object") return false;
   const text = (value as { text?: unknown }).text;
   return typeof text === "string" && text.trim().length > 0;
 }
 
-async function postLive(payload: { command: string; caseCtx?: CaseContext; inventoryIds: string[] }): Promise<{
-  text: string;
-  draft?: unknown;
-}> {
+function clipTurn(turn: LastTurn | undefined): LastTurn | undefined {
+  if (!turn) return undefined;
+  const question = turn.question.trim().slice(0, LAST_TURN_MAX_CHARS);
+  const answer = turn.answer.trim().slice(0, LAST_TURN_MAX_CHARS);
+  return question && answer ? { question, answer } : undefined;
+}
+
+async function postLive(payload: {
+  command: string;
+  caseCtx?: CaseContext;
+  inventoryIds: string[];
+  lastTurn?: LastTurn;
+}): Promise<AssistantReply> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), LIVE_TIMEOUT_MS);
   try {
@@ -146,7 +176,13 @@ async function postLive(payload: { command: string; caseCtx?: CaseContext; inven
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const body: unknown = await res.json();
     if (!isLiveBody(body)) throw new Error("Bad assistant response");
-    return { text: body.text, draft: body.draft };
+    const reply: AssistantReply = { text: body.text };
+    if (body.draft !== undefined && body.draft !== null) reply.draft = body.draft;
+    if (Array.isArray(body.citations)) {
+      reply.citations = body.citations.filter((id): id is string => typeof id === "string" && id.length > 0);
+    }
+    if (typeof body.notFound === "boolean") reply.notFound = body.notFound;
+    return reply;
   } finally {
     clearTimeout(timer);
   }
@@ -155,11 +191,14 @@ async function postLive(payload: { command: string; caseCtx?: CaseContext; inven
 export const liveProvider: AssistantProvider = {
   name: "live",
   async ask(input) {
+    if (isOfflineCommand(input.command)) return offlineProvider.ask(input);
     try {
+      const lastTurn = clipTurn(input.lastTurn);
       return await postLive({
-        command: input.command,
+        command: input.command.trim(),
         caseCtx: input.caseCtx,
         inventoryIds: input.inventory.map((item) => item.id),
+        ...(lastTurn ? { lastTurn } : {}),
       });
     } catch {
       const offline = await offlineProvider.ask(input);
