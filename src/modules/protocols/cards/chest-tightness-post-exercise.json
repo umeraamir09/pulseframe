@@ -1,0 +1,77 @@
+{
+  "id": "chest-tightness-post-exercise",
+  "title": "Chest tightness after resistive exercise",
+  "regionIds": ["chest"],
+  "keywords": ["chest", "tight", "pressure", "exercise", "resistive"],
+  "differential": [
+    {
+      "label": "Chest wall muscle strain after resistive exercise",
+      "note": "Working idea only. This is not a diagnosis."
+    },
+    {
+      "label": "Cardiac cause. Cannot be ruled out onboard. Needs flight surgeon review",
+      "note": "Working idea only. This is not a diagnosis."
+    },
+    {
+      "label": "Stress or anxiety response",
+      "note": "Working idea only. This is not a diagnosis."
+    }
+  ],
+  "tests": [
+    {
+      "title": "Heart rate",
+      "instruction": "Rest in a restrained position. Read heart rate on the onboard monitor and enter it.",
+      "inputKey": "heartRate"
+    },
+    {
+      "title": "Systolic blood pressure",
+      "instruction": "Rest in a restrained position. Read systolic blood pressure on the onboard monitor and enter it.",
+      "inputKey": "systolicBP"
+    },
+    {
+      "title": "Diastolic blood pressure",
+      "instruction": "Rest in a restrained position. Read diastolic blood pressure on the onboard monitor and enter it.",
+      "inputKey": "diastolicBP"
+    },
+    {
+      "title": "Oxygen saturation",
+      "instruction": "Rest in a restrained position. Read oxygen saturation on the onboard monitor and enter it.",
+      "inputKey": "oxygenSat"
+    },
+    {
+      "title": "Body temperature",
+      "instruction": "Rest in a restrained position. Read body temperature on the onboard monitor and enter it.",
+      "inputKey": "temperatureC"
+    },
+    {
+      "title": "Pain score",
+      "instruction": "Rest in a restrained position. Enter a pain score from 0 to 10.",
+      "inputKey": "painScore"
+    }
+  ],
+  "immediateSteps": [
+    {
+      "title": "Stop exercise and rest in a restrained position",
+      "instruction": "Stop the session and stay restrained."
+    },
+    {
+      "title": "Tell a crewmate and keep them nearby",
+      "instruction": "Call a crewmate and ask them to stay within reach."
+    },
+    {
+      "title": "Do not resume exercise until the flight surgeon clears it",
+      "instruction": "Wait for flight surgeon clearance before any more exercise."
+    },
+    {
+      "title": "Re-measure heart rate and blood pressure and enter the results",
+      "instruction": "Take both readings again at rest and enter them."
+    },
+    {
+      "title": "Send the case to the flight surgeon",
+      "instruction": "Continue to handoff and send the case."
+    }
+  ],
+  "candidateItemIds": [],
+  "cautions": "This is a demonstration protocol, not a diagnosis. Contact the flight surgeon before using anything from the kit.",
+  "sourceNote": "Demonstration protocol written by the team for a hackathon prototype. Pending researcher review. Not a NASA protocol."
+}
