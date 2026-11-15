@@ -124,4 +124,15 @@ describe("rules", () => {
     expect(dedupe(watch, [{ ...act, id: "al-2" }])).toEqual({ action: "keep" });
     expect(dedupe(act, [{ ...existingWatch, ackedAt: new Date().toISOString() }])).toEqual({ action: "add" });
   });
+
+  it("dedupe: an emergency-test alert stays beside the same-day routine alert", () => {
+    const routine = scoreMeasurement(reading("heartRate", 78, 142, 7), rows).draft!;
+    const emergency = scoreMeasurement(
+      reading("heartRate", 96, 142, 15, { caseId: "case-1", source: "emergency-test" }),
+      [...rows, reading("heartRate", 96, 142, 15, { caseId: "case-1", source: "emergency-test" })],
+    ).draft!;
+    expect(emergency.caseId).toBe("case-1");
+    expect(dedupe(emergency, [{ ...routine, id: "al-hr" }])).toEqual({ action: "add" });
+    expect(dedupe(emergency, [{ ...emergency, id: "al-case" }])).toEqual({ action: "keep" });
+  });
 });
