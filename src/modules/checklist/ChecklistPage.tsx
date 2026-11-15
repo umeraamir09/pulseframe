@@ -1,30 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import type { ChecklistItem } from "../../contracts";
 import { FIRST_SEED_DAY, MISSION_DAY_TODAY, missionDayLabel, store, useLive } from "../../data/db";
-import { HazardChip } from "../../ui/HazardChip";
-import checklistIcon from "../../assets/icons/checklist/checklist.svg";
-import dumbbellIcon from "../../assets/icons/checklist/dumbbell.svg";
-import heartIcon from "../../assets/icons/checklist/heart.svg";
-import pillIcon from "../../assets/icons/checklist/pill.svg";
-import radiationIcon from "../../assets/icons/checklist/radiation.svg";
-import shieldWatchIcon from "../../assets/icons/checklist/shield-watch.svg";
-import smileIcon from "../../assets/icons/checklist/smile.svg";
+import { Icon, type IconName } from "../../ui/Icon";
+import { usePageMeta } from "../../ui/pageMeta";
 import { ChecklistRow } from "./ChecklistRow";
 
 type Kind = ChecklistItem["kind"];
 
-const GROUP: Record<Kind, { title: string; short: string; icon: string; to?: string }> = {
-  meds: { title: "Meds", short: "Meds", icon: pillIcon },
-  vitals: { title: "Vitals", short: "Vitals", icon: heartIcon },
-  exercise: { title: "Exercise", short: "Exercise", icon: dumbbellIcon, to: "/fitness" },
-  radiation: { title: "Radiation", short: "Radiation", icon: radiationIcon, to: "/radiation" },
-  psych: { title: "Psych", short: "Psych", icon: smileIcon, to: "/psych" },
-  other: { title: "Other", short: "Other", icon: checklistIcon },
-};
+const GROUPS: { kind: Kind; title: string; short: string; icon: IconName }[] = [
+  { kind: "meds", title: "Meds", short: "Meds", icon: "pill" },
+  { kind: "vitals", title: "Vitals", short: "Vitals", icon: "heart" },
+  { kind: "exercise", title: "Exercise", short: "Exercise", icon: "dumbbell" },
+  { kind: "radiation", title: "Radiation", short: "Radiation", icon: "radiation" },
+  { kind: "psych", title: "Psych", short: "Psych", icon: "smile" },
+  { kind: "other", title: "Other", short: "Other", icon: "checklist" },
+];
 
-/** Summary tile order, and the two card columns from the design. */
-const ORDER: Kind[] = ["meds", "vitals", "exercise", "radiation", "psych", "other"];
+/** Two columns as in the design: meds, vitals, radiation on the left; exercise, psych, other on the right. */
 const COLUMNS: Kind[][] = [
   ["meds", "vitals", "radiation"],
   ["exercise", "psych", "other"],
@@ -35,123 +27,109 @@ const DAYS = Array.from({ length: MISSION_DAY_TODAY - FIRST_SEED_DAY + 1 }, (_, 
 export function ChecklistPage() {
   const [md, setMd] = useState(MISSION_DAY_TODAY);
   const [editPast, setEditPast] = useState(false);
+  usePageMeta("Daily checklist", `${missionDayLabel(md)} · grouped by type`);
   const { data: items, loading, error } = useLive(() => store.listChecklist(String(md)), [md]);
   const { data: inventory } = useLive(() => store.listInventory(), []);
 
-  const all = items ?? [];
   const isPast = md < MISSION_DAY_TODAY;
   const readOnly = isPast && !editPast;
-  const required = all.filter((i) => i.required);
-  const requiredDone = required.filter((i) => i.doneAt).length;
-  const byKind = (k: Kind) => all.filter((i) => i.kind === k);
+  const rows = items ?? [];
+  const done = rows.filter((i) => i.doneAt).length;
+  const sources = [...new Set(rows.map((r) => r.sourceUrl).filter((u): u is string => Boolean(u)))];
 
   return (
-    <section className="cl">
-      <header className="cl-head">
+    <div className="stack" style={{ gap: 20 }}>
+      <section className="card check-summary" aria-label="Progress">
+        <div className="big">
+          <span className="numeral-xl" style={{ fontSize: 64 }}>
+            {done}
+          </span>
+          <span className="unit" style={{ fontSize: 20 }}>
+            of {rows.length}
+          </span>
+        </div>
         <div>
-          <h1>Daily checklist</h1>
-          <p>
-            {missionDayLabel(md)}
-            {md === MISSION_DAY_TODAY ? " (today)" : ""} · grouped by type
-          </p>
-        </div>
-        <div className="cl-head-tools">
-          <div className="cl-days" role="tablist" aria-label="Mission day">
-            {DAYS.map((d) => (
-              <button
-                key={d}
-                type="button"
-                role="tab"
-                aria-selected={d === md}
-                className={d === md ? "is-active" : ""}
-                onClick={() => {
-                  setMd(d);
-                  setEditPast(false);
-                }}
-              >
-                {d}
-              </button>
-            ))}
-          </div>
-          <HazardChip id="environment" />
-        </div>
-      </header>
-
-      <div className="cl-card cl-progress">
-        <p className="cl-count">
-          <span className="cl-count-big">{requiredDone}</span>
-          <span className="cl-count-of">of {required.length}</span>
-        </p>
-        <div className="cl-progress-mid">
-          <p className="cl-progress-label">
-            Required done{md === MISSION_DAY_TODAY ? " today" : ""}
-            {isPast ? (
-              <label className="cl-edit-past">
-                <input type="checkbox" checked={editPast} onChange={(e) => setEditPast(e.target.checked)} /> Edit past
-                day
-              </label>
-            ) : null}
-          </p>
-          <div
-            className="cl-strip"
-            role="progressbar"
-            aria-label="Required items done"
-            aria-valuemin={0}
-            aria-valuemax={required.length}
-            aria-valuenow={requiredDone}
-          >
-            {required.map((_, i) => (
-              <span key={i} className={i < requiredDone ? "on" : ""} />
+          <span className="muted" style={{ fontWeight: 500 }}>
+            {isPast ? `Done on ${missionDayLabel(md)}` : "Done today"}
+          </span>
+          <div className="seg-progress" role="progressbar" aria-valuemin={0} aria-valuemax={rows.length} aria-valuenow={done}>
+            {rows.map((r, i) => (
+              <span key={r.id} className={i < done ? "on" : undefined} />
             ))}
           </div>
         </div>
-        <ul className="cl-tiles" aria-label="Done by type">
-          {ORDER.map((k) => {
-            const rows = byKind(k);
-            if (!rows.length) return null;
+        <div className="group-counters">
+          {GROUPS.map((g) => {
+            const gr = rows.filter((r) => r.kind === g.kind);
+            if (!gr.length) return null;
             return (
-              <li key={k}>
-                <strong>
-                  {rows.filter((r) => r.doneAt).length}/{rows.length}
-                </strong>
-                <span>{GROUP[k].short}</span>
-              </li>
+              <span key={g.kind} className="group-counter">
+                <b>
+                  {gr.filter((r) => r.doneAt).length}/{gr.length}
+                </b>
+                <span>{g.short}</span>
+              </span>
             );
           })}
-        </ul>
-      </div>
+        </div>
+        <div className="day-select">
+          <label className="sr" htmlFor="md-pick">
+            Mission day
+          </label>
+          <select
+            id="md-pick"
+            className="select"
+            value={md}
+            onChange={(e) => {
+              setMd(Number(e.target.value));
+              setEditPast(false);
+            }}
+          >
+            {DAYS.map((d) => (
+              <option key={d} value={d}>
+                {missionDayLabel(d)}
+                {d === MISSION_DAY_TODAY ? " (today)" : ""}
+              </option>
+            ))}
+          </select>
+          {isPast ? (
+            <button type="button" className={`btn xs ${editPast ? "dark" : "secondary"}`} onClick={() => setEditPast((v) => !v)}>
+              <Icon name="edit" size={14} /> {editPast ? "Editing" : "Edit day"}
+            </button>
+          ) : null}
+        </div>
+      </section>
 
-      {error ? <p className="cl-error">Could not load the checklist: {error.message}</p> : null}
+      {error ? <p className="error">Could not load the checklist: {error.message}</p> : null}
       {loading && !items ? <p className="muted">Loading…</p> : null}
       {items && items.length === 0 ? <p className="muted">No checklist for this day yet.</p> : null}
 
-      <div className="cl-groups">
+      <div className="check-cols">
         {COLUMNS.map((col, ci) => (
-          <div key={ci} className="cl-col">
-            {col.map((k) => {
-              const rows = byKind(k);
-              if (!rows.length) return null;
-              const g = GROUP[k];
+          <div key={ci} className="check-col">
+            {col.map((kind) => {
+              const g = GROUPS.find((x) => x.kind === kind)!;
+              const gr = rows.filter((i) => i.kind === kind);
+              if (!gr.length) return null;
               return (
-                <section key={k} className="cl-card cl-group" aria-labelledby={`cl-group-${k}`}>
-                  <div className="cl-group-head">
-                    <span className="cl-group-icon">
-                      <img src={g.icon} alt="" width={18} height={18} />
+                <section key={kind} className="card check-card" aria-labelledby={`grp-${kind}`}>
+                  <div className="card-head">
+                    <span className="icon-badge sm accent sq">
+                      <Icon name={g.icon} size={18} />
                     </span>
-                    <h2 id={`cl-group-${k}`}>{g.to ? <Link to={g.to}>{g.title}</Link> : g.title}</h2>
-                    <span className="cl-group-count">
-                      {rows.filter((r) => r.doneAt).length} of {rows.length}
+                    <h2 id={`grp-${kind}`} className="h3">
+                      {g.title}
+                    </h2>
+                    <span className="muted small">
+                      {gr.filter((r) => r.doneAt).length} of {gr.length}
                     </span>
                   </div>
-                  <ul className="cl-items">
-                    {rows.map((item) => (
-                      <ChecklistRow key={item.id} item={item} readOnly={readOnly} inventory={inventory ?? []} />
-                    ))}
-                  </ul>
-                  {k === "meds" ? (
-                    <p className="cl-dose-note">
-                      <img src={shieldWatchIcon} alt="" width={14} height={14} />
-                      Pulseframe does not suggest doses.
+                  {gr.map((item) => (
+                    <ChecklistRow key={item.id} item={item} readOnly={readOnly} inventory={inventory ?? []} />
+                  ))}
+                  {kind === "meds" ? (
+                    <p className="note watch">
+                      <Icon name="shield" size={16} /> Pulseframe does not suggest doses.
                     </p>
                   ) : null}
                 </section>
@@ -161,10 +139,20 @@ export function ChecklistPage() {
         ))}
       </div>
 
-      <p className="cl-footnote">
-        Items are drawn from public NASA material on ISS crew routines (hover the info icon for the source). Times and
-        exercise minutes are demonstration values, not a NASA prescription.
-      </p>
-    </section>
+      {sources.length ? (
+        <p className="muted small">
+          Items are drawn from public NASA material on ISS crew routines:{" "}
+          {sources.map((u, i) => (
+            <span key={u}>
+              {i ? ", " : ""}
+              <a href={u} target="_blank" rel="noreferrer">
+                source {i + 1}
+              </a>
+            </span>
+          ))}
+          . Times and exercise minutes are demonstration values, not a NASA prescription.
+        </p>
+      ) : null}
+    </div>
   );
 }

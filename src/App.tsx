@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { AppShell } from "./modules/shell/AppShell";
 import { DashboardPage } from "./modules/dashboard/DashboardPage";
+import { AlertsPage } from "./modules/alerts/AlertsPage";
 import { EmergencyPage } from "./modules/emergency/EmergencyPage";
 import { ChecklistPage } from "./modules/checklist/ChecklistPage";
 import { FitnessPage } from "./modules/fitness/FitnessPage";
@@ -16,6 +17,7 @@ export default function App() {
     <Routes>
       <Route element={<AppShell />}>
         <Route path="/" element={<DashboardPage />} />
+        <Route path="/alerts" element={<AlertsPage />} />
         <Route path="/emergency" element={<EmergencyPage />} />
         <Route path="/checklist" element={<ChecklistPage />} />
         <Route path="/fitness" element={<FitnessPage />} />

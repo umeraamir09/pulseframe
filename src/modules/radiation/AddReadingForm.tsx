@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from "react";
 import type { Alert } from "../../contracts";
 import { AlertCard } from "../../ui/AlertCard";
+import { UnitInput } from "../../ui/controls";
+import { Icon } from "../../ui/Icon";
 import { saveReading } from "./saveReading";
 
 export function AddReadingForm() {
@@ -29,36 +31,28 @@ export function AddReadingForm() {
   }
 
   return (
-    <form className="log-form" onSubmit={(e) => void submit(e)}>
-      <h2>Log a dosimeter reading</h2>
-      <div className="check-input flush">
-        <label htmlFor="rad-rate">Dose rate</label>
-        <input
-          id="rad-rate"
-          type="number"
-          step="any"
-          min={0}
-          inputMode="decimal"
-          placeholder="e.g. 18.0"
-          value={rate}
-          onChange={(e) => setRate(e.target.value)}
-        />
-        <span className="muted">µGy/h</span>
-        <button type="submit" className="primary" disabled={busy}>
-          {busy ? "Saving…" : "Save reading"}
+    <div className="stack">
+      <form className="add-reading" onSubmit={(e) => void submit(e)} style={{ marginTop: 0 }}>
+        <div className="field" style={{ width: 240 }}>
+          <span className="field-label">Dose rate on the dosimeter</span>
+          <UnitInput unit="µGy/h" min={0} placeholder="18.0" value={rate} onChange={(e) => setRate(e.target.value)} aria-label="Dose rate" />
+        </div>
+        <button type="submit" className="btn primary" disabled={busy}>
+          <Icon name="check" size={18} /> {busy ? "Saving…" : "Save reading"}
         </button>
-      </div>
-      <p className="muted small">The cumulative dose is updated from your last reading and the hours since it.</p>
+        <span className="muted small grow">Cumulative dose is updated from your last reading and the hours since it.</span>
+      </form>
       {error ? <p className="error">{error}</p> : null}
       {saved ? (
-        <div role="status">
-          <p className="muted small">
-            Saved {saved.rate} µGy/h · cumulative {saved.cumulative.toFixed(3)} mGy since log start.
+        <div role="status" className="stack">
+          <p className={`note ${saved.alert ? "watch" : "normal"}`}>
+            <Icon name={saved.alert ? "alert" : "check"} size={16} />
+            Saved {saved.rate} µGy/h · cumulative {saved.cumulative.toFixed(3)} mGy.
             {saved.alert ? "" : " Within your usual range."}
           </p>
           {saved.alert ? <AlertCard alert={saved.alert} compact /> : null}
         </div>
       ) : null}
-    </form>
+    </div>
   );
 }
