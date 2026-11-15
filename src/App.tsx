@@ -8,7 +8,6 @@ import { FitnessPage } from "./modules/fitness/FitnessPage";
 import { RadiationPage } from "./modules/radiation/RadiationPage";
 import { PsychPage } from "./modules/psych/PsychPage";
 import { AssistantPage } from "./modules/assistant/AssistantPage";
-import { SyncPage } from "./modules/sync/SyncPage";
 import { SourcesPage } from "./modules/sources/SourcesPage";
 import { NotFound } from "./modules/shell/NotFound";
 
@@ -24,7 +23,6 @@ export default function App() {
         <Route path="/radiation" element={<RadiationPage />} />
         <Route path="/psych" element={<PsychPage />} />
         <Route path="/assistant" element={<AssistantPage />} />
-        <Route path="/sync" element={<SyncPage />} />
         <Route path="/sources" element={<SourcesPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
