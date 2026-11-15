@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { SyncChip } from "../../ui/SyncChip";
 
 const LINKS = [
   ["/", "Dashboard"],
@@ -21,6 +22,7 @@ export function AppShell() {
           {LINKS.map(([to, label]) => (
             <NavLink key={to} to={to} end={to === "/"}>
               {label}
+              {to === "/sync" ? <SyncChip /> : null}
             </NavLink>
           ))}
         </nav>
