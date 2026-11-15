@@ -159,13 +159,22 @@ export function explainAlert(a: AlertDraft): string {
 }
 
 /**
- * Dedupe rule: one unacknowledged alert per crew, key and mission day. A higher severity replaces a lower one.
- * Returns which existing alert (if any) to replace, or `keep` when the draft should be dropped.
+ * Dedupe rule: one unacknowledged alert per crew, key, mission day, and case slot.
+ * A routine reading and an emergency-test reading (one has a caseId, the other does not,
+ * or they belong to different cases) are different slots, so a test can still raise an
+ * alert on a day that already has a routine alert. A higher severity replaces a lower one
+ * in the same slot. Returns `keep` when the draft should be dropped.
  */
 export function dedupe(draft: AlertDraft, existing: Alert[]): { action: "add" } | { action: "replace"; old: Alert } | { action: "keep" } {
   const day = missionDayOf(draft.openedAt);
+  const slot = draft.caseId ?? "";
   const same = existing.find(
-    (a) => !a.ackedAt && a.crewId === draft.crewId && a.key === draft.key && missionDayOf(a.openedAt) === day,
+    (a) =>
+      !a.ackedAt &&
+      a.crewId === draft.crewId &&
+      a.key === draft.key &&
+      missionDayOf(a.openedAt) === day &&
+      (a.caseId ?? "") === slot,
   );
   if (!same) return { action: "add" };
   return SEVERITY_RANK[draft.severity] > SEVERITY_RANK[same.severity] ? { action: "replace", old: same } : { action: "keep" };
